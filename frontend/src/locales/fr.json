@@ -1,0 +1,38 @@
+{   
+    "global": {
+        "app-title": "OpenTableTop",
+        "app-subtitle": "Vos aventures, où que vous soyez"
+    },
+
+    "selector": {
+        "lang": {
+            "fr": "Français",
+            "en": "Anglais"
+        }
+    },
+
+    "component": {
+        "navbar": {
+            "table": "Table de jeu",
+            "players": "Joueurs",
+            "character-sheet": "Fiche Personnage",
+            "inventory": "Inventaire",
+            "dev": "Développement",
+            "home": "Écran de connexion"
+        }
+    },
+
+    "page": {
+
+        "login": {
+            "role-div": {
+                "caption": "Sélectionner votre rôle et prenez place autour de la table !"
+            },
+            "role": {
+                "player": "Joueur",
+                "game-master": "Maître du jeu"
+            }
+        }
+    } 
+
+}
