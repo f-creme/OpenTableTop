@@ -1,10 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from pydantic import BaseModel
 
 from db.db import get_db
 from api.auth.auth_utils import (
     hash_password, verify_password, create_token, decode_token
 )
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 security = HTTPBearer()
@@ -27,7 +32,10 @@ def register(username: str, password: str):
     return {"message": "User created"}
 
 @router.post("/login")
-def login(username: str, password: str):
+def login(data: LoginRequest):
+    username = data.username
+    password = data.password
+    
     cn = get_db()
     cs = cn.cursor()
 
