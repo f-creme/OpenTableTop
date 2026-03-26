@@ -1,4 +1,4 @@
-import { AuthProvider } from "./context/AuthContext"
+import { AuthProvider } from "./context/RoleContext"
 import { LanguageProvider } from "./context/LanguageContext"
 
 import ReactDOM from "react-dom/client"

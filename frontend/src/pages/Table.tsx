@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-import { useAuth } from "../context/AuthContext"
+import { useRole } from "../context/RoleContext"
 // import { useTranslation } from "react-i18next";
 
 import DiceMenu from "../components/DiceMenu";
@@ -13,7 +13,7 @@ import MapDisplay from "../components/MapDisplay";
 
 const Table = () => {
     // const { t } = useTranslation();
-    const { role } = useAuth();
+    const { role } = useRole();
 
     const apiURL = import.meta.env.VITE_API_URL;
     const api = axios.create({ baseURL: apiURL });

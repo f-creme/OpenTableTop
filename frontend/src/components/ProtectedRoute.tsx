@@ -1,9 +1,9 @@
 // components/ProtectedRoute.tsx
 import { Navigate, Outlet } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
+import { useRole } from "../context/RoleContext"
 
 export default function ProtectedRoute() {
-  const { role } = useAuth()
+  const { role } = useRole()
 
   if (!role) {
     return <Navigate to="/" replace />

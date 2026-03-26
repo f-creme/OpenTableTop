@@ -1,14 +1,14 @@
 // pages/player/Inventory.tsx
 
 import { Navigate } from "react-router-dom"
-import { useAuth } from "../../context/AuthContext"
+import { useRole } from "../../context/RoleContext"
 
 import { useEffect, useState } from "react";
 
 import { TrafficCone } from "lucide-react";
 
 export default function Inventory() {
-    const { role } = useAuth()
+    const { role } = useRole()
 
     if ( role !== "player" ) {
         return <Navigate to="/" />

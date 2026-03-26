@@ -1,11 +1,11 @@
-// context/AuthContext.tsx
+// context/RoleContext.tsx
 
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
 type Role = "mj" | "player" | null
 
-const AuthContext = createContext<{
+const RoleContext = createContext<{
     role: Role;
     setRole: (role: Role) => void;
 }>({
@@ -27,11 +27,11 @@ export function AuthProvider({ children }: { children: ReactNode}) {
     })
 
     return (
-        <AuthContext.Provider value={{ role, setRole}}>
+        <RoleContext.Provider value={{ role, setRole}}>
             { children }
-        </AuthContext.Provider>
+        </RoleContext.Provider>
     );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useRole = () => useContext(RoleContext);
 

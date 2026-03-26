@@ -2,7 +2,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { Navigate } from "react-router-dom"
 
-import Login from "./pages/Login"
 import AppLayout from "./pages/AppLayout"
 
 import Table from "./pages/Table"
@@ -15,12 +14,13 @@ import Players from "./pages/gm/Players"
 import ProtectedRoute from "./components/ProtectedRoute"
 
 import TableDev from "./pages/TableDev"
+import RoleSelection from "./pages/RoleSelection"
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<RoleSelection />} />
 
         <Route path="/room" element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>

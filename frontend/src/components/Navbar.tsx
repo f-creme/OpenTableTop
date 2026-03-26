@@ -2,14 +2,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { useAuth } from "../context/AuthContext";
+import { useRole } from "../context/RoleContext";
 import { NavbarTransition } from "./Transitions";
 
 import { House, Menu, Dice3, SquareUserRound, UsersRound, Bug, Swords } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
-  const { role } = useAuth();
+  const { role } = useRole();
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

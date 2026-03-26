@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useRole } from "../context/RoleContext";
 import { useTranslation } from "react-i18next";
 
 import LanguageSwitcher from "../components/LangSwitcher";
@@ -10,8 +10,8 @@ import logo from "../assets/logo.webp"
 import { Crown, Dice5 } from "lucide-react";
 import BackgroundDice from "../components/BackgroundDice";
 
-export default function Login() {
-    const { setRole } = useAuth()
+export default function RoleSelection() {
+    const { setRole } = useRole()
     const navigate = useNavigate()
     const { t } = useTranslation()
 

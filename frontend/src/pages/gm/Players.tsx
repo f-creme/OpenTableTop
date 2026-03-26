@@ -1,10 +1,10 @@
 // pages/mj/Players.tsx
 
 import { Navigate } from "react-router-dom"
-import { useAuth } from "../../context/AuthContext"
+import { useRole } from "../../context/RoleContext"
 
 export default function Players() {
-    const { role } = useAuth()
+    const { role } = useRole()
 
     if ( role !== "mj" ) {
         return <Navigate to="/" />
