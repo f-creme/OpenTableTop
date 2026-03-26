@@ -22,10 +22,10 @@ function App() {
 
           {/* Routes protégées */}
           <Route path="/room" element={<ProtectedRoute />}>
+
+            {/* Page de sélection de rôle protégée */}
+            <Route path="role-selection" element={<RoleSelection />} />
             <Route element={<AppLayout />}>
-              
-              {/* Page de sélection de rôle protégée */}
-              <Route path="role-selection" element={<RoleSelection />} />
 
               {/* default root → redirection vers role-selection */}
               <Route index element={<Navigate to="role-selection" />} />
