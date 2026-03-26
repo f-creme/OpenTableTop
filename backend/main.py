@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import maps, table_ws
+from api.maps import routes as maps_route
+from api.table import websocket
 
 app = FastAPI(title="OpenTableTop API")
 
@@ -13,5 +14,5 @@ app.add_middleware(
     allow_origins=["*"]
 )
 
-app.include_router(maps.router)
-app.include_router(table_ws.router)
+app.include_router(maps_route.router)
+app.include_router(websocket.router)
