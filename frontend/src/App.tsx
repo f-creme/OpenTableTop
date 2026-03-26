@@ -1,47 +1,49 @@
 // App.tsx
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { Navigate } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { AuthProvider } from "./context/AuthContext";
 
 import AppLayout from "./pages/AppLayout"
-
+import Login from "./pages/Login";
+import RoleSelection from "./pages/RoleSelection"
 import Table from "./pages/Table"
-
 import CharacterSheet from "./pages/player/CharacterSheet"
 import Inventory from "./pages/player/Inventory"
-
 import Players from "./pages/gm/Players"
-
 import ProtectedRoute from "./components/ProtectedRoute"
-
 import TableDev from "./pages/TableDev"
-import RoleSelection from "./pages/RoleSelection"
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<RoleSelection />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Page de login publique */}
+          <Route path="/" element={<Login />} />
 
-        <Route path="/room" element={<ProtectedRoute />}>
-          <Route element={<AppLayout />}>
+          {/* Routes protégées */}
+          <Route path="/room" element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
+              
+              {/* Page de sélection de rôle protégée */}
+              <Route path="role-selection" element={<RoleSelection />} />
 
-            {/* default root */}
-            <Route index element={<Navigate to="table"/>}/>
+              {/* default root → redirection vers role-selection */}
+              <Route index element={<Navigate to="role-selection" />} />
 
-            {/* Pages */}
-            <Route path="table" element={<Table />} />
+              {/* Pages principales */}
+              <Route path="table" element={<Table />} />
+              <Route path="player/character-sheet" element={<CharacterSheet />} />
+              <Route path="player/inventory" element={<Inventory />} />
+              <Route path="mj/players" element={<Players />} />
 
-            <Route path="player/character-sheet" element={<CharacterSheet />} />
-            <Route path="player/inventory" element={<Inventory />} />
-            <Route path="mj/players" element={<Players />} />
-
-            {/* DEV SECTION*/}
-            <Route path="dev" element={<TableDev />} />
+              {/* DEV SECTION */}
+              <Route path="dev" element={<TableDev />} />
+            </Route>
           </Route>
-        </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
 
-      </Routes>
-    </BrowserRouter>
   )
 }
 
