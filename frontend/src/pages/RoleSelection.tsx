@@ -17,7 +17,7 @@ export default function RoleSelection() {
 
     const chooseRole = (role: "mj" | "player") => {
         setRole(role)
-        navigate("/room")
+        navigate("/room/table")
     }
 
     return (

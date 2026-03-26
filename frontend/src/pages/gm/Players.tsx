@@ -7,7 +7,7 @@ export default function Players() {
     const { role } = useRole()
 
     if ( role !== "mj" ) {
-        return <Navigate to="/" />
+        return <Navigate to="/room" />
     }
     
     return (

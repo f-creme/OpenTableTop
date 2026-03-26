@@ -3,15 +3,13 @@
 import { Navigate } from "react-router-dom"
 import { useRole } from "../../context/RoleContext"
 
-import { useEffect, useState } from "react";
-
 import { TrafficCone } from "lucide-react";
 
 export default function Inventory() {
     const { role } = useRole()
 
     if ( role !== "player" ) {
-        return <Navigate to="/" />
+        return <Navigate to="/room" />
     }
 
     return (
