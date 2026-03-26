@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.maps import routes as maps_route
+from api.auth import routes as auth_route
 from api.table import websocket
 
 app = FastAPI(title="OpenTableTop API")
@@ -15,4 +16,5 @@ app.add_middleware(
 )
 
 app.include_router(maps_route.router)
+app.include_router(auth_route.router)
 app.include_router(websocket.router)
