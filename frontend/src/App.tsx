@@ -17,20 +17,18 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Page de login publique */}
+          {/* Public login page */}
           <Route path="/" element={<Login />} />
 
-          {/* Routes protégées */}
+          {/* Protected routes */}
           <Route path="/room" element={<ProtectedRoute />}>
 
-            {/* Page de sélection de rôle protégée */}
             <Route path="role-selection" element={<RoleSelection />} />
+            <Route index element={<Navigate to="role-selection" />} />
+
             <Route element={<AppLayout />}>
 
-              {/* default root → redirection vers role-selection */}
-              <Route index element={<Navigate to="role-selection" />} />
-
-              {/* Pages principales */}
+              {/* Main pages */}
               <Route path="table" element={<Table />} />
               <Route path="player/character-sheet" element={<CharacterSheet />} />
               <Route path="player/inventory" element={<Inventory />} />
