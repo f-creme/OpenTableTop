@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
-from db.db import get_db
+from db.db import get_db, get_cursor
 from api.auth.auth_utils import (
     hash_password, verify_password, create_token, decode_token
 )
@@ -17,11 +17,11 @@ security = HTTPBearer()
 @router.post("/register")
 def register(username: str, password: str):
     cn = get_db()
-    cs = cn.cursor()
+    cs = get_cursor(cn)
 
     try: 
         cs.execute(
-            "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+            "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
             (username, hash_password(password))
         )
         cn.commit()
@@ -37,10 +37,10 @@ def login(data: LoginRequest):
     password = data.password
     
     cn = get_db()
-    cs = cn.cursor()
+    cs = get_cursor(cn)
 
     cs.execute(
-        "SELECT * FROM users WHERE username = ?;",
+        "SELECT * FROM users WHERE username = %s;",
         (username, )
     )
     userData = cs.fetchone()
