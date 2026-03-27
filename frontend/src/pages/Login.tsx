@@ -32,9 +32,9 @@ const Login = () => {
             navigate("/room");
         } catch (err: any) {
             if (err.response && err.response.status === 401) {
-                setError("Identifiants incorrects");
+                setError(t("page.login.error-credentials"));
             } else {
-                setError("Erreur serveur");
+                setError(t("page.login.error-server"));
             }
         }
     };
@@ -96,7 +96,7 @@ const Login = () => {
                             {t("page.login.connect-btn")}
                         </button>
                         
-                        {error && <p><br/>{error}</p>}
+                        {error && <p className="text-sm text-error"><br/>{error}</p>}
                     </div>
 
                     <div className="mb-10">

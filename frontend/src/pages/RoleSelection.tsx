@@ -37,7 +37,7 @@ export default function RoleSelection() {
                     <div className="w-2/3 flex flex-col gap-4 my-10 bg-base-200 p-5 rounded-2xl shadow-xl">
 
                         <div className="flex justify-center">
-                            <p className="text-md text-center">{t("page.login.role-div.caption")}</p>
+                            <p className="text-md text-center">{t("page.role-selection.caption")}</p>
                         </div>
 
                         <div className="flex flex-col gap-4 sm:flex-row sm:gap-10">
@@ -46,7 +46,7 @@ export default function RoleSelection() {
                                 onClick={ () => chooseRole("player")}
                             >
                                 <Dice5 className="w-5 h-5" />
-                                <span>{t("page.login.role.player")}</span>
+                                <span>{t("page.role-selection.role.player")}</span>
                             </button>
                             
                             <button 
@@ -54,7 +54,7 @@ export default function RoleSelection() {
                                 onClick={ () => chooseRole("mj") }
                             >
                                 <Crown className="w-5 h-5"/>
-                                <span>{t("page.login.role.game-master")}</span>
+                                <span>{t("page.role-selection.role.master")}</span>
                             </button>
                         </div>
 
