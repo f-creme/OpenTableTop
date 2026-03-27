@@ -11,17 +11,21 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+
 router = APIRouter(prefix="/auth", tags=["auth"])
 security = HTTPBearer()
 
 @router.post("/register")
-def register(username: str, password: str, db=Depends(get_db)):
+def register(data: RegisterRequest, db=Depends(get_db)):
     cs = db.cursor()
 
     try: 
         cs.execute(
             "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
-            (username, hash_password(password))
+            (data.username, hash_password(data.password))
         )
         db.commit()
     except:
