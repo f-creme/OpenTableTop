@@ -24,7 +24,7 @@ export default function Footer() {
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
                         <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
                             <span className="font-medium text-base-content/50">Made by</span>
-                            <span className="font-semibold text-base-content/70">Florentin</span>
+                            <span className="font-semibold text-base-content/70">Florentin C.</span>
                         </div>
                         <div className="flex items-center gap-3 sm:gap-4">
                             <span className="text-xs text-base-content/50">© 2026 Florentin Creme</span>
