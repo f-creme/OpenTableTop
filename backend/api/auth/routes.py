@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
+import time
 
 from db.db import get_db
 from api.auth.auth_utils import (
@@ -49,11 +50,13 @@ def login(data: LoginRequest, db=Depends(get_db)):
     cs.close()
     
     if not userData:
+        time.sleep(1)
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     isCorrectPassword = verify_password(password, userData["password_hash"])
 
     if not isCorrectPassword:
+        time.sleep(1)
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     token = create_token({

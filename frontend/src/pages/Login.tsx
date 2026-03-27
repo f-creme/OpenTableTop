@@ -19,9 +19,11 @@ const Login = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
+    const [disabledConnect, setDisabledConnect] = useState<boolean>(false)
 
     const handleLogin = async () => {
         setError("");
+        setDisabledConnect(true);
         try {
             const res = await axiosInstance.post("/auth/login", {
                 username, 
@@ -31,6 +33,7 @@ const Login = () => {
             login(res.data.access_token);
             navigate("/room");
         } catch (err: any) {
+            setTimeout(() => setDisabledConnect(false), 1000)
             if (err.response && err.response.status === 401) {
                 setError(t("page.login.error-credentials"));
             } else {
@@ -92,11 +95,12 @@ const Login = () => {
                         <button 
                             className="btn btn-primary"
                             onClick={handleLogin}
+                            disabled={disabledConnect}
                         >
                             {t("page.login.connect-btn")}
                         </button>
                         
-                        {error && <p className="text-sm text-error"><br/>{error}</p>}
+                        {error && <p className="text-sm font-medium text-error-content"><br/>{error}</p>}
                     </div>
 
                     <div className="mb-10">
