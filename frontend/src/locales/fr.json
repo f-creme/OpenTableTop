@@ -25,12 +25,21 @@
     "page": {
 
         "login": {
-            "role-div": {
-                "caption": "Sélectionner votre rôle et prenez place autour de la table !"
-            },
+            "title": "Connexion",
+            "username": "Nom d'utilisateur",
+            "username-validation": "Le nom d'utilisateur doit contenir entre 5 et 20 caractères.",
+            "password": "Mot de passe",
+            "password-validation": "Le mot de passe doit contenir moins 20 caractères.",
+            "connect-btn": "Se connecter",
+            "error-credentials": "Identifiant ou mot de passe incorrect",
+            "error-server": "Erreur serveur"
+        }, 
+
+        "role-selection": {
+            "caption": "Rejoignez la table de jeu en tant que :",
             "role": {
                 "player": "Joueur",
-                "game-master": "Maître du jeu"
+                "master": "Maître du jeu"
             }
         }
     } 
