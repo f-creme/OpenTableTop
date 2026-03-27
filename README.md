@@ -41,7 +41,7 @@ Current capabilities:
 
 <br/>
 
-## 🚀 Quick Start
+## 📦 Manual installation *for development*
 
 ### 1. Clone the repository
 
@@ -50,12 +50,20 @@ git clone https://github.com/f-creme/OpenTableTop.git
 cd OpenTableTop
 ```
 
-### 2. Install dependencies
+### 2. Setup and install dependencies
+
+**Database (PostgreSQL):**
+```bash
+cd database
+cp .env.example .env # Copy the env file dans edit it if needed
+docker-compose up -d # init.sql file will automatically create the database and tables
+```
 
 **Frontend:**
 
 ```bash
 cd frontend
+cp .env.example .env # Copy the env file dans edit it if needed
 npm install 
 npm run dev
 ```
@@ -64,12 +72,24 @@ npm run dev
 
 ```bash
 cd backend
+cp .env.example .env # Copy the env file dans edit it if needed
 uv sync 
 uv run uvicorn main:app --reload
 ```
 
-### 3. Configure maps
+### 3. Configuration
 
+#### Add Users
+As the interface still does not allow to create users, you can add an authorized user via the API:
+
+```bash
+curl -X POST http://localhost:8000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"user","password":"pass"}'
+```
+> ⚠️ Only use this for local development. Do not expose your server to the internet when using this command.
+
+#### Add Maps
 * Place your map images in a maps folder
 * Edit `config.py` in the backend to point to that folder
 
