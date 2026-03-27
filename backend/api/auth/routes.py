@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
-from db.db import get_db, get_cursor
+from db.db import get_db
 from api.auth.auth_utils import (
     hash_password, verify_password, create_token, decode_token
 )
@@ -15,36 +15,34 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 security = HTTPBearer()
 
 @router.post("/register")
-def register(username: str, password: str):
-    cn = get_db()
-    cs = get_cursor(cn)
+def register(username: str, password: str, db=Depends(get_db)):
+    cs = db.cursor()
 
     try: 
         cs.execute(
             "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
             (username, hash_password(password))
         )
-        cn.commit()
+        db.commit()
     except:
         raise HTTPException(status_code=400, detail="User already exists")
     
-    cn.close()
+    cs.close()
     return {"message": "User created"}
 
 @router.post("/login")
-def login(data: LoginRequest):
+def login(data: LoginRequest, db=Depends(get_db)):
     username = data.username
     password = data.password
     
-    cn = get_db()
-    cs = get_cursor(cn)
+    cs = db.cursor()
 
     cs.execute(
         "SELECT * FROM users WHERE username = %s;",
         (username, )
     )
     userData = cs.fetchone()
-    cn.close()
+    cs.close()
     
     if not userData:
         raise HTTPException(status_code=401, detail="Invalid credentials")
