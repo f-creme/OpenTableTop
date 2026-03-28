@@ -9,3 +9,15 @@ export interface Campaign {
     title: string,
     userRole: "player" | "gm"
 }
+
+export interface CampaignGlobalAPI {
+    campaign_title: string,
+    public_name: string | null,
+    character_name: string | null 
+}
+
+export interface CampaignGlobal {
+    campaignTitle: string,
+    userPublicName: string | null, 
+    userCampaignCharacterName: string | null
+}

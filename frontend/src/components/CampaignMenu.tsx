@@ -1,6 +1,8 @@
 // src/components/CampaignMenu.tsx
 
+import { useState, useEffect } from "react";
 import { ScrollText, Settings, Users } from "lucide-react";
+import { useCampaign } from "../context/CampaignContext";
 
 interface CampaignMenuProps {
     view: "general" | "users" | "episodes"
@@ -8,6 +10,13 @@ interface CampaignMenuProps {
 }
 
 const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
+    const { campaignId } = useCampaign();
+    const [disabledMenu, setDisabledMenu] = useState<boolean>(true)
+
+    useEffect(() => {
+        if (campaignId === null) return;
+        if (campaignId > 0) setDisabledMenu(false);
+    }, [campaignId])
 
     return (
         <div className="min-h-full min-w-full bg-base-200 p-4 rounded-2xl shadow-xl flex flex-col">
@@ -29,6 +38,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                     className={`btn justify-start gap-2 ${
                         view ==="users" ? "btn-primary btn-soft" : "btn-ghost"
                     }`}  
+                    disabled={disabledMenu}
                     onClick={() => setView("users")}
                 >
                     <Users className="h-5 w-5"/> Joueurs invités
@@ -39,6 +49,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                     className={`btn justify-start gap-2 ${
                         view ==="episodes" ? "btn-primary btn-soft" : "btn-ghost"
                     }`} 
+                    disabled={disabledMenu}
                     onClick={() => setView("episodes")}
                 >
                     <ScrollText className="h-5 w-5"/> Épisodes 
@@ -47,8 +58,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
 
             <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
             <div className="flex flex-col gap-4 justify-between m-4 mb-0">
-                <button className="flex-1 btn btn-success text-success-content p-3">Enregistrer</button>
-                <button className="flex-1 btn btn-error text-error-content p-3">Supprimer</button>
+                <button className="flex-1 btn btn-error text-error-content p-3" disabled={disabledMenu}>Supprimer</button>
             </div>
         </div>
     );

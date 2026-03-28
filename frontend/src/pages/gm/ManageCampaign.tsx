@@ -1,37 +1,50 @@
 // src/pages/gm/ManageCampaign.tsx
 import { useState, useEffect } from "react";
-import CampaignMenu from "../../components/CampaignMenu"
-
 import { useCampaign } from "../../context/CampaignContext";
-import { getCampaignTitle, putCampaignTitle } from "../../api/services/campaignServices";
+import { useProfile } from "../../context/ProfileContext";
+import { getCampaignGlobal, putCampaignTitle } from "../../api/services/campaignServices";
 
+import type { CampaignGlobal } from "../../types/campaign";
+
+import CampaignMenu from "../../components/CampaignMenu"
 import { Pen } from "lucide-react";
 
 export default function ManageCampaign() {
     const { campaignId } = useCampaign();
+    const { publicName } = useProfile();
+    const { setPublicName } = useProfile();
     const [campaignTitle, setCampaignTitle] = useState<string>("");
-    const [disabledEditCampaignTitle, setDisableEditCampaignTitle] = useState<boolean>(true)
+    const [campaignProfile, setCampaignProfile] = useState<string>("");
+
+    const [disabledEditGlobal, setDisableEditGlobal] = useState<boolean>(true)
 
     // Load campaign general information
     useEffect(() => {
+        // console.log(campaignId)
         if (campaignId === null) return;
+        if (campaignId < 0) return;
 
-        const fetchTitle = async () => {
+        const fetchGlobal = async () => {
             try {
-                const title = await getCampaignTitle(campaignId);
-                setCampaignTitle(title);
+                const res: CampaignGlobal = await getCampaignGlobal(campaignId);
+                setCampaignTitle(res.campaignTitle);
+                if (res.userCampaignCharacterName) {
+                    setPublicName(res.userCampaignCharacterName)
+                } else if (res.userPublicName) {
+                    setPublicName(res.userPublicName)
+                };
             } catch (err) {
                 console.error(err);
             }
         };
-
-        fetchTitle();
+        fetchGlobal();
     }, [campaignId]);
 
-    // Update campaign general information
+    // Update campaign global
     const updateCampaignTitle = async () => {
         if (
             campaignId === null ||
+            campaignId < 0 ||
             campaignTitle.length === 0 ||
             campaignTitle.length >= 35
         ) return;
@@ -44,6 +57,18 @@ export default function ManageCampaign() {
         }
     };
 
+    // Create campaign
+    const createCampaign = async () => {
+        if (
+            campaignId === null ||
+            campaignId !== -1 ||
+            campaignTitle.length === 0 ||
+            campaignTitle.length >= 35
+        ) return;
+
+        console.log("Cr")
+    }
+
     const [view, setView] = useState<"general" | "users" | "episodes">("general");
 
     return (
@@ -54,27 +79,49 @@ export default function ManageCampaign() {
                     {view === "general" && (
                         <>
                             <div className="flex flex-col">
-                                <fieldset className="fieldset w-full">
-                                    <legend className="fieldset-legend text-2xl" >Titre de la campagne</legend>
+                                {campaignId === -1 && (
+                                    <>
+                                        <p className="bg-info/10 rounded-md text-info p-4 mb-4">
+                                            Donnez un titre à votre campagne pour finaliser sa création.
+                                        </p>
+                                    </>
+                                )}
+                                <fieldset className="fieldset w-full mb-4">
+                                    <legend className="fieldset-legend text-2xl">Titre de la campagne</legend>
                                     <input 
                                         type="text" className="input input-xl w-full"
                                         value={campaignTitle} onChange={(e) => setCampaignTitle(e.target.value)} 
-                                        disabled={disabledEditCampaignTitle}
+                                        disabled={disabledEditGlobal}
+                                    />
+                                </fieldset>
+
+                                <fieldset>
+                                    <legend className="fieldset-legend">Votre nom pour la campagne</legend>
+                                    <input 
+                                        type="text" className="input input-md w-full"
+                                        value={campaignProfile} onChange={(e) => setCampaignProfile(e.target.value)} 
+                                        disabled={disabledEditGlobal}
                                     />
                                 </fieldset>
                                 <div className="flex flex-row-reverse mt-5 gap-5">
                                     <button 
                                         className="btn btn-success text-success-content p-3"
-                                        disabled={disabledEditCampaignTitle}
-                                        onClick={() => updateCampaignTitle()}
+                                        disabled={disabledEditGlobal}
+                                        onClick={() => {
+                                            if (campaignId === -1) {
+                                                createCampaign()
+                                            } else {
+                                                updateCampaignTitle()
+                                            }
+                                        }}
                                     >
                                         Enregistrer
                                     </button>
                                     <button
                                         className={`btn btn-circle ${
-                                            disabledEditCampaignTitle === false ? "btn-primary btn-soft" : ""
+                                            disabledEditGlobal === false ? "btn-primary btn-soft" : ""
                                         }`}  
-                                        onClick={() => setDisableEditCampaignTitle(!disabledEditCampaignTitle)}
+                                        onClick={() => setDisableEditGlobal(!disabledEditGlobal)}
                                     >
                                         <Pen />
                                     </button>

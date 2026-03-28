@@ -11,15 +11,15 @@ def get_user_campaigns(db, user_id: int):
         )
         return cs.fetchall()
 
-
-def get_campaign_title(db, user_id: int, campaign_id: int):
+def get_campaign_global(db, user_id: int, campaign_id: int):
     with db.cursor() as cursor:
         cursor.execute(
             """
-            SELECT campaign_title
-            FROM campaigns
-            LEFT JOIN users_campaigns ON users_campaigns.campaign_id = campaigns.id
-            WHERE role = 'gm' AND user_id = %s AND campaign_id = %s;
+            SELECT c.campaign_title, uc.character_name, p.public_name 
+            FROM campaigns c
+            LEFT JOIN users_campaigns uc ON uc.campaign_id = c.id 
+            LEFT JOIN profiles p ON p.user_id = uc.user_id 
+            WHERE role IN ('gm', 'player') AND uc.user_id = %s AND campaign_id = %s;
             """,
             (user_id, campaign_id)
         )
