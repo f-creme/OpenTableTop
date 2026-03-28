@@ -32,3 +32,8 @@ export async function putCampaignGlobal(id: number, title: string, name: string)
     const res = await axiosInstance.put(`/campaigns/${id}/title`, {title, name});
     return res.data;
 }
+
+export async function postNewCampaign(title: string, name: string) {
+    const res = await axiosInstance.post(`/campaigns/create`, {title, name});
+    return res.data;
+}

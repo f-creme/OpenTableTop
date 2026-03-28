@@ -2,21 +2,23 @@
 import { useState, useEffect } from "react";
 import { useCampaign } from "../../context/CampaignContext";
 import { useProfile } from "../../context/ProfileContext";
-import { getCampaignGlobal, putCampaignGlobal } from "../../api/services/campaignServices";
+import { getCampaignGlobal, postNewCampaign, putCampaignGlobal } from "../../api/services/campaignServices";
 
 import type { CampaignGlobal } from "../../types/campaign";
 
 import CampaignMenu from "../../components/CampaignMenu"
 import { Pen } from "lucide-react";
-import { NavbarTransition } from "../../components/Transitions";
+import axios from "axios";
 
 export default function ManageCampaign() {
     const { campaignId } = useCampaign();
+    const { setCampaignId } = useCampaign();
     const { publicName } = useProfile();
     const { setPublicName } = useProfile();
     const [campaignTitle, setCampaignTitle] = useState<string>("");
 
     const [displayUpdateStatus, setDisplayUpdateStatus] = useState<"success" | "error" | null>(null)
+    const [error, setError] = useState<string | null>(null)
     const [disabledEditGlobal, setDisableEditGlobal] = useState<boolean>(true)
 
     // Load campaign general information
@@ -71,7 +73,18 @@ export default function ManageCampaign() {
             campaignTitle.length >= 35
         ) return;
 
-        console.log("Cr")
+        try {
+            if (publicName === null) return;
+            setError(null);
+            const res = await postNewCampaign(campaignTitle, publicName);
+            setCampaignId(res.campaignId);
+            setDisplayUpdateStatus("success");
+            setTimeout(() => setDisplayUpdateStatus(null), 3000);
+        } catch (err) {
+            if (axios.isAxiosError(err)) setError(err.response?.data?.detail);
+            setDisplayUpdateStatus("error");
+            setTimeout(() => setDisplayUpdateStatus(null), 5000);
+        }
     }
 
     const [view, setView] = useState<"general" | "users" | "episodes">("general");
@@ -141,7 +154,11 @@ export default function ManageCampaign() {
                                 {displayUpdateStatus === "error" && (
                                     <>
                                         <div className="bg-error/10 mt-10 p-4 rounded-xl text-error">
-                                            Une erreur est survenue lors de l'enregistrement.
+                                            <p>Une erreur est survenue lors de l'enregistrement.</p>
+                                        
+                                        {error !== null && (
+                                            <p><br/>Détails: {error}</p>
+                                        )}
                                         </div>
                                     </>                                    
                                 )}   

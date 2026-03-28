@@ -44,3 +44,19 @@ def update_campaign_global(db, user_id: int, campaign_id: int, title: str, chara
             """,
             (character_name, campaign_id, user_id)
         )
+
+
+def create_campaign(db, user_id: int, title: str, character_name: str):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO campaigns (campaign_title) VALUES (%s) RETURNING id;",
+            (title, )
+        )
+        campaign_id = cursor.fetchall()[0]["id"]
+
+        cursor.execute(
+            "INSERT INTO users_campaigns (campaign_id, user_id, role, character_name) " \
+            "VALUES (%s, %s, 'gm', %s);",
+            (campaign_id, user_id, character_name)
+        )
+        return campaign_id

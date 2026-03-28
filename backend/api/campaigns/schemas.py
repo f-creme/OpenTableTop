@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
-class UpdateCampaignGlobalRequest(BaseModel):
+class CampaignGlobalRequest(BaseModel):
     title: str
     name: str

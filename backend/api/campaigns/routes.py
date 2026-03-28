@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 import psycopg2
-
+from psycopg2 import errors
 from db.db import get_db
 from api.dependencies.auth import get_current_user_id
-from api.campaigns.schemas import UpdateCampaignGlobalRequest
+from api.campaigns.schemas import CampaignGlobalRequest
 from api.campaigns import repository
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
@@ -31,11 +31,25 @@ def get_campaign_global(campaign_id: int, user_id: int = Depends(get_current_use
 
 
 @router.put("/{campaign_id}/title")
-def update_campaign_global(campaign_id: int, data: UpdateCampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+def update_campaign_global(campaign_id: int, data: CampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
     try:
         repository.update_campaign_global(db, user_id, campaign_id, data.title, data.name)
         db.commit()
         return {"message": "database update"}
 
     except Exception:
-        raise HTTPException(status_code=400, detail="Unable to update campaign title")
+        raise HTTPException(status_code=400, detail="Unable to update campaign information")
+    
+@router.post("/create")
+def create_campaign(data: CampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+    try:
+        new_campaign_id = repository.create_campaign(db, user_id, data.title, data.name)
+        db.commit()
+        return {"message": "campaign created", "campaignId": new_campaign_id}
+    
+    except errors.UniqueViolation:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="A campaign with this title already exists.")
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Unable to create campaign: {e}.")
