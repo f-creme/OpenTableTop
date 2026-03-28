@@ -11,6 +11,7 @@ import Inventory from "./pages/player/Inventory"
 import Players from "./pages/gm/Players"
 import ProtectedRoute from "./components/ProtectedRoute"
 import TableDev from "./pages/TableDev"
+import ManageCampaign from "./pages/gm/ManageCampaign";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route path="player/character-sheet" element={<CharacterSheet />} />
               <Route path="player/inventory" element={<Inventory />} />
               <Route path="mj/players" element={<Players />} />
+              <Route path="mj/campaign" element={<ManageCampaign />} />
 
               {/* DEV SECTION */}
               <Route path="dev" element={<TableDev />} />

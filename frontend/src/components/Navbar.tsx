@@ -53,9 +53,15 @@ export default function Navbar() {
             </Link>
 
             {role === "mj" && (
-              <Link className="btn btn-ghost text-md" to="/room/mj/players">
-                {t("component.navbar.players")}
-              </Link>
+            <>
+                <Link className="btn btn-ghost text-md" to="/room/mj/campaign">
+                  {t("component.navbar.campaign")}
+                </Link>
+                
+                <Link className="btn btn-ghost text-md" to="/room/mj/players">
+                  {t("component.navbar.players")}
+                </Link>
+              </>
             )}
 
             {role === "player" && (
@@ -86,7 +92,10 @@ export default function Navbar() {
               <li className="font-medium"><Link to="/room/table"><Dice3 className="h-4 w-4 stroke-2" /> {t("component.navbar.table")}</Link></li>
 
               {role === "mj" && (
-                <li className="font-medium"><Link to="/room/mj/players"><UsersRound className="h-4 w-4 stroke-2" /> {t("component.navbar.players")}</Link></li>
+                <>
+                  <li className="font-medium"><Link to="/room/mj/campaign"><UsersRound className="h-4 w-4 stroke-2" /> {t("component.navbar.campaign")}</Link></li>
+                  <li className="font-medium"><Link to="/room/mj/players"><UsersRound className="h-4 w-4 stroke-2" /> {t("component.navbar.players")}</Link></li>
+                </>
               )}
 
               {role === "player" && (
