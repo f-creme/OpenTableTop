@@ -32,7 +32,7 @@ export default function Navbar() {
 
           {/* Left part */}
           <div className="flex-1">
-            <a className="btn btn-ghost text-xl">{t("global.app-title")}</a>
+            <Link className="btn btn-ghost text-xl" to="/room/role-selection">{t("global.app-title")}</Link>
           </div>
 
           {/* Menu for mobile devices */}
