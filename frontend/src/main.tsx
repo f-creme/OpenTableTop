@@ -7,12 +7,15 @@ import "./i18n"
 
 import './index.css'
 import { CampaignProvider } from "./context/CampaignContext"
+import { ProfileProvider } from "./context/ProfileContext"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <AuthProvider>
       <LanguageProvider>
           <CampaignProvider>
-            <App />
+            <ProfileProvider>
+              <App />
+            </ProfileProvider>
           </CampaignProvider>
       </LanguageProvider>
   </AuthProvider>
