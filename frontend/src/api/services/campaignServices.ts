@@ -28,11 +28,7 @@ export async function getCampaignGlobal(id: number) {
     return res.data.map(mapCampaignGlobal)[0];
 }
 
-export async function putCampaignTitle(id: number, title: string) {
-    const res = await axiosInstance.put(`/campaigns/${id}/title`, {title});
+export async function putCampaignGlobal(id: number, title: string, name: string) {
+    const res = await axiosInstance.put(`/campaigns/${id}/title`, {title, name});
     return res.data;
 }
-
-// export async function postCampaign({ title, profile }: { title: string, profile: string }) {
-//     return;
-// }

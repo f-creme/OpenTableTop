@@ -26,17 +26,21 @@ def get_campaign_global(db, user_id: int, campaign_id: int):
         return cursor.fetchall()
 
 
-def update_campaign_title(db, user_id: int, campaign_id: int, title: str):
+def update_campaign_global(db, user_id: int, campaign_id: int, title: str, character_name: str):
     with db.cursor() as cursor:
         cursor.execute(
             """
-            UPDATE campaigns
-            SET campaign_title = %s
-            FROM users_campaigns
-            WHERE users_campaigns.campaign_id = campaigns.id
-              AND role = 'gm'
-              AND user_id = %s
-              AND campaign_id = %s;
+            UPDATE campaigns SET campaign_title = %s 
+            FROM users_campaigns WHERE users_campaigns.campaign_id = campaigns.id
+            AND role = 'gm' AND user_id = %s AND campaign_id = %s;
             """,
             (title, user_id, campaign_id)
+        )
+
+        cursor.execute(
+            """
+            UPDATE users_campaigns SET character_name = %s 
+            WHERE campaign_id = %s AND user_id = %s AND role = 'gm';
+            """,
+            (character_name, campaign_id, user_id)
         )

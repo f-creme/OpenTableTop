@@ -2,20 +2,21 @@
 import { useState, useEffect } from "react";
 import { useCampaign } from "../../context/CampaignContext";
 import { useProfile } from "../../context/ProfileContext";
-import { getCampaignGlobal, putCampaignTitle } from "../../api/services/campaignServices";
+import { getCampaignGlobal, putCampaignGlobal } from "../../api/services/campaignServices";
 
 import type { CampaignGlobal } from "../../types/campaign";
 
 import CampaignMenu from "../../components/CampaignMenu"
 import { Pen } from "lucide-react";
+import { NavbarTransition } from "../../components/Transitions";
 
 export default function ManageCampaign() {
     const { campaignId } = useCampaign();
     const { publicName } = useProfile();
     const { setPublicName } = useProfile();
     const [campaignTitle, setCampaignTitle] = useState<string>("");
-    const [campaignProfile, setCampaignProfile] = useState<string>("");
 
+    const [displayUpdateStatus, setDisplayUpdateStatus] = useState<"success" | "error" | null>(null)
     const [disabledEditGlobal, setDisableEditGlobal] = useState<boolean>(true)
 
     // Load campaign general information
@@ -41,7 +42,7 @@ export default function ManageCampaign() {
     }, [campaignId]);
 
     // Update campaign global
-    const updateCampaignTitle = async () => {
+    const updateCampaignGlobal = async () => {
         if (
             campaignId === null ||
             campaignId < 0 ||
@@ -50,10 +51,14 @@ export default function ManageCampaign() {
         ) return;
 
         try {
-            const res = await putCampaignTitle(campaignId, campaignTitle);
-            console.log(res);
+            if (publicName === null) return;
+            await putCampaignGlobal(campaignId, campaignTitle, publicName);
+            setDisplayUpdateStatus("success");
+            setTimeout(() => setDisplayUpdateStatus(null), 3000);
         } catch (err) {
             console.error(err);
+            setDisplayUpdateStatus("error");
+            setTimeout(() => setDisplayUpdateStatus(null), 5000);
         }
     };
 
@@ -99,7 +104,7 @@ export default function ManageCampaign() {
                                     <legend className="fieldset-legend">Votre nom pour la campagne</legend>
                                     <input 
                                         type="text" className="input input-md w-full"
-                                        value={campaignProfile} onChange={(e) => setCampaignProfile(e.target.value)} 
+                                        value={publicName as string} onChange={(e) => setPublicName(e.target.value)} 
                                         disabled={disabledEditGlobal}
                                     />
                                 </fieldset>
@@ -111,7 +116,7 @@ export default function ManageCampaign() {
                                             if (campaignId === -1) {
                                                 createCampaign()
                                             } else {
-                                                updateCampaignTitle()
+                                                updateCampaignGlobal()
                                             }
                                         }}
                                     >
@@ -125,7 +130,21 @@ export default function ManageCampaign() {
                                     >
                                         <Pen />
                                     </button>
-                                </div>    
+                                </div> 
+                                {displayUpdateStatus === "success" && (
+                                    <>
+                                        <div className="bg-success/10 mt-10 p-4 rounded-xl text-success">
+                                            Enregistrement réussi !
+                                        </div>
+                                    </>
+                                )}
+                                {displayUpdateStatus === "error" && (
+                                    <>
+                                        <div className="bg-error/10 mt-10 p-4 rounded-xl text-error">
+                                            Une erreur est survenue lors de l'enregistrement.
+                                        </div>
+                                    </>                                    
+                                )}   
                             </div>
                         </>
                     )}

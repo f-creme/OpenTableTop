@@ -3,7 +3,7 @@ import psycopg2
 
 from db.db import get_db
 from api.dependencies.auth import get_current_user_id
-from api.campaigns.schemas import UpdateTitleRequest
+from api.campaigns.schemas import UpdateCampaignGlobalRequest
 from api.campaigns import repository
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
@@ -21,7 +21,7 @@ def get_user_campaigns(user_id: int = Depends(get_current_user_id), db=Depends(g
 
 
 @router.get("/{campaign_id}/global")
-def get_campaign_title(campaign_id: int, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+def get_campaign_global(campaign_id: int, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
     result = repository.get_campaign_global(db, user_id, campaign_id)
     return [{
         "campaign_title": result[0]["campaign_title"], 
@@ -31,9 +31,9 @@ def get_campaign_title(campaign_id: int, user_id: int = Depends(get_current_user
 
 
 @router.put("/{campaign_id}/title")
-def update_campaign_title(campaign_id: int, data: UpdateTitleRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+def update_campaign_global(campaign_id: int, data: UpdateCampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
     try:
-        repository.update_campaign_title(db, user_id, campaign_id, data.title)
+        repository.update_campaign_global(db, user_id, campaign_id, data.title, data.name)
         db.commit()
         return {"message": "database update"}
 
