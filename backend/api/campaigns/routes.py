@@ -41,3 +41,48 @@ def get_user_campaigns(credentials: HTTPAuthorizationCredentials = Depends(secur
 
     except psycopg2.Error as e: 
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/get_title")
+def get_campaign_title(id: int, credentials: HTTPAuthorizationCredentials = Depends(security), db=Depends(get_db)):
+    try: 
+        payload = decode_token(credentials.credentials)
+        user_id = payload["user_id"]
+    except Exception:
+        raise HTTPException(status_code=410, detail="Invalid token")
+    
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT campaign_title FROM campaigns " \
+            "LEFT JOIN users_campaigns ON users_campaigns.campaign_id = campaigns.id " \
+            "WHERE role = 'gm' AND user_id = %s AND campaign_id = %s;",
+            (user_id, id)
+        )
+        response = cursor.fetchall()
+    return response
+
+class UpdateTitleRequest(BaseModel):
+    id: int
+    title: str
+
+@router.put("/update_title")
+def update_campaign_title(data: UpdateTitleRequest, credentials: HTTPAuthorizationCredentials = Depends(security), db=Depends(get_db)):
+    try: 
+        payload = decode_token(credentials.credentials)
+        user_id = payload["user_id"]
+    except Exception:
+        raise HTTPException(status_code=410, detail="Invalid token")
+    
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                "UPDATE campaigns SET campaign_title = %s " \
+                "FROM users_campaigns WHERE users_campaigns.campaign_id = campaigns.id " \
+                "AND role = 'gm' AND user_id = %s AND campaign_id = %s;",
+                (data.title, user_id, data.id)
+            )
+        db.commit()
+
+    except Exception:
+        raise HTTPException(status_code=400, detail="Unable to update campaign title")
+    
+    return {"message": "database update"}
