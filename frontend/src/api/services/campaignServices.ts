@@ -14,14 +14,12 @@ export async function getCampaigns() {
     return res.data.map(mapCampaign)
 }
 
-export async function getCampaignTitle({ id }: { id: number }) {
-    const res = await axiosInstance.get("/campaigns/get_title", {
-        params: { id }
-    });
-    return res.data[0].campaign_title
+export async function getCampaignTitle(id: number) {
+    const res = await axiosInstance.get(`/campaigns/${id}/title`);
+    return res.data[0].campaign_title;
 }
 
-export async function putCampaignTitle({ id, title, }: { id: number, title: string }) {
-    const res = await axiosInstance.put("/campaigns/update_title", { id, title, });
-    return res.data
+export async function putCampaignTitle(id: number, title: string) {
+    const res = await axiosInstance.put(`/campaigns/${id}/title`, {title});
+    return res.data;
 }

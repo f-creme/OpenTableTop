@@ -1,88 +1,37 @@
-from fastapi import APIRouter, HTTPException, Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException
 import psycopg2
 
 from db.db import get_db
-from api.auth.auth_utils import decode_token
+from api.dependencies.auth import get_current_user_id
+from api.campaigns.schemas import UpdateTitleRequest
+from api.campaigns import repository
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
-security = HTTPBearer()
+
 
 @router.get("/")
-def get_user_campaigns(credentials: HTTPAuthorizationCredentials = Depends(security), db=Depends(get_db)):
+def get_user_campaigns(user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
     try:
-        payload = decode_token(credentials.credentials)
-        user_id = payload["user_id"]
-        
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    
-    try:
-        with db.cursor() as cs:
-            cs.execute(
-                "SELECT campaign_id, campaign_title, user_id, " \
-                "username, users_campaigns.role FROM users_campaigns " \
-                "LEFT JOIN campaigns ON campaigns.id = users_campaigns.campaign_id " \
-                "LEFT JOIN users ON users.id = users_campaigns.user_id " \
-                "WHERE user_id = %s;",
-                (user_id, )
-            )
-            user_campaigns = cs.fetchall()
-            response = [
-                {
-                    "id": v["campaign_id"],
-                    "title": v["campaign_title"],
-                    "user_role": v["role"] 
-                } for v in user_campaigns
-            ]
+        campaigns = repository.get_user_campaigns(db, user_id)
 
-            return response
+        return [{"id": c["campaign_id"], "title": c["campaign_title"], "user_role": c["role"]} for c in campaigns]
 
-    except psycopg2.Error as e: 
+    except psycopg2.Error as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/get_title")
-def get_campaign_title(id: int, credentials: HTTPAuthorizationCredentials = Depends(security), db=Depends(get_db)):
-    try: 
-        payload = decode_token(credentials.credentials)
-        user_id = payload["user_id"]
-    except Exception:
-        raise HTTPException(status_code=410, detail="Invalid token")
-    
-    with db.cursor() as cursor:
-        cursor.execute(
-            "SELECT campaign_title FROM campaigns " \
-            "LEFT JOIN users_campaigns ON users_campaigns.campaign_id = campaigns.id " \
-            "WHERE role = 'gm' AND user_id = %s AND campaign_id = %s;",
-            (user_id, id)
-        )
-        response = cursor.fetchall()
-    return response
 
-class UpdateTitleRequest(BaseModel):
-    id: int
-    title: str
+@router.get("/{campaign_id}/title")
+def get_campaign_title(campaign_id: int, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+    result = repository.get_campaign_title(db, user_id, campaign_id)
+    return result
 
-@router.put("/update_title")
-def update_campaign_title(data: UpdateTitleRequest, credentials: HTTPAuthorizationCredentials = Depends(security), db=Depends(get_db)):
-    try: 
-        payload = decode_token(credentials.credentials)
-        user_id = payload["user_id"]
-    except Exception:
-        raise HTTPException(status_code=410, detail="Invalid token")
-    
+
+@router.put("/{campaign_id}/title")
+def update_campaign_title(campaign_id: int, data: UpdateTitleRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
     try:
-        with db.cursor() as cursor:
-            cursor.execute(
-                "UPDATE campaigns SET campaign_title = %s " \
-                "FROM users_campaigns WHERE users_campaigns.campaign_id = campaigns.id " \
-                "AND role = 'gm' AND user_id = %s AND campaign_id = %s;",
-                (data.title, user_id, data.id)
-            )
+        repository.update_campaign_title(db, user_id, campaign_id, data.title)
         db.commit()
+        return {"message": "database update"}
 
     except Exception:
         raise HTTPException(status_code=400, detail="Unable to update campaign title")
-    
-    return {"message": "database update"}

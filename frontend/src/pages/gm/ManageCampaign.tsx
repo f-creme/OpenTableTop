@@ -14,24 +14,35 @@ export default function ManageCampaign() {
 
     // Load campaign general information
     useEffect(() => {
-        if (campaignId !== null) {
-            getCampaignTitle({id: campaignId})
-                .then((res) => setCampaignTitle(res))
-                .catch((err) => console.log(err))
+        if (campaignId === null) return;
+
+        const fetchTitle = async () => {
+            try {
+                const title = await getCampaignTitle(campaignId);
+                setCampaignTitle(title);
+            } catch (err) {
+                console.error(err);
+            }
         };
+
+        fetchTitle();
     }, [campaignId]);
 
     // Update campaign general information
-    const updateCampaignTitle = () => {
-        if (campaignTitle.length < 35 && campaignTitle.length > 0 && campaignId !== null) {
-            putCampaignTitle({
-                id: campaignId,
-                title: campaignTitle
-            })
-                .then((res) => console.log(res))
-                .catch((err) => console.log(err))
+    const updateCampaignTitle = async () => {
+        if (
+            campaignId === null ||
+            campaignTitle.length === 0 ||
+            campaignTitle.length >= 35
+        ) return;
+
+        try {
+            const res = await putCampaignTitle(campaignId, campaignTitle);
+            console.log(res);
+        } catch (err) {
+            console.error(err);
         }
-    }
+    };
 
     const [view, setView] = useState<"general" | "users" | "episodes">("general");
 
