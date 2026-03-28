@@ -98,7 +98,7 @@ export default function RoleSelection() {
                                     <option key={c.id} value={c.id}>{c.title}</option>
                                 ))
                             )}
-                            <option key={-1} value={-1}><CirclePlus className="h-4 w-4"/> Créer une campagne</option>
+                            <option key={-1} value={-1}><CirclePlus className="h-4 w-4"/>{t("page.role-selection.selector.campaign.create")}</option>
                         </select>
 
                         <div className="flex flex-col gap-4 sm:flex-row sm:gap-10">

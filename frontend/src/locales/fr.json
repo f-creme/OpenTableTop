@@ -15,6 +15,7 @@
         "navbar": {
             "table": "Table de jeu",
             "players": "Joueurs",
+            "campaign": "Campagne",
             "character-sheet": "Fiche Personnage",
             "inventory": "Inventaire",
             "dev": "Développement",
@@ -36,7 +37,12 @@
         }, 
 
         "role-selection": {
-            "caption": "Rejoignez la table de jeu en tant que :",
+            "caption": "Sélectionnez une campagne et rejoignez la table de jeu :",
+            "selector": {
+                "campaign": {
+                    "create": "Créer une nouvelle campagne"
+                }
+            },
             "role": {
                 "player": "Joueur",
                 "master": "Maître du jeu"
