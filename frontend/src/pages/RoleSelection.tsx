@@ -13,9 +13,12 @@ import BackgroundDice from "../components/BackgroundDice";
 import { getCampaigns } from "../api/services/campaignServices";
 import type { Campaign } from "../types/campaign";
 import { useCampaign } from "../context/CampaignContext";
+import { useProfile } from "../context/ProfileContext";
+import { getProfile } from "../api/services/authServices";
 
 export default function RoleSelection() {
     const { setRole } = useRole();
+    const { setPublicName } = useProfile();
     const navigate = useNavigate();
     const { t } = useTranslation();
     const { setCampaignId } = useCampaign();
@@ -33,6 +36,18 @@ export default function RoleSelection() {
             navigate("/room/table");
         }
     };
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const res = await getProfile();
+                setPublicName(res.publicName);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchProfile()
+    }, []);
 
     // Load campaigns
     useEffect(() => {

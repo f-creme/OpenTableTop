@@ -7,6 +7,8 @@ from db.db import get_db
 from api.auth.auth_utils import (
     hash_password, verify_password, create_token, decode_token
 )
+from api.dependencies.auth import get_current_user_id
+
 
 class LoginRequest(BaseModel):
     username: str
@@ -84,3 +86,16 @@ def me(credentials: HTTPAuthorizationCredentials = Depends(security)):
         return payload
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
+    
+@router.get("/public")
+def get_public_profile(user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                "SELECT public_name FROM profiles WHERE user_id = %s;",
+                (user_id, )
+            )
+            response = cursor.fetchone()
+            return {"publicName": response["public_name"]} 
+    except:
+        HTTPException(status_code=401, detail="Invalid credentials")
