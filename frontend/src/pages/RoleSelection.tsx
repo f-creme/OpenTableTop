@@ -24,7 +24,11 @@ export default function RoleSelection() {
 
     const chooseRole = (role: "mj" | "player") => {
         setRole(role)
-        navigate("/room/table")
+        if ( selectedCampaign < 0 ) {
+            navigate("/room/mj/campaign")
+        } else {
+            navigate("/room/table")
+        }
     }
 
     const [campaigns, setCampaigns] = useState<Campaign[] | null>(null);
@@ -63,7 +67,7 @@ export default function RoleSelection() {
     }, [selectedCampaign])
 
     useEffect(() => {
-        if (selectedCampaign > 0) {
+        if (selectedCampaign !== 0) {
             setCampaignId(selectedCampaign);
         }
     }, [selectedCampaign]);
