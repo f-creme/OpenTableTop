@@ -15,6 +15,7 @@ class LoginRequest(BaseModel):
 class RegisterRequest(BaseModel):
     username: str
     password: str
+    public_name: str
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 security = HTTPBearer()
@@ -22,17 +23,26 @@ security = HTTPBearer()
 @router.post("/register")
 def register(data: RegisterRequest, db=Depends(get_db)):
     cs = db.cursor()
-
     try: 
+        # Create user and get his/her id
         cs.execute(
-            "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
+            "INSERT INTO users (username, password_hash) VALUES (%s, %s) RETURNING id;",
             (data.username, hash_password(data.password))
         )
+        user_id = cs.fetchone()["id"]
+
+        # Create profile
+        cs.execute(
+            "INSERT INTO profiles (user_id, public_name) VALUES (%s, %s);",
+            (user_id, data.public_name)
+        )
         db.commit()
+
     except:
+        db.rollback()
         raise HTTPException(status_code=400, detail="User already exists")
-    
-    cs.close()
+    finally:
+        cs.close()
     return {"message": "User created"}
 
 @router.post("/login")
