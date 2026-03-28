@@ -37,6 +37,7 @@
         }, 
 
         "role-selection": {
+            "welcome": "Bienvenue",
             "caption": "Sélectionnez une campagne et rejoignez la table de jeu :",
             "selector": {
                 "campaign": {

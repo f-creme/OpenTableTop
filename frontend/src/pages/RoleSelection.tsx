@@ -19,6 +19,7 @@ import { getProfile } from "../api/services/authServices";
 export default function RoleSelection() {
     const { setRole } = useRole();
     const { setPublicName } = useProfile();
+    const { publicName } = useProfile()
     const navigate = useNavigate();
     const { t } = useTranslation();
     const { setCampaignId } = useCampaign();
@@ -92,15 +93,15 @@ export default function RoleSelection() {
             <NavbarTransition>
                 <BackgroundDice />
                 <div className="flex-1 flex flex-col items-center">
-                    <img src={logo} alt="OpenTableTop Logo" className="w-70 h-70 mt-15" />
+                    <img src={logo} alt="OpenTableTop Logo" className="w-50 h-50 mt-15" />
 
-                    <p className="text-4xl font-bold text-center">
+                    <p className="text-3xl font-bold text-center">
                         {t("global.app-title")}
                     </p>
-                    <p className="text text-sm text-center p-1">
+                    <p className="text text-xs text-center p-1">
                         {t("global.app-subtitle")}
                     </p>
-
+                    <p className="text text-4xl mt-10">{t("page.role-selection.welcome")} {publicName} !</p>
                     <div className="w-2/3 flex flex-col gap-4 my-10 bg-base-200 p-5 rounded-2xl shadow-xl">
 
                         <div className="flex justify-center">
