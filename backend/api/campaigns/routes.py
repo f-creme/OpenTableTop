@@ -29,8 +29,15 @@ def get_user_campaigns(credentials: HTTPAuthorizationCredentials = Depends(secur
                 (user_id, )
             )
             user_campaigns = cs.fetchall()
+            response = [
+                {
+                    "id": v["campaign_id"],
+                    "title": v["campaign_title"],
+                    "user_role": v["role"] 
+                } for v in user_campaigns
+            ]
+
+            return response
 
     except psycopg2.Error as e: 
         raise HTTPException(status_code=500, detail=str(e))
-    
-    return user_campaigns
