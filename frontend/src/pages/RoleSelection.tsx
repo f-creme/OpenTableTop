@@ -8,7 +8,7 @@ import Footer from "../components/Footer";
 import { NavbarTransition } from "../components/Transitions";
 
 import logo from "../assets/logo.webp";
-import { CirclePlus, Crown, Dice5 } from "lucide-react";
+import { Crown, Dice5 } from "lucide-react";
 import BackgroundDice from "../components/BackgroundDice";
 import { getCampaigns } from "../api/services/campaignServices";
 import type { Campaign } from "../types/campaign";
@@ -106,7 +106,6 @@ export default function RoleSelection() {
                                 </option>
                             ))}
                             <option key={-1} value={-1}>
-                                <CirclePlus className="h-4 w-4" />
                                 {t("page.role-selection.selector.campaign.create")}
                             </option>
                         </select>
