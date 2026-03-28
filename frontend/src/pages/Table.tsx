@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import { useRole } from "../context/RoleContext"
+import { useCampaign } from "../context/CampaignContext";
 // import { useTranslation } from "react-i18next";
 
 import DiceMenu from "../components/DiceMenu";
@@ -14,6 +15,7 @@ import MapDisplay from "../components/MapDisplay";
 const Table = () => {
     // const { t } = useTranslation();
     const { role } = useRole();
+    const { campaignId } = useCampaign();
 
     const apiURL = import.meta.env.VITE_API_URL;
     const api = axios.create({ baseURL: apiURL });
@@ -35,10 +37,12 @@ const Table = () => {
 
     // WebSocket
     useEffect(() => {
-        const ws = new WebSocket(`${apiURL.replace("http", "ws")}/table_ws/ws`);
+        if (!campaignId) return;
+
+        const ws = new WebSocket(`${apiURL.replace("http", "ws")}/table_ws/ws/${campaignId}`);
         wsRef.current = ws;
 
-        ws.onopen = () => console.log("Connected to table WebSocket");
+        ws.onopen = () => console.log(`Connected to table WebSocket ${campaignId}`);
         
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -50,11 +54,11 @@ const Table = () => {
                 handleDiceResult(data);
             };
         };
-        ws.onclose = () => console.log("Disconnected from table WebSocket");
+        ws.onclose = () => console.log(`Disconnected to table WebSocket ${campaignId}`);
         ws.onerror = (err) => console.error("WebSocket error:", err);
 
         return () => ws.close();
-    }, []);
+    }, [campaignId]);
 
     const changeMap = (mapName: string) => {
         wsRef.current?.send(JSON.stringify({ type: "map_change", selected_map: mapName }));

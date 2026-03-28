@@ -1,5 +1,5 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from typing import List
+from typing import List, Dict
 import random
 
 router = APIRouter(prefix="/table_ws", tags=["table_ws"])
@@ -55,11 +55,18 @@ class ConnectionManager:
 
         await self.broadcast(message)
 
+# Dictionnary to store a connection manager per campaign 
+campaign_managers: Dict[int, ConnectionManager] = {}
 
-manager = ConnectionManager()
+def get_manager(campaign_id: int) -> ConnectionManager:
+    if campaign_id not in campaign_managers:
+        campaign_managers[campaign_id] = ConnectionManager()
+    return campaign_managers[campaign_id]
 
-@router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+# Websocket endpoint per campaign
+@router.websocket("/ws/{campaign_id}")
+async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
+    manager = get_manager(campaign_id)
     await manager.connect(websocket)
 
     try:
