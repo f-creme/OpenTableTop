@@ -31,7 +31,7 @@ export default function RoleSelection() {
 
     const chooseRole = (role: "mj" | "player") => {
         setRole(role);
-        if (selectedCampaign < 0) {
+        if (role === "mj") {
             navigate("/room/mj/campaign");
         } else {
             navigate("/room/table");
