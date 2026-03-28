@@ -10,7 +10,16 @@ interface CampaignContextType {
 const CampaignContext = createContext<CampaignContextType | undefined>(undefined);
 
 export function CampaignProvider({ children }: { children: ReactNode }) {
-    const [campaignId, setCampaignId] = useState<number | null>(null);
+    // On initialise à partir de localStorage si disponible
+    const [campaignId, setCampaignIdState] = useState<number | null>(() => {
+        const saved = localStorage.getItem("campaignId");
+        return saved ? Number(saved) : null;
+    });
+
+    const setCampaignId = (id: number) => {
+        setCampaignIdState(id);
+        localStorage.setItem("campaignId", String(id));
+    };
 
     return (
         <CampaignContext.Provider value={{ campaignId, setCampaignId }}>
