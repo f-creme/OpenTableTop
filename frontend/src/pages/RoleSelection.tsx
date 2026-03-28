@@ -12,12 +12,15 @@ import { CirclePlus, Crown, Dice5 } from "lucide-react";
 import BackgroundDice from "../components/BackgroundDice";
 import { getCampaigns } from "../api/services/campaignServices";
 import type { Campaign } from "../types/campaign";
+import { useCampaign } from "../context/CampaignContext";
 
 
 export default function RoleSelection() {
     const { setRole } = useRole()
     const navigate = useNavigate()
     const { t } = useTranslation()
+    const { setCampaignId } = useCampaign();
+
 
     const chooseRole = (role: "mj" | "player") => {
         setRole(role)
@@ -58,6 +61,12 @@ export default function RoleSelection() {
             }
         }
     }, [selectedCampaign])
+
+    useEffect(() => {
+        if (selectedCampaign > 0) {
+            setCampaignId(selectedCampaign);
+        }
+    }, [selectedCampaign]);
 
     return (
         <div className="min-h-screen flex flex-col">
