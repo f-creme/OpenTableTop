@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useCampaign } from "../context/CampaignContext";
 import { getMaps } from "../api/services/mapServices";
 
 export const useMaps = () => {
+    const { campaignId } = useCampaign()
     const [maps, setMaps] = useState<string[]>([]);
     const [selectedMap, setSelectedMap] = useState<string | null>(null);
 
     useEffect(() => {
-        getMaps()
+        if (!campaignId) return;
+        getMaps(campaignId)
             .then((maps) => {
                 setMaps(maps);
 

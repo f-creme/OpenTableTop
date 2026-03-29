@@ -2,10 +2,11 @@
 
 interface MapDisplayProps {
   apiURL: string;
+  campaignId: number;
   selectedMap: string | null;
 }
 
-const MapDisplay = ({ apiURL, selectedMap }: MapDisplayProps) => {
+const MapDisplay = ({ apiURL, campaignId, selectedMap }: MapDisplayProps) => {
   if (!selectedMap) return <p>No map selected</p>;
 
   return (
@@ -15,7 +16,7 @@ const MapDisplay = ({ apiURL, selectedMap }: MapDisplayProps) => {
                       before:bg-[radial-gradient(circle,transparent_60%,rgba(0,0,0,0.15))]
                       before:pointer-events-none">
         <img
-          src={`${apiURL}/maps/${selectedMap}`}
+          src={`${apiURL}/maps/${campaignId}/${selectedMap}`}
           alt={selectedMap}
           className="max-w-[70vw] max-h-[70vh] object-contain rounded"
         />

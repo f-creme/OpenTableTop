@@ -73,7 +73,7 @@ const Table = () => {
                 <DiceResults {...dice} />
 
                 <div className="flex-1 flex items-center justify-center min-h-0">
-                    <MapDisplay apiURL={apiURL} selectedMap={selectedMap} />
+                    <MapDisplay apiURL={apiURL} selectedMap={selectedMap} campaignId={Number(campaignId)} />
                 </div>
 
             </div>
