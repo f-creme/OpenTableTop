@@ -7,19 +7,25 @@ type Props = {
     usersList: CampaignUsers[];
     setUsersList: Dispatch<SetStateAction<CampaignUsers[]>>;
     onLoad: () => void;
-    onRemove: (idCampaignUser: number) => void
+    onRemove: (idCampaignUser: number) => void;
+    newParticipant: string;
+    setNewParticipant: (name: string) => void;
+    onAddParticipant: (userName: string) => void
 }
 
 const CampaignUsersForm: FC<Props> = ({
     usersList,
     onLoad,
-    onRemove
+    onRemove,
+    newParticipant, 
+    setNewParticipant,
+    onAddParticipant
 }) => {
     return (
         <div className="flex flex-col">
             <p className="text-4xl text-center font-semibold p-5 mb-5">Participants</p>
             <div className="flex flex-row justify-between items-center mb-5 p-4">
-                <div className="text-lg font-medium">Liste des participants</div>
+                <div className="text-xl font-medium">Liste des participants</div>
                 <button className="btn btn-primary" onClick={onLoad}>Actualiser la liste</button>
             </div>
             <div className="bg-base-200 rounded-2xl px-4 divide-y divide-primary/30 w-full">
@@ -56,6 +62,28 @@ const CampaignUsersForm: FC<Props> = ({
                         </div>
                     ))
                 )}
+            </div>
+            <div className="flex flex-col mt-5 mb-5 p-4">
+                <div className="text-xl font-medium">Ajouter un participant</div>
+                <p>Recherchez un utilisateur et ajoutez le comme participant à votre campagne</p>
+                <div className="flex flex-row gap-4 mt-4 items-baseline-last">
+                    <fieldset className="w-2/3">
+                        <legend className="fieldset-legend">Nom du joueur</legend>
+                        <input 
+                            type="text" className="input w-full"
+                            value={newParticipant}
+                            onChange={(e) => setNewParticipant(e.target.value)}
+                        ></input>
+                    </fieldset>
+                    <button 
+                        className="btn btn-primary w-1/3" 
+                        onClick={() => {
+                            if(confirm("Ajouter ce participant ?")) {
+                                onAddParticipant(newParticipant)
+                            }
+                        }}
+                    >Ajouter aux participants</button>
+                </div>
             </div>
         </div>
     )

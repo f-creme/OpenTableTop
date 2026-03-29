@@ -25,6 +25,9 @@ export default function ManageCampaign() {
         setUsersList, 
         loadUsers,
         removeUser, 
+        newParticipant,
+        setNewParticipant, 
+        addParticipant
     } = useCampaignUsers();
 
     const [view, setView] = useState<"general" | "users" | "episodes">("general");
@@ -57,10 +60,13 @@ export default function ManageCampaign() {
                     )}
                     {view === "users" && (
                         <CampaignUsersForm
-                            usersList={ usersList }
-                            setUsersList={ setUsersList }
-                            onLoad={ loadUsers }
-                            onRemove={ removeUser }
+                            usersList={usersList}
+                            setUsersList={setUsersList}
+                            onLoad={loadUsers}
+                            onRemove={removeUser}
+                            newParticipant={newParticipant}
+                            setNewParticipant={setNewParticipant}
+                            onAddParticipant={addParticipant}
                         />
                     )}
                     {view === "episodes" && <div>Episodes</div>}

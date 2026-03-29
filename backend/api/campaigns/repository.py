@@ -87,4 +87,18 @@ def get_campaign_users(db, campaign_id: int):
 def remove_user_from_campaign(db, user_campaign_id: int):
     with db.cursor() as cursor:
         cursor.execute("DELETE FROM users_campaigns WHERE id = %s", (user_campaign_id, ))
-        
+
+def find_user(db, public_name: str):
+    with db.cursor() as cursor:
+        cursor.execute("SELECT user_id FROM profiles WHERE public_name = %s;", (public_name, ))
+        response = cursor.fetchone()
+        return response["user_id"]
+    
+def add_user_to_campaign(db, participant_user_id: int, campaign_id: int, participant_public_name: str):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO users_campaigns "
+            "(user_id, campaign_id, character_name, role) VALUES " \
+            "(%s, %s, %s, 'player');",
+            (participant_user_id, campaign_id, participant_public_name)
+        )

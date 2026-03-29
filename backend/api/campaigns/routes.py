@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2 import errors
 from db.db import get_db
 from api.dependencies.auth import get_current_user_id
-from api.campaigns.schemas import CampaignGlobalRequest
+from api.campaigns.schemas import CampaignGlobalRequest, NewParticipantRequest
 from api.campaigns import repository
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
@@ -80,3 +80,18 @@ def remove_user_from_campaign(user_campaign_id: int, db = Depends(get_db)):
         return {"message": "user removed from campaign"}
     except:
         raise HTTPException(status_code=400, detail="Unable to get campaign's users.")
+    
+@router.post("/{campaign_id}/add_participant")
+def add_participant_to_campaign(campaign_id: int, data: NewParticipantRequest, db = Depends(get_db)):
+    try:
+        participant_user_id = repository.find_user(db, data.participantName)
+    except:
+        raise HTTPException(status_code=400, detail="The name provided does not match any known user.")
+    # return [participant_user_id, campaign_id, data.participantName]
+    try: 
+        repository.add_user_to_campaign(db, participant_user_id, campaign_id, data.participantName)
+        db.commit()
+        return {"message": "Participant added to the campaign"}
+    except:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Unable to add the participant.")

@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { getInvitedUsers, removeUserFromCampaign } from "../api/services/campaignServices";
+import { addParticipantToCampaign, getInvitedUsers, removeUserFromCampaign } from "../api/services/campaignServices";
 import { useCampaign } from "../context/CampaignContext";
 import { toast } from "react-hot-toast";
 
 import type { CampaignUsers } from "../types/campaign";
+import { isAxiosError } from "axios";
 
 export const useCampaignUsers = () => {
     const { campaignId } = useCampaign();
     
     const [usersList, setUsersList] = useState<CampaignUsers[]>([])
+    const [newParticipant, setNewParticipant] = useState<string>("")
 
     const loadUsers = async () => {
         if (!campaignId || campaignId < 0) return;
@@ -27,7 +29,7 @@ export const useCampaignUsers = () => {
     const removeUser = async (idCampaignUser: number) => {
         await toast.promise(
             removeUserFromCampaign(idCampaignUser)
-                .then((res) => {console.log(res); loadUsers})
+                .then((res) => console.log(res))
                 .catch((err) => {console.log(err); throw err}),
             {
                 loading: "Suppression du participant...",
@@ -38,10 +40,28 @@ export const useCampaignUsers = () => {
         return;
     }
 
+    const addParticipant = async (newParticipant: string) => {
+        if (!campaignId) return;
+        await toast.promise(
+            addParticipantToCampaign(campaignId, newParticipant)
+                .then((res) => console.log(res))
+                .catch((err) => {console.log(err); throw err}),
+            {
+                loading: "Recherhce de l'utilisateur...",
+                success: "Participant ajouté à la campagne",
+                error: (err) => isAxiosError(err) ? err.response?.data?.detail : "L'ajout du participant n'a pas abouti"
+            }
+        )
+        return;
+    }
+
     return {
         loadUsers, 
         usersList,
         setUsersList,
-        removeUser
+        removeUser,
+        newParticipant,
+        setNewParticipant,
+        addParticipant
     }
 }

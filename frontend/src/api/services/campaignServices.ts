@@ -63,3 +63,8 @@ export async function removeUserFromCampaign(idCampaignUser: number) {
     const res = await axiosInstance.delete(`/campaigns/remove_user/${idCampaignUser}`)
     return res.data;
 }
+
+export async function addParticipantToCampaign(campaignId: number, participantName: string) {
+    const res = await axiosInstance.post(`/campaigns/${campaignId}/add_participant`, {participantName})
+    return res.data;
+}
