@@ -9,6 +9,7 @@ import type { CampaignGlobal } from "../../types/campaign";
 import CampaignMenu from "../../components/CampaignMenu"
 import { Pen } from "lucide-react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function ManageCampaign() {
     const { campaignId } = useCampaign();
@@ -17,8 +18,6 @@ export default function ManageCampaign() {
     const { setPublicName } = useProfile();
     const [campaignTitle, setCampaignTitle] = useState<string>("");
 
-    const [displayUpdateStatus, setDisplayUpdateStatus] = useState<"success" | "error" | null>(null)
-    const [error, setError] = useState<string | null>(null)
     const [disabledEditGlobal, setDisableEditGlobal] = useState<boolean>(true)
 
     // Load campaign general information
@@ -52,16 +51,16 @@ export default function ManageCampaign() {
             campaignTitle.length >= 35
         ) return;
 
-        try {
-            if (publicName === null) return;
-            await putCampaignGlobal(campaignId, campaignTitle, publicName);
-            setDisplayUpdateStatus("success");
-            setTimeout(() => setDisplayUpdateStatus(null), 3000);
-        } catch (err) {
-            console.error(err);
-            setDisplayUpdateStatus("error");
-            setTimeout(() => setDisplayUpdateStatus(null), 5000);
-        }
+        if (publicName === null) return;
+
+        await toast.promise(
+            putCampaignGlobal(campaignId, campaignTitle, publicName),
+            {
+                loading: "Mise à jour de la campagne...",
+                success: "Campagne mise à jour",
+                error: "Impossible de mettre à jour la campagne.\nCe titre est peut-être déjà utilisé.",
+            }
+        );
     };
 
     // Create campaign
@@ -73,24 +72,32 @@ export default function ManageCampaign() {
             campaignTitle.length >= 35
         ) return;
 
-        try {
-            if (publicName === null) return;
-            setError(null);
-            const res = await postNewCampaign(campaignTitle, publicName);
-            setCampaignId(res.campaignId);
-            setDisplayUpdateStatus("success");
-            setTimeout(() => setDisplayUpdateStatus(null), 3000);
-        } catch (err) {
-            if (axios.isAxiosError(err)) setError(err.response?.data?.detail);
-            setDisplayUpdateStatus("error");
-            setTimeout(() => setDisplayUpdateStatus(null), 5000);
-        }
-    }
+        if (publicName === null) return;
+
+        await toast.promise(
+            postNewCampaign(campaignTitle, publicName)
+                .then((res) => {
+                    setCampaignId(res.campaignId);
+                    return res;
+                }),
+            {
+                loading: "Création de la campagne...",
+                success: "Campagne créée ",
+                error: (err) => {
+                    if (axios.isAxiosError(err)) {
+                        return err.response?.data?.detail || "Erreur lors de la création";
+                    }
+                    return "Erreur lors de la création ";
+                },
+            }
+        );
+    };
 
     const [view, setView] = useState<"general" | "users" | "episodes">("general");
 
     return (
         <div className="min-h-screen flex justify-center mb-5">
+            <Toaster position="top-center" toastOptions={{ duration: 5000 }}/>
             <div className="flex w-9/10">
                 <div className="flex-4"><CampaignMenu view={view} setView={setView}/></div>
                 <div className="flex-9 p-6">
@@ -144,7 +151,7 @@ export default function ManageCampaign() {
                                         <Pen />
                                     </button>
                                 </div> 
-                                {displayUpdateStatus === "success" && (
+                                {/* {displayUpdateStatus === "success" && (
                                     <>
                                         <div className="bg-success/10 mt-10 p-4 rounded-xl text-success">
                                             Enregistrement réussi !
@@ -161,7 +168,7 @@ export default function ManageCampaign() {
                                         )}
                                         </div>
                                     </>                                    
-                                )}   
+                                )}    */}
                             </div>
                         </>
                     )}

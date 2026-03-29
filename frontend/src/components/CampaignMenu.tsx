@@ -39,7 +39,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
 
     return (
         <div className="min-h-full min-w-full bg-base-200 p-4 rounded-2xl shadow-xl flex flex-col">
-            <Toaster position="top-center"/>
+            <Toaster position="top-center" toastOptions={{ duration: 5000 }}/>
             <div className="flex-1 flex flex-col gap-2">
                 <p className="font-semibold py-2">Gestion de la campagne</p>
 
