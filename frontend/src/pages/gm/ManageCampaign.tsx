@@ -31,7 +31,7 @@ export default function ManageCampaign() {
         addParticipant
     } = useCampaignUsers();
 
-    const [view, setView] = useState<"general" | "users" | "episodes">("general");
+    const [view, setView] = useState<"general" | "users" | "resources">("general");
 
     const handleSave = () => {
         if (campaignId === -1) {
@@ -51,7 +51,7 @@ export default function ManageCampaign() {
                     <select
                         value={view}
                         onChange={(e) =>
-                            setView(e.target.value as "general" | "users" | "episodes")
+                            setView(e.target.value as "general" | "users" | "resources")
                         }
                         className="w-full p-2 border rounded-md shadow-sm "
                     >
@@ -92,8 +92,8 @@ export default function ManageCampaign() {
                         />
                     )}
 
-                    {view === "episodes" && (
-                        <div>Episodes</div>
+                    {view === "resources" && (
+                        <div>Ressources</div>
                     )}
                 </div>
             </div>

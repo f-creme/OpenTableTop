@@ -8,8 +8,8 @@ import { Toaster, toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
 
 interface CampaignMenuProps {
-    view: "general" | "users" | "episodes"
-    setView: (value: "general" | "users" | "episodes") => void;
+    view: "general" | "users" | "resources"
+    setView: (value: "general" | "users" | "resources") => void;
 }
 
 const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
@@ -67,12 +67,12 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                 <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
                 <button 
                     className={`btn justify-start gap-2 ${
-                        view ==="episodes" ? "btn-primary btn-soft" : "btn-ghost"
+                        view ==="resources" ? "btn-primary btn-soft" : "btn-ghost"
                     }`} 
                     disabled={disabledMenu}
-                    onClick={() => setView("episodes")}
+                    onClick={() => setView("resources")}
                 >
-                    <ScrollText className="h-5 w-5"/> Épisodes 
+                    <ScrollText className="h-5 w-5"/> Ressources 
                 </button>
             </div>
 
