@@ -8,6 +8,7 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.current_map: str | None = None
+        self.current_illustration: str | None = None
 
 
     async def connect(self, websocket: WebSocket):
@@ -20,7 +21,6 @@ class ConnectionManager:
                 "type": "map_update",
                 "selected_map": self.current_map
             })
-
 
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
@@ -39,6 +39,15 @@ class ConnectionManager:
         await self.broadcast({
             "type": "map_update",
             "selected_map": map_name
+        })
+
+    async def broadcast_illustration(self, illus: str):
+        """Illustration broadcast"""
+        self.current_illustration = illus
+
+        await self.broadcast({
+            "type": "illus_update",
+            "selected_illustration": illus
         })
 
 
@@ -76,6 +85,9 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
             
             if msg_type == "map_change":
                 await manager.broadcast_map(data["selected_map"])
+
+            if msg_type == "illustration_change":
+                await manager.broadcast_illustration(data["selected_illustration"])
             
             elif msg_type == "dice_roll":
                 await manager.broadcast_dice(

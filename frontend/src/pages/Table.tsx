@@ -10,6 +10,8 @@ import MapDisplay from "../components/MapDisplay";
 import { useMaps } from "../hooks/useMaps";
 import { useDice } from "../hooks/useDice";
 import { useTableSocket } from "../hooks/useTableSocket";
+import { useIllustrations } from "../hooks/useIllustration";
+import IllustrationSelector from "../components/IllustrationSelector";
 
 const Table = () => {
     const { role } = useRole();
@@ -17,24 +19,24 @@ const Table = () => {
 
     const apiURL = import.meta.env.VITE_API_URL;
 
-    const {
-        maps,
-        selectedMap,
-        setSelectedMap
-    } = useMaps();
-
+    const {maps, selectedMap, setSelectedMap} = useMaps();
+    const {illustrations, selectedIllustration, setSelectedIllustration} = useIllustrations();
     const dice = useDice();
 
     const { send } = useTableSocket({
         campaignId,
         apiURL,
         onMapUpdate: setSelectedMap,
+        onIllusUpdate: setSelectedIllustration,
         onDiceResult: dice.handleDiceResult
     });
 
     const changeMap = (mapName: string) => {
         send({ type: "map_change", selected_map: mapName });
     };
+    const changeIllustration = (illusName: string | null) => {
+        send({ type: "illustration_change", selected_illustration: illusName})
+    }
 
     const rollDices = (die: number) => {
         send({
@@ -60,6 +62,15 @@ const Table = () => {
                         </li>
 
                         <li>
+                            <IllustrationSelector
+                                role={role}
+                                illustrations={illustrations}
+                                selectedIllustration={selectedIllustration}
+                                changeIllustration={changeIllustration}
+                            />
+                        </li>
+
+                        <li>
                             <DiceMenu
                                 dices={[4,6,10,12,20,50,100]}
                                 countDices={dice.countDices}
@@ -73,7 +84,7 @@ const Table = () => {
                 <DiceResults {...dice} />
 
                 <div className="flex-1 flex items-center justify-center min-h-0">
-                    <MapDisplay apiURL={apiURL} selectedMap={selectedMap} campaignId={Number(campaignId)} />
+                    <MapDisplay apiURL={apiURL} selectedMap={selectedMap} campaignId={Number(campaignId)} selectedIllustration={selectedIllustration} />
                 </div>
 
             </div>

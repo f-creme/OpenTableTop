@@ -4,6 +4,7 @@ type Props = {
     campaignId: number | null;
     apiURL: string;
     onMapUpdate: (map: string) => void;
+    onIllusUpdate: (illus: string) => void;
     onDiceResult: (data: any) => void;
 };
 
@@ -11,6 +12,7 @@ export const useTableSocket = ({
     campaignId,
     apiURL,
     onMapUpdate,
+    onIllusUpdate, 
     onDiceResult
 }: Props) => {
     const wsRef = useRef<WebSocket | null>(null);
@@ -30,6 +32,11 @@ export const useTableSocket = ({
 
             if (data.type === "dice_result") {
                 onDiceResult(data);
+            }
+
+            if (data.type === "illus_update") {
+                console.log(data.selected_illustration)
+                onIllusUpdate(data.selected_illustration)
             }
         };
 
