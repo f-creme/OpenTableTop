@@ -9,6 +9,7 @@ import { useCampaignUsers } from "../../hooks/useCampaignUsers";
 
 export default function ManageCampaign() {
     const { campaignId } = useCampaign();
+
     const {
         campaignTitle,
         setCampaignTitle,
@@ -22,11 +23,11 @@ export default function ManageCampaign() {
 
     const {
         usersList,
-        setUsersList, 
+        setUsersList,
         loadUsers,
-        removeUser, 
+        removeUser,
         newParticipant,
-        setNewParticipant, 
+        setNewParticipant,
         addParticipant
     } = useCampaignUsers();
 
@@ -41,11 +42,31 @@ export default function ManageCampaign() {
     };
 
     return (
-        <div className="min-h-screen flex justify-center mb-5">
-            <Toaster position="top-center" toastOptions={{ duration: 5000 }}/>
-            <div className="flex w-9/10">
-                <div className="flex-4"><CampaignMenu view={view} setView={setView} /></div>
-                <div className="flex-9 p-6">
+        <div className="min-h-screen flex justify-center mb-5 px-2">
+            <Toaster position="top-center" toastOptions={{ duration: 5000 }} />
+
+            <div className="flex flex-col md:flex-row w-full md:w-9/10 gap-4">
+
+                <div className="md:hidden">
+                    <select
+                        value={view}
+                        onChange={(e) =>
+                            setView(e.target.value as "general" | "users" | "episodes")
+                        }
+                        className="w-full p-2 border rounded-md shadow-sm "
+                    >
+                        <option value="general">Général</option>
+                        <option value="users">Utilisateurs</option>
+                        <option value="episodes">Épisodes</option>
+                    </select>
+                </div>
+
+                <div className="hidden md:block md:w-1/3 lg:w-1/4">
+                    <CampaignMenu view={view} setView={setView} />
+                </div>
+
+                <div className="w-full md:w-2/3 lg:w-3/4 p-4 md:p-6 rounded-xl shadow-xl">
+
                     {view === "general" && (
                         <CampaignGeneralForm
                             campaignTitle={campaignTitle}
@@ -58,6 +79,7 @@ export default function ManageCampaign() {
                             isNewCampaign={campaignId === -1}
                         />
                     )}
+
                     {view === "users" && (
                         <CampaignUsersForm
                             usersList={usersList}
@@ -69,7 +91,10 @@ export default function ManageCampaign() {
                             onAddParticipant={addParticipant}
                         />
                     )}
-                    {view === "episodes" && <div>Episodes</div>}
+
+                    {view === "episodes" && (
+                        <div>Episodes</div>
+                    )}
                 </div>
             </div>
         </div>
