@@ -29,11 +29,16 @@ export async function getCampaignGlobal(id: number) {
 }
 
 export async function putCampaignGlobal(id: number, title: string, name: string) {
-    const res = await axiosInstance.put(`/campaigns/${id}/title`, {title, name});
+    const res = await axiosInstance.put(`/campaigns/${id}/update-global`, {title, name});
     return res.data;
 }
 
 export async function postNewCampaign(title: string, name: string) {
     const res = await axiosInstance.post(`/campaigns/create`, {title, name});
+    return res.data;
+}
+
+export async function DeleteCampaign(id: number) {
+    const res = await axiosInstance.delete(`/campaigns/${id}/delete`);
     return res.data;
 }

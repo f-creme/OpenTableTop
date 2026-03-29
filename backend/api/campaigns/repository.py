@@ -60,3 +60,14 @@ def create_campaign(db, user_id: int, title: str, character_name: str):
             (campaign_id, user_id, character_name)
         )
         return campaign_id
+    
+def delete_campaign(db, user_id: int, campaign_id: int):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM campaigns c USING users_campaigns uc " \
+            "WHERE c.id = %s " \
+            "AND uc.campaign_id = c.id " \
+            "AND uc.user_id = %s " \
+            "AND uc.role = 'gm';",
+            (campaign_id, user_id)
+        )

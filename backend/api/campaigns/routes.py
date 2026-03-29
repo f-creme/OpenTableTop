@@ -30,7 +30,7 @@ def get_campaign_global(campaign_id: int, user_id: int = Depends(get_current_use
     }]
 
 
-@router.put("/{campaign_id}/title")
+@router.put("/{campaign_id}/update-global")
 def update_campaign_global(campaign_id: int, data: CampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
     try:
         repository.update_campaign_global(db, user_id, campaign_id, data.title, data.name)
@@ -52,4 +52,14 @@ def create_campaign(data: CampaignGlobalRequest, user_id: int = Depends(get_curr
         raise HTTPException(status_code=400, detail="A campaign with this title already exists.")
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=400, detail=f"Unable to create campaign: {e}.")
+        raise HTTPException(status_code=400, detail="Unable to create campaign.")
+    
+@router.delete("/{campaign_id}/delete")
+def delete_campaign(campaign_id: int, user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+    try:
+        repository.delete_campaign(db, user_id, campaign_id)
+        db.commit()
+        return {"message": "campaign deleted"}
+    except Exception:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Unable to delete campaign.")
