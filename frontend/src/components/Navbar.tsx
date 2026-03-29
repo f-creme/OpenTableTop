@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useRole } from "../context/RoleContext";
 import { NavbarTransition } from "./Transitions";
 
-import { House, Menu, Dice3, SquareUserRound, UsersRound, Bug, Swords } from "lucide-react";
+import { LogOut, Menu, Dice3, SquareUserRound, UsersRound, Bug, Swords } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
@@ -81,7 +81,7 @@ export default function Navbar() {
             </Link>
 
             <Link className="btn btn-ghost" to="/">
-              <House className="h-5 w-5"/>
+              <LogOut className="h-5 w-5"/>
             </Link>
 
           </div>
@@ -106,7 +106,7 @@ export default function Navbar() {
               )}
 
               <li className="font-medium"><Link to="/room/dev"><Bug className="h-4 w-4 stroke-2" /> {t("component.navbar.dev")}</Link></li>
-              <li className="font-medium"><Link to="/"><House className="h-4 w-4 stroke-2" /> {t("component.navbar.home")} </Link></li>
+              <li className="font-medium"><Link to="/"><LogOut className="h-4 w-4 stroke-2" /> {t("component.navbar.home")} </Link></li>
             </ul>,
             document.body
           )}
