@@ -24,13 +24,14 @@ const CampaignGeneralForm: FC<Props> = ({
 }) => {
     return (
         <div className="flex flex-col">
+            <p className="text-4xl text-center font-semibold p-5 mb-5">Informations générales</p>
             {isNewCampaign && (
                 <p className="bg-info/10 rounded-md text-info p-4 mb-4">
                     Donnez un titre à votre campagne pour finaliser sa création.
                 </p>
             )}
             <fieldset className="fieldset w-full mb-4">
-                <legend className="fieldset-legend text-2xl">Titre de la campagne</legend>
+                <legend className="fieldset-legend text-xl">Titre de la campagne</legend>
                 <input 
                     type="text"
                     className="input input-xl w-full"
