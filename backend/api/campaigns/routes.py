@@ -5,6 +5,7 @@ from db.db import get_db
 from api.dependencies.auth import get_current_user_id
 from api.campaigns.schemas import CampaignGlobalRequest, NewParticipantRequest
 from api.campaigns import repository
+from core.config_storage import create_campaign_storage
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
@@ -45,6 +46,8 @@ def create_campaign(data: CampaignGlobalRequest, user_id: int = Depends(get_curr
     try:
         new_campaign_id = repository.create_campaign(db, user_id, data.title, data.name)
         db.commit()
+
+        create_campaign_storage(new_campaign_id)
         return {"message": "campaign created", "campaignId": new_campaign_id}
     
     except errors.UniqueViolation:
