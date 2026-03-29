@@ -21,3 +21,17 @@ export interface CampaignGlobal {
     userPublicName: string | null, 
     userCampaignCharacterName: string | null
 }
+
+export interface CampaignUsersAPI {
+    id: number,
+    role: string, 
+    character_name: string,
+    public_name: string
+}
+
+export interface CampaignUsers {
+    idCampaignUser: number,
+    userRole: string, 
+    characterName: string
+    publicName: string
+}

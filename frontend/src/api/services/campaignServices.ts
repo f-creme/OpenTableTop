@@ -1,6 +1,7 @@
 import axiosInstance from "../axiosInstance";
 import type { CampaignAPI, Campaign } from "../../types/campaign";
 import type { CampaignGlobalAPI, CampaignGlobal } from "../../types/campaign";
+import type { CampaignUsersAPI, CampaignUsers } from "../../types/campaign";
 
 function mapCampaign(apiCampaign: CampaignAPI): Campaign {
     return {
@@ -15,6 +16,15 @@ function mapCampaignGlobal(apiCampaignGlobal: CampaignGlobalAPI): CampaignGlobal
         campaignTitle: apiCampaignGlobal.campaign_title,
         userPublicName: apiCampaignGlobal.public_name,
         userCampaignCharacterName: apiCampaignGlobal.character_name
+    }
+}
+
+function mapCampaignUsers(apiCampaignUser: CampaignUsersAPI): CampaignUsers {
+    return {
+        idCampaignUser: apiCampaignUser.id,
+        userRole: apiCampaignUser.role,
+        characterName: apiCampaignUser.character_name,
+        publicName: apiCampaignUser.public_name
     }
 }
 
@@ -40,5 +50,16 @@ export async function postNewCampaign(title: string, name: string) {
 
 export async function DeleteCampaign(id: number) {
     const res = await axiosInstance.delete(`/campaigns/${id}/delete`);
+    return res.data;
+}
+
+export async function getInvitedUsers(id: number) {
+    const res = await axiosInstance.get(`/campaigns/${id}/users`)
+    return res.data.map(mapCampaignUsers)
+}
+
+export async function removeUserFromCampaign(idCampaignUser: number) {
+    // id corresponds to a user in a given campaign (i.e. || id | user_id | campaign_id ||)
+    const res = await axiosInstance.delete(`/campaigns/remove_user/${idCampaignUser}`)
     return res.data;
 }

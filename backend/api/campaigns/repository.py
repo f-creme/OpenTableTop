@@ -71,3 +71,20 @@ def delete_campaign(db, user_id: int, campaign_id: int):
             "AND uc.role = 'gm';",
             (campaign_id, user_id)
         )
+
+def get_campaign_users(db, campaign_id: int):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT id, character_name, role, public_name " \
+            "FROM users_campaigns " \
+            "LEFT JOIN profiles ON users_campaigns.user_id = profiles.user_id " \
+            "WHERE campaign_id = %s " \
+            "ORDER BY role ASC;", 
+            (campaign_id, )
+        )
+        return cursor.fetchall()
+    
+def remove_user_from_campaign(db, user_campaign_id: int):
+    with db.cursor() as cursor:
+        cursor.execute("DELETE FROM users_campaigns WHERE id = %s", (user_campaign_id, ))
+        

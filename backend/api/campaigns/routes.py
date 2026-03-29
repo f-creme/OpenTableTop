@@ -63,3 +63,20 @@ def delete_campaign(campaign_id: int, user_id: int = Depends(get_current_user_id
     except Exception:
         db.rollback()
         raise HTTPException(status_code=400, detail="Unable to delete campaign.")
+    
+@router.get("/{campaign_id}/users")
+def get_campaign_users(campaign_id: int, db = Depends(get_db)):
+    try: 
+        response = repository.get_campaign_users(db, campaign_id)
+        return response
+    except:
+        raise HTTPException(status_code=400, detail="Unable to get campaign's users.")
+    
+@router.delete("/remove_user/{user_campaign_id}")
+def remove_user_from_campaign(user_campaign_id: int, db = Depends(get_db)):
+    try:
+        repository.remove_user_from_campaign(db, user_campaign_id)
+        db.commit()
+        return {"message": "user removed from campaign"}
+    except:
+        raise HTTPException(status_code=400, detail="Unable to get campaign's users.")

@@ -3,7 +3,9 @@ import { useCampaign } from "../../context/CampaignContext";
 import { useCampaignGlobal } from "../../hooks/useCampaignGlobal";
 import CampaignMenu from "../../components/CampaignMenu";
 import CampaignGeneralForm from "../../components/CampaignGeneralForm";
+import CampaignUsersForm from "../../components/CampaignUsersForm";
 import { Toaster } from "react-hot-toast";
+import { useCampaignUsers } from "../../hooks/useCampaignUsers";
 
 export default function ManageCampaign() {
     const { campaignId } = useCampaign();
@@ -17,6 +19,13 @@ export default function ManageCampaign() {
         updateCampaign,
         createCampaign
     } = useCampaignGlobal();
+
+    const {
+        usersList,
+        setUsersList, 
+        loadUsers,
+        removeUser, 
+    } = useCampaignUsers();
 
     const [view, setView] = useState<"general" | "users" | "episodes">("general");
 
@@ -46,7 +55,14 @@ export default function ManageCampaign() {
                             isNewCampaign={campaignId === -1}
                         />
                     )}
-                    {view === "users" && <div>Users</div>}
+                    {view === "users" && (
+                        <CampaignUsersForm
+                            usersList={ usersList }
+                            setUsersList={ setUsersList }
+                            onLoad={ loadUsers }
+                            onRemove={ removeUser }
+                        />
+                    )}
                     {view === "episodes" && <div>Episodes</div>}
                 </div>
             </div>
