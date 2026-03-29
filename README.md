@@ -85,7 +85,7 @@ As the interface still does not allow to create users, you can add an authorized
 ```bash
 curl -X POST http://localhost:8000/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"username":"user","password":"pass"}'
+  -d '{"username":"user","password":"pass","public_name":"display_name"}'
 ```
 > ⚠️ Only use this for local development. Do not expose your server to the internet when using this command.
 
