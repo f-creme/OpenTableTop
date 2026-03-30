@@ -39,7 +39,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
   useEffect(() => {
     if (!selectedMap) return;
     const img = new window.Image();
-    img.src = `${apiURL}/maps/${campaignId}/${selectedMap}`;
+    img.src = `${apiURL}/maps/${campaignId}/${encodeURIComponent(selectedMap)}`;
     img.onload = () => setImage(img);
   }, [selectedMap, apiURL, campaignId]);
 
@@ -50,7 +50,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
       return;
     }
     const img = new window.Image();
-    img.src = `${apiURL}/illus/${campaignId}/${selectedIllustration}`;
+    img.src = `${apiURL}/illus/${campaignId}/${encodeURIComponent(selectedIllustration)}`;
     img.onload = () => setIllustration(img);
   }, [selectedIllustration, apiURL, campaignId]);
 
