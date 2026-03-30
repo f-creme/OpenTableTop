@@ -27,6 +27,8 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
+  const [showTokenScaleControl, setShowTokenScaleControl] = useState<boolean>(false);
+  const [tokenScale, settokenScale] = useState<number>(1);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<any>(null);
@@ -212,6 +214,52 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
     });
   };
 
+  // --- Token Scale ---
+  const scaleFromCenter = (
+    x: number,
+    y: number,
+    currentScale: number,
+    newScale: number,
+    width: number,
+    height: number
+  ) => {
+    const currentWidth = width * currentScale;
+    const currentHeight = height * currentScale;
+
+    const centerX = x + (currentWidth / 2);
+    const centerY = y + (currentHeight / 2);
+
+    const newWidth = width * newScale;
+    const newHeight = height * newScale;
+
+    const x_new = centerX - (newWidth / 2);
+    const y_new = centerY - (newHeight / 2);
+
+    return { x_new, y_new };
+  };
+
+  const handleTokenScale = (newScale: number) => {
+    settokenScale(newScale);
+    setTokens((prev) =>
+      prev.map((t) => {
+        const { x_new, y_new } = scaleFromCenter(
+          t.x_coord,
+          t.y_coord,
+          t.scale, 
+          newScale,
+          t.image.width,
+          t.image.height
+        );
+        return {
+          ...t,
+          x_coord: x_new,
+          y_coord: y_new,
+          scale: newScale
+        };
+      })
+    );
+  };
+
   const onTokenDragEnd = (index: number, newX: number, newY: number) => {
     const token = activeTokens[index]
     send({type: "token_move", token: {...token, x: newX, y: newY}})
@@ -221,10 +269,36 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
     <div ref={containerRef} className="relative h-[80vh] mx-auto my-8 bg-black border-2 rounded-xl overflow-hidden">
       <button
         onClick={resetView}
-        className="absolute btn btn-primary top-2 right-2 z-10 px-3 py-1 rounded-lg shadow-md"
+        className="absolute btn btn-primary w-40 h-10 top-2 right-2 z-10 px-3 py-1 rounded-lg shadow-md"
       >
         Réinitialiser la vue
       </button>
+
+      <button
+        onClick={() => setShowTokenScaleControl(prev => !prev)}
+        className="absolute btn btn-secondary w-40 h-10 top-2 right-48 z-10 px-3 rounded-lg shadow-md"
+      >
+        Echelle des tokens
+      </button>
+
+      {showTokenScaleControl && (
+        <>
+          <div className="absolute top-14 w-80 right-32 bg-base-100 z-10 p-3 rounded-lg shadow-md">
+            <input 
+              className="w-full range range-secondary range-sm"
+              type="range"
+              min={0.2}
+              max={3}
+              step={0.1}
+              value={tokenScale}
+              onChange={(e) => handleTokenScale(Number(e.target.value))}
+            />
+            <div className="text-sm text-center mt-1">
+              x{tokenScale.toFixed(1)}
+            </div>
+          </div>
+        </>
+      )}
 
       <Stage
         width={containerSize.width}
