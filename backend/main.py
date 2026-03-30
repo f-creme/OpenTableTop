@@ -5,7 +5,7 @@ from api.maps import routes as maps_route
 from api.auth import routes as auth_route
 from api.campaigns import routes as campaigns_routes
 from api.illustrations import routes as illus_route
-from api.table import routes as other_table_route
+from api.tokens import routes as tokens_route
 
 from api.table import websocket
 
@@ -23,5 +23,5 @@ app.include_router(maps_route.router)
 app.include_router(auth_route.router)
 app.include_router(campaigns_routes.router)
 app.include_router(illus_route.router)
-app.include_router(other_table_route.router)
+app.include_router(tokens_route.router)
 app.include_router(websocket.router)
