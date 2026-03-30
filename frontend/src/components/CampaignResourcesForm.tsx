@@ -64,7 +64,7 @@ const CampaignResourcesForm: FC<Props> = ({
                             setSelectedMapFile(e.target.files[0])
                         }
                     }}/>
-                    <label className="label">Taille maximale: 500 kB</label>
+                    <label className="label">Taille maximale: 2MB</label>
                 </fieldset>
                 <button
                     className="btn btn-primary w-full"
