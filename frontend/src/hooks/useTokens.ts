@@ -28,6 +28,7 @@ export const useTokens = () => {
   return {
     tokens,
     activeTokens,
+    setActiveTokens,
     ToggleToken,
   };
 };

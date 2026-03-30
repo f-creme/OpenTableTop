@@ -14,6 +14,8 @@ import { useTableSocket } from "../hooks/useTableSocket";
 import { useIllustrations } from "../hooks/useIllustration";
 import { useTokens } from "../hooks/useTokens";
 import IllustrationSelector from "../components/IllustrationSelector";
+import { useEffect, useRef } from "react";
+import type { Token } from "../types/token";
 
 const Table = () => {
     const { role } = useRole();
@@ -23,7 +25,7 @@ const Table = () => {
 
     const {maps, selectedMap, setSelectedMap} = useMaps();
     const {illustrations, selectedIllustration, setSelectedIllustration} = useIllustrations();
-    const { tokens, activeTokens, ToggleToken } = useTokens()
+    const { tokens, activeTokens, setActiveTokens, ToggleToken } = useTokens()
     const dice = useDice();
 
     const { send } = useTableSocket({
@@ -31,7 +33,8 @@ const Table = () => {
         apiURL,
         onMapUpdate: setSelectedMap,
         onIllusUpdate: setSelectedIllustration,
-        onDiceResult: dice.handleDiceResult
+        onDiceResult: dice.handleDiceResult,
+        setActiveToken: setActiveTokens
     });
 
     const changeMap = (mapName: string) => {
@@ -48,6 +51,27 @@ const Table = () => {
             count: dice.countDices
         });
     };
+
+    const prevActiveRef = useRef<Token[]>([]);
+
+    useEffect(() => {
+        if (!send) return;
+
+        const prevActive = prevActiveRef.current;
+
+        const added = activeTokens.filter(
+            (t) => !prevActive.some((p) => p.id === t.id)
+        )
+
+        const removed = prevActive.filter(
+            (t) => !activeTokens.some((p) => p.id === t.id)
+        )
+
+        added.forEach((t) => send({type: "token_update", action: "add", token: t}));
+        removed.forEach((t) => send({type: "token_update", action: "remove", token: t}));
+
+        prevActiveRef.current = activeTokens;
+    }, [activeTokens, send])
 
     return (
         <div className="min-h-screen flex flex-col">

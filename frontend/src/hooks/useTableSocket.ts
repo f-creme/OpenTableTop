@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import type { Token } from "../types/token";
 
 type Props = {
     campaignId: number | null;
@@ -6,6 +8,7 @@ type Props = {
     onMapUpdate: (map: string) => void;
     onIllusUpdate: (illus: string) => void;
     onDiceResult: (data: any) => void;
+    setActiveToken: Dispatch<SetStateAction<Token[]>>;
 };
 
 export const useTableSocket = ({
@@ -13,7 +16,8 @@ export const useTableSocket = ({
     apiURL,
     onMapUpdate,
     onIllusUpdate, 
-    onDiceResult
+    onDiceResult,
+    setActiveToken
 }: Props) => {
     const wsRef = useRef<WebSocket | null>(null);
 
@@ -25,6 +29,7 @@ export const useTableSocket = ({
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log(data)
 
             if (data.type === "map_update") {
                 onMapUpdate(data.selected_map);
@@ -35,9 +40,13 @@ export const useTableSocket = ({
             }
 
             if (data.type === "illus_update") {
-                console.log(data.selected_illustration)
                 onIllusUpdate(data.selected_illustration)
             }
+
+            if (data.type === "init_tokens") {
+                setActiveToken(data.tokens)
+            }
+
         };
 
         return () => ws.close();
