@@ -11,6 +11,7 @@ interface TokenDisplay {
 }
 
 type Props = {
+  role: "player" | "mj" | null
   apiURL: string;
   campaignId: number;
   selectedMap: string | null;
@@ -19,7 +20,7 @@ type Props = {
   send: (payload: any) => any;
 };
 
-const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send }: Props) => {
+const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send }: Props) => {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [illustration, setIllustration] = useState<HTMLImageElement | null>(null);
   const [tokens, setTokens] = useState<TokenDisplay[]>([]);
@@ -287,12 +288,14 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
         Réinitialiser la vue
       </button>
 
-      <button
-        onClick={() => setShowTokenScaleControl(prev => !prev)}
-        className="absolute btn btn-secondary w-40 h-10 top-2 right-48 z-10 px-3 rounded-lg shadow-md"
-      >
-        Echelle des tokens
-      </button>
+      {role === "mj" && (
+        <button
+          onClick={() => setShowTokenScaleControl(prev => !prev)}
+          className="absolute btn btn-secondary w-40 h-10 top-2 right-48 z-10 px-3 rounded-lg shadow-md"
+        >
+          Echelle des tokens
+        </button>
+      )}
 
       {showTokenScaleControl && (
         <>
