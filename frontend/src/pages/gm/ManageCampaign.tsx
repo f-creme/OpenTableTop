@@ -6,6 +6,8 @@ import CampaignGeneralForm from "../../components/CampaignGeneralForm";
 import CampaignUsersForm from "../../components/CampaignUsersForm";
 import { Toaster } from "react-hot-toast";
 import { useCampaignUsers } from "../../hooks/useCampaignUsers";
+import CampaignResourcesForm from "../../components/CampaignResourcesForm";
+import { useCampaignResources } from "../../hooks/useCampaignResources";
 
 export default function ManageCampaign() {
     const { campaignId } = useCampaign();
@@ -30,6 +32,12 @@ export default function ManageCampaign() {
         setNewParticipant,
         addParticipant
     } = useCampaignUsers();
+
+    const {
+        availMaps,
+        loadMaps, 
+        handleUpload
+    } = useCampaignResources()
 
     const [view, setView] = useState<"general" | "users" | "resources">("general");
 
@@ -93,7 +101,12 @@ export default function ManageCampaign() {
                     )}
 
                     {view === "resources" && (
-                        <div>Ressources</div>
+                        <CampaignResourcesForm 
+                            campaignId={campaignId!}
+                            availMaps={availMaps}
+                            loadMaps={loadMaps}
+                            uploadFile={handleUpload}
+                        />
                     )}
                 </div>
             </div>
