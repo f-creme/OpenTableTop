@@ -6,12 +6,14 @@ type Props = {
     availMaps: string[];
     loadMaps: () => void;
     uploadFile: (file: File, category: "maps" | "illustrations" | "tokens") => Promise<void>;
+    deleteFile: (filename: string, category: "maps" | "illustrations" | "tokens") => Promise<void>;
 };
 
 const CampaignResourcesForm: FC<Props> = ({
     availMaps,
     loadMaps,
-    uploadFile
+    uploadFile,
+    deleteFile
 }) => {
     const [selectedMapFile, setSelectedMapFile] = useState<File | null>(null);
     return (
@@ -47,6 +49,7 @@ const CampaignResourcesForm: FC<Props> = ({
                         </div>
                         <button
                             className="btn btn-primary btn-ghost"
+                            onClick={() => deleteFile(map, "maps")}
                         >
                             <Trash className="h-4 w-4" />                            
                         </button>

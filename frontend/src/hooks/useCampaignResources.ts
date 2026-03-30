@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { useCampaign } from "../context/CampaignContext"
 import { getMaps } from "../api/services/mapServices";
 import { useState } from "react";
-import { uploadFile } from "../api/services/campaignResourcesServices";
+import { uploadFile, deleteFile } from "../api/services/campaignResourcesServices";
 
 export const useCampaignResources = () => {
     const { campaignId } = useCampaign()
@@ -45,15 +45,32 @@ export const useCampaignResources = () => {
             await uploadFile(campaignId, formData, category)
             
             if (category === "maps") loadMaps();
-            
+
         } catch (err: any) {
             console.error(err);
             alert(err.response?.data?.detail || "Erreur upload");
         }   
-    }
+    };
+
+    const handleTrash = async (filename: string, category: "maps" | "illustrations" | "tokens") => {
+        if (!campaignId) return;
+        if (!confirm(`Supprimer ${filename} ?`)) return;
+
+        try {
+            await deleteFile(campaignId, filename, category);
+            alert(`${filename} supprimé`);
+
+            if (category === "maps") loadMaps;
+        } catch (err: any) {
+            console.error(err);
+            alert(err.response?.data?.detail || "Erreur lors de la suppression");
+        }
+    };
+
     return {
         availMaps,
         loadMaps,
-        handleUpload
+        handleUpload,
+        handleTrash
     }
 }

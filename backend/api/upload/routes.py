@@ -36,7 +36,7 @@ async def upload_file(category: str, campaign_id: int, user_id: int = Depends(ge
     # Check role of user for the campaign
     is_user_gm = repository.get_user_role_for_campaign(db, user_id, campaign_id)
     if not is_user_gm:
-        raise HTTPException(400, detail="Unauthorized access")
+        raise HTTPException(403, detail="Unauthorized access")
 
     is_safe_filename = secure_urls.is_safe_filename(str(file.filename))
     if not is_safe_filename:
@@ -87,3 +87,33 @@ async def upload_token(
     db = Depends(get_db)
 ):
     return await upload_file("tokens", campaign_id, user_id, file, db)
+
+@router.delete("/{category}/{campaign_id}/{filename}")
+def delete_file(category: str, campaign_id: int, filename: str, user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+    _ALLOWED_CATEGORIES = {"maps", "illustrations", "tokens"}
+    if category not in _ALLOWED_CATEGORIES:
+        raise HTTPException(400, "Invalid Ca")
+    
+    is_user_gm = repository.get_user_role_for_campaign(db, user_id, campaign_id)
+    if not is_user_gm:
+        raise HTTPException(403, "Unauthorized access")
+    
+    if not secure_urls.is_safe_filename(filename):
+        raise HTTPException(400, "Invalid file name")
+    
+    folder = get_campaign_path(campaign_id)
+    file_path = folder / category / filename
+    file_path = file_path.resolve()
+
+    if not str(file_path).startswith(str(folder)):
+        raise HTTPException(400, "File path is invalid")
+    
+    if not file_path.exists() or not file_path.is_file():
+        raise HTTPException(404, "File not found")
+    
+    try: 
+        file_path.unlink()
+    except Exception as e:
+        raise HTTPException(500, f"Cannot delete file: {str(e)}")
+    
+    return {"detail": "File deleted"}
