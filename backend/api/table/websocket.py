@@ -2,13 +2,22 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import List, Dict
 import random
 
+from pydantic import BaseModel
+
 router = APIRouter(prefix="/table_ws", tags=["table_ws"])
+
+class Token(BaseModel):
+    id: str
+    x: int
+    y: int
+    scale: float
 
 class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.current_map: str | None = None
         self.current_illustration: str | None = None
+        self.current_active_tokens: list = []
 
 
     async def connect(self, websocket: WebSocket):
@@ -20,6 +29,13 @@ class ConnectionManager:
             await websocket.send_json({
                 "type": "map_update",
                 "selected_map": self.current_map
+            })
+
+        # Sync tokens while connecting
+        if len(self.current_active_tokens) > 0:
+            await websocket.send_json({
+                "type": "init_tokens",
+                "tokens": self.current_active_tokens
             })
 
     def disconnect(self, websocket: WebSocket):
@@ -63,6 +79,19 @@ class ConnectionManager:
         }
 
         await self.broadcast(message)
+    
+    async def broadcast_token_update(self, action: str, token: Token):
+        if action == "add":
+            if token not in self.current_active_tokens:
+                self.current_active_tokens.append(token)
+
+        if action == "remove":
+            new_actives_tokens = [t for t in self.current_active_tokens if t != token]
+            self.current_active_tokens = new_actives_tokens
+
+        message = {"type": "token_update", "action": action, "token": token}
+        await self.broadcast(message)
+        
 
 # Dictionnary to store a connection manager per campaign 
 campaign_managers: Dict[int, ConnectionManager] = {}
@@ -86,7 +115,7 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
             if msg_type == "map_change":
                 await manager.broadcast_map(data["selected_map"])
 
-            if msg_type == "illustration_change":
+            elif msg_type == "illustration_change":
                 await manager.broadcast_illustration(data["selected_illustration"])
             
             elif msg_type == "dice_roll":
@@ -95,6 +124,9 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
                     count=data["count"],
                     player=data.get("player")
                 )
+
+            elif msg_type == "token_update":
+                await manager.broadcast_token_update(action=data["action"], token=data["token"])
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
