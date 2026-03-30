@@ -70,6 +70,10 @@ export const useTableSocket = ({
                             : t
                     )
                 );
+            };
+
+            if (data.type === "tokens_scale") {
+                setActiveToken(data.tokens);
             }
 
         };

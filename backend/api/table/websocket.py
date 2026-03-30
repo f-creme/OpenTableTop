@@ -96,6 +96,9 @@ class ConnectionManager:
         self.current_active_tokens = [token if t["id"] == token["id"] else t for t in self.current_active_tokens]
         await self.broadcast({"type": "token_move", "token": token})
         
+    async def broadcast_token_scale(self, tokens: list):
+        self.current_active_tokens = tokens
+        await self.broadcast({"type": "tokens_scale", "tokens": tokens})
 
 # Dictionnary to store a connection manager per campaign 
 campaign_managers: Dict[int, ConnectionManager] = {}
@@ -136,6 +139,9 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
             elif msg_type == "token_move":
                 token = Token(**(data["token"])).model_dump()
                 await manager.broadcast_token_move(token=token)
+
+            elif msg_type == "tokens_scale":
+                await manager.broadcast_token_scale(data["tokens"])
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)

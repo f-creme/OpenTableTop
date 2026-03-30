@@ -260,6 +260,19 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
     );
   };
 
+    // send({
+    //   type: "tokens_scale",
+    //   tokens: tokens.map(t => ({
+    //     id: t.image.src.split("/").pop(),
+    //     x: t.x_coord,
+    //     y: t.y_coord,
+    //     scale: t.scale
+    //   }))
+    // });
+
+
+
+
   const onTokenDragEnd = (index: number, newX: number, newY: number) => {
     const token = activeTokens[index]
     send({type: "token_move", token: {...token, x: newX, y: newY}})
@@ -283,11 +296,11 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
 
       {showTokenScaleControl && (
         <>
-          <div className="absolute top-14 w-80 right-32 bg-base-100 z-10 p-3 rounded-lg shadow-md">
+          <div className="absolute top-14 w-80 right-32 bg-white border-2 border-secondary z-10 p-3 rounded-lg shadow-md">
             <input 
               className="w-full range range-secondary range-sm"
               type="range"
-              min={0.2}
+              min={0.1}
               max={3}
               step={0.1}
               value={tokenScale}
@@ -295,6 +308,17 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
             />
             <div className="text-sm text-center mt-1">
               x{tokenScale.toFixed(1)}
+            </div>
+            <div 
+              className="btn btn-secondary btn-soft w-full mt-4"
+              onClick={() => send({type: "tokens_scale", tokens: tokens.map(t => ({
+                id: t.image.src.split("/").pop(),
+                x: t.x_coord,
+                y: t.y_coord,
+                scale: t.scale
+              }))})}
+            >
+              Partager l'échelle à tous les joueurs
             </div>
           </div>
         </>
