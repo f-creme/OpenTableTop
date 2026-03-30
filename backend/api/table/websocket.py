@@ -8,8 +8,8 @@ router = APIRouter(prefix="/table_ws", tags=["table_ws"])
 
 class Token(BaseModel):
     id: str
-    x: int
-    y: int
+    x: float
+    y: float
     scale: float
 
 class ConnectionManager:
@@ -17,7 +17,7 @@ class ConnectionManager:
         self.active_connections: List[WebSocket] = []
         self.current_map: str | None = None
         self.current_illustration: str | None = None
-        self.current_active_tokens: list = []
+        self.current_active_tokens: List[dict] = []
 
 
     async def connect(self, websocket: WebSocket):
@@ -80,7 +80,7 @@ class ConnectionManager:
 
         await self.broadcast(message)
     
-    async def broadcast_token_update(self, action: str, token: Token):
+    async def broadcast_token_update(self, action: str, token: dict):
         if action == "add":
             if token not in self.current_active_tokens:
                 self.current_active_tokens.append(token)
@@ -91,6 +91,10 @@ class ConnectionManager:
 
         message = {"type": "token_update", "action": action, "token": token}
         await self.broadcast(message)
+
+    async def broadcast_token_move(self, token: dict):
+        self.current_active_tokens = [token if t["id"] == token["id"] else t for t in self.current_active_tokens]
+        await self.broadcast({"type": "token_move", "token": token})
         
 
 # Dictionnary to store a connection manager per campaign 
@@ -126,7 +130,12 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
                 )
 
             elif msg_type == "token_update":
-                await manager.broadcast_token_update(action=data["action"], token=data["token"])
+                token = Token(**(data["token"])).model_dump()
+                await manager.broadcast_token_update(action=data["action"], token=token)
+
+            elif msg_type == "token_move":
+                token = Token(**(data["token"])).model_dump()
+                await manager.broadcast_token_move(token=token)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)

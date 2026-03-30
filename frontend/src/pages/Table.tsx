@@ -126,6 +126,7 @@ const Table = () => {
                         campaignId={Number(campaignId)} 
                         selectedIllustration={selectedIllustration} 
                         activeTokens={activeTokens}
+                        send={send}
                     />
                 </div>
 

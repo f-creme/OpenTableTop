@@ -16,9 +16,10 @@ type Props = {
   selectedMap: string | null;
   selectedIllustration: string | null;
   activeTokens: Token[];
+  send: (payload: any) => any;
 };
 
-const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, activeTokens }: Props) => {
+const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send }: Props) => {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [illustration, setIllustration] = useState<HTMLImageElement | null>(null);
   const [tokens, setTokens] = useState<TokenDisplay[]>([]);
@@ -66,11 +67,11 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
             const img = new window.Image();
             img.src = `${apiURL}/tokens/${campaignId}/${encodeURIComponent(t.id)}`;
             img.onload = () => {
-              const transformedY = (y: number, countTokens: number) => (y === 0 ? y + 150 * countTokens : y);
+              const transformedY = (y: number, countTokens: number) => (y === 0 ? 150 * countTokens : y);
               loadedImages.push({
                 image: img,
                 x_coord: t.x,
-                y_coord: transformedY(t.x, index),
+                y_coord: transformedY(t.y, index),
                 scale: t.scale
               });
               resolve();
@@ -211,6 +212,11 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
     });
   };
 
+  const onTokenDragEnd = (index: number, newX: number, newY: number) => {
+    const token = activeTokens[index]
+    send({type: "token_move", token: {...token, x: newX, y: newY}})
+  }
+
   return (
     <div ref={containerRef} className="relative h-[80vh] mx-auto my-8 bg-black border-2 rounded-xl overflow-hidden">
       <button
@@ -272,6 +278,7 @@ const MapDisplay = ({ apiURL, campaignId, selectedMap, selectedIllustration, act
               scaleY={t.scale}
               draggable
               onDragMove={(e) => onTokenDrag(index, e.target.x(), e.target.y())}
+              onDragEnd={(e) => onTokenDragEnd(index, e.target.x(), e.target.y())}
             />
           ))}
         </Layer>

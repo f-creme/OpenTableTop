@@ -59,6 +59,17 @@ export const useTableSocket = ({
                 if (data.action === "remove") {
                     setActiveToken((prev) => prev.filter((t) => t.id !== token.id));
                 };
+            };
+
+            if (data.type === "token_move") {
+                const token = data.token as Token;
+                setActiveToken((prev) => 
+                    prev.map((t) =>
+                        t.id === token.id
+                            ? { ...t, x: token.x, y: token.y }
+                            : t
+                    )
+                );
             }
 
         };
