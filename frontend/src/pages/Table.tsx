@@ -7,10 +7,12 @@ import DiceMenu from "../components/DiceMenu";
 import DiceResults from "../components/DiceResults";
 import MapSelector from "../components/MapSelector";
 import MapDisplay from "../components/MapDisplay";
+import TokenSelector from "../components/TokenSelector";
 import { useMaps } from "../hooks/useMaps";
 import { useDice } from "../hooks/useDice";
 import { useTableSocket } from "../hooks/useTableSocket";
 import { useIllustrations } from "../hooks/useIllustration";
+import { useTokens } from "../hooks/useTokens";
 import IllustrationSelector from "../components/IllustrationSelector";
 
 const Table = () => {
@@ -21,6 +23,7 @@ const Table = () => {
 
     const {maps, selectedMap, setSelectedMap} = useMaps();
     const {illustrations, selectedIllustration, setSelectedIllustration} = useIllustrations();
+    const { tokens, activeTokens, ToggleToken } = useTokens()
     const dice = useDice();
 
     const { send } = useTableSocket({
@@ -71,6 +74,15 @@ const Table = () => {
                         </li>
 
                         <li>
+                            <TokenSelector
+                                role={role}
+                                tokens={tokens}
+                                activeTokens={activeTokens}
+                                toggleToken={ToggleToken}
+                            />
+                        </li>
+
+                        <li>
                             <DiceMenu
                                 dices={[4,6,10,12,20,50,100]}
                                 countDices={dice.countDices}
@@ -84,7 +96,13 @@ const Table = () => {
                 <DiceResults {...dice} />
 
                 <div className="flex-1 flex items-center justify-center min-h-0">
-                    <MapDisplay apiURL={apiURL} selectedMap={selectedMap} campaignId={Number(campaignId)} selectedIllustration={selectedIllustration} />
+                    <MapDisplay 
+                        apiURL={apiURL}
+                        selectedMap={selectedMap} 
+                        campaignId={Number(campaignId)} 
+                        selectedIllustration={selectedIllustration} 
+                        activeTokens={activeTokens}
+                    />
                 </div>
 
             </div>

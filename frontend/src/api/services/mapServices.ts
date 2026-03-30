@@ -9,3 +9,8 @@ export async function getIllustrations(campaignId: number) {
     const res = await axiosInstance.get(`/illus/${campaignId}`);
     return res.data.illus
 }
+
+export async function getTokens(campaignId: number) {
+    const res = await axiosInstance.get(`tokens/${campaignId}`);
+    return res.data.tokens;
+}
