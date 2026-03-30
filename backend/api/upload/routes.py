@@ -17,7 +17,7 @@ DATA_DIR = os.path.abspath(DATA_DIR)
 MAX_FILE_SIZE = 2 * 1024 * 1024
 MAX_CAMPAIGN_SIZE = 100 * 1024 * 1024
 
-dict_category = {"maps": "maps", "illus": "illustrations", "tokens": "tokens"}
+dict_category = {"maps": "maps", "illustrations": "illustrations", "tokens": "tokens"}
 
 def get_campaign_path(campaign_id: int) -> Path:
     path = Path(f"{DATA_DIR}/campaign_{campaign_id:04d}")
@@ -70,14 +70,14 @@ async def upload_map(
     return await upload_file("maps", campaign_id, user_id, file, db)
 
 
-@router.post("/illus/{campaign_id}")
+@router.post("/illustrations/{campaign_id}")
 async def upload_illustration(
     campaign_id: int,
     user_id: int = Depends(get_current_user_id),
     file: UploadFile = File(...),
     db = Depends(get_db)
 ):
-    return await upload_file("illus", campaign_id, user_id, file, db)
+    return await upload_file("illustrations", campaign_id, user_id, file, db)
 
 @router.post("/tokens/{campaign_id}")
 async def upload_token(

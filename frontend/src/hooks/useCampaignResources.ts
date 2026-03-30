@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { useCampaign } from "../context/CampaignContext"
 import { getMaps } from "../api/services/mapServices";
 import { useState } from "react";
-import { uploadMap } from "../api/services/campaignResourcesServices";
+import { uploadFile } from "../api/services/campaignResourcesServices";
 
 export const useCampaignResources = () => {
     const { campaignId } = useCampaign()
@@ -41,17 +41,16 @@ export const useCampaignResources = () => {
         try {
             const formData = new FormData();
             formData.append("file", file);
-
-            if (category === "maps") {
-                await uploadMap(campaignId, formData)
-            };
-
+            
+            await uploadFile(campaignId, formData, category)
+            
+            if (category === "maps") loadMaps();
+            
         } catch (err: any) {
             console.error(err);
             alert(err.response?.data?.detail || "Erreur upload");
         }   
     }
-
     return {
         availMaps,
         loadMaps,
