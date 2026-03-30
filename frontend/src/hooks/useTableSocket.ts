@@ -47,6 +47,20 @@ export const useTableSocket = ({
                 setActiveToken(data.tokens)
             }
 
+            if (data.type === "token_update") {
+                const token = data.token as Token;
+
+                if (data.action === "add") {
+                    setActiveToken((prev) => {
+                        if (prev.some((t) => t.id === token.id)) return prev;
+                        return [...prev, token]
+                    });
+                };
+                if (data.action === "remove") {
+                    setActiveToken((prev) => prev.filter((t) => t.id !== token.id));
+                };
+            }
+
         };
 
         return () => ws.close();
