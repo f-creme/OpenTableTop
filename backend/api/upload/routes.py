@@ -14,8 +14,8 @@ router = APIRouter(prefix="/upload", tags=["upload"])
 
 DATA_DIR = os.path.abspath(DATA_DIR)
 
-MAX_FILE_SIZE = 500 * 1024
-MAX_CAMPAIGN_SIZE = 50 * 1024 * 1024
+MAX_FILE_SIZE = 2 * 1024 * 1024
+MAX_CAMPAIGN_SIZE = 100 * 1024 * 1024
 
 dict_category = {"maps": "maps", "illus": "illustrations", "tokens": "tokens"}
 
@@ -24,7 +24,7 @@ def get_campaign_path(campaign_id: int) -> Path:
     return path
 
 def get_folder_size(folder: Path) -> int:
-    return sum(f.stat().st_size for f in folder.glob("*") if f.is_file())
+    return sum(f.stat().st_size for f in folder.rglob("*") if f.is_file())
 
 
 async def upload_file(category: str, campaign_id: int, user_id: int = Depends(get_current_user_id), file: UploadFile = File(...), db = Depends(get_db)):

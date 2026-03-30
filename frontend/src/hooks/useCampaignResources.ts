@@ -29,7 +29,7 @@ export const useCampaignResources = () => {
             alert("Aucun fichier sélectionné");
             return;
         }
-        if (file.size > 500 * 1024) {
+        if (file.size > 2 * 1024 * 1024) {
             alert("Fichier top volumineux");
             return;
         }
