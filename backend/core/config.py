@@ -1,7 +1,11 @@
 import os
+from os.path import dirname, abspath, join
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "../data"))
+dotenv_path = join(dirname(__file__), "..", ".env")
+load_dotenv(dotenv_path)
 
-CAMPAIGN_DIR = os.path.join(DATA_DIR, "campaign_0000")
-MAPS_DIR = os.path.join(CAMPAIGN_DIR, "maps")
+if "STORAGE_DIR" not in os.environ:
+    raise ValueError(f"STORAGE_DIR is not set in environment variables")
+
+DATA_DIR = abspath(os.environ["STORAGE_DIR"])
