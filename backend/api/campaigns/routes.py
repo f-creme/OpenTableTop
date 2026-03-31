@@ -9,6 +9,8 @@ from core.config_storage import create_campaign_storage
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
+MAX_CAMPAIGN_PER_USER = 2
+
 
 @router.get("/")
 def get_user_campaigns(user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
@@ -44,11 +46,17 @@ def update_campaign_global(campaign_id: int, data: CampaignGlobalRequest, user_i
 @router.post("/create")
 def create_campaign(data: CampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
     try:
-        new_campaign_id = repository.create_campaign(db, user_id, data.title, data.name)
-        db.commit()
+        count = repository.count_user_campaigns(db, user_id)
 
-        create_campaign_storage(new_campaign_id)
-        return {"message": "campaign created", "campaignId": new_campaign_id}
+        if count < MAX_CAMPAIGN_PER_USER:
+            new_campaign_id = repository.create_campaign(db, user_id, data.title, data.name)
+            db.commit()
+
+            create_campaign_storage(new_campaign_id)
+            return {"message": "campaign created", "campaignId": new_campaign_id}
+        
+        else:
+            raise HTTPException(status_code=400, detail="User has reached the campaign limit")
     
     except errors.UniqueViolation:
         db.rollback()

@@ -45,6 +45,14 @@ def update_campaign_global(db, user_id: int, campaign_id: int, title: str, chara
             (character_name, campaign_id, user_id)
         )
 
+def count_user_campaigns(db, user_id: int):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT COUNT(*) FROM users_campaigns WHERE user_id = %s AND role = 'gm';",
+            (user_id, )
+        )
+        count = cursor.fetchone()["count"]
+        return count
 
 def create_campaign(db, user_id: int, title: str, character_name: str):
     with db.cursor() as cursor:
