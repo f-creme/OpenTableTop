@@ -283,10 +283,10 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
   return (
     <div ref={containerRef} className="relative h-[80vh] mx-auto my-8 bg-black border-2 rounded-xl overflow-hidden">
       <div className="fab fab-reverse absolute">
-        <div tabIndex={0} role="button" className="btn btn-lg btn-circle btn-secondary"><MonitorCog /></div>
-        <button className="fab-main-action absolute btn btn-circle btn-lg btn-primary"><X /></button>
+        <div tabIndex={0} role="button" className="btn btn-xl btn-circle btn-secondary"><MonitorCog /></div>
+        <button className="fab-main-action absolute btn btn-xl btn-circle btn-primary"><X /></button>
         <div className="tooltip tooltip-left" data-tip="Réinitialiser la vue">
-          <button onClick={resetView} className="btn btn-secondary btn-circle z-10"><RotateCcw /></button>
+          <button onClick={resetView} className="btn btn-xl btn-secondary btn-circle z-10"><RotateCcw /></button>
         </div>  
 
         <div className="tooltip tooltip-left" data-tip="Redimensionner les tokens">
