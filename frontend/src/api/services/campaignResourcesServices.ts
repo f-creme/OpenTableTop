@@ -5,6 +5,10 @@ export async function uploadFile(campaignId: number, file: FormData, category: "
 }
 
 export async function deleteFile(campaignId: number, filename: string, category: "maps" | "illustrations" | "tokens") {
-    const res = await axiosInstance.delete(`/upload/${category}/${campaignId}/${filename}`);
-    console.log(res.data);
+    await axiosInstance.delete(`/upload/${category}/${campaignId}/${filename}`);
+}
+
+export async function getQuota(campaignId: number) {
+    const res = await axiosInstance.get(`/upload/${campaignId}/quota`);
+    return res.data.quota;
 }

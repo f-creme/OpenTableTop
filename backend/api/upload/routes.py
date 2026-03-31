@@ -117,3 +117,11 @@ def delete_file(category: str, campaign_id: int, filename: str, user_id: int = D
         raise HTTPException(500, f"Cannot delete file: {str(e)}")
     
     return {"detail": "File deleted"}
+
+
+@router.get("/{campaign_id}/quota")
+def get_campaign_quota(campaign_id: int):
+    folder = get_campaign_path(campaign_id)
+    current_size = get_folder_size(folder)
+    max_size = MAX_CAMPAIGN_SIZE
+    return {"quota": {"currentSize": current_size, "maxSize": max_size}}
