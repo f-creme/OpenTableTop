@@ -78,29 +78,38 @@ export const useCampaignResources = () => {
     const handleUpload = async (file: File | null, category: "maps" | "illustrations" | "tokens") => {
         if (!campaignId) return;
         if (!file) {
-            alert("Aucun fichier sélectionné");
+            toast.error("Aucun fichier sélectionné");
             return;
         }
         if (file.size > 2 * 1024 * 1024) {
-            alert("Fichier top volumineux");
+            toast.error("Fichier trop volumineux");
             return;
         }
         if (!file.type.startsWith("image/")) {
-            alert("Seules les images sont autorisées");
+            toast.error("Seules les images sont autorisées");
             return;
         }
 
         try {
             const formData = new FormData();
             formData.append("file", file);
-            
-            await uploadFile(campaignId, formData, category)
-            
+
+            await toast.promise(
+                uploadFile(campaignId, formData, category),
+                {
+                    loading: "Upload en cours...",
+                    success: "Fichier uploadé avec succès",
+                    error: "Erreur lors de l'upload"
+                }
+            );
+
             if (category === "maps") loadMaps();
+            if (category === "illustrations") loadIllustrations();
+            if (category === "tokens") loadTokens();
 
         } catch (err: any) {
             console.error(err);
-            alert(err.response?.data?.detail || "Erreur upload");
+            toast.error(err.response?.data?.detail || "Erreur upload");
         }   
     };
 
@@ -109,13 +118,22 @@ export const useCampaignResources = () => {
         if (!confirm(`Supprimer ${filename} ?`)) return;
 
         try {
-            await deleteFile(campaignId, filename, category);
-            alert(`${filename} supprimé`);
+            await toast.promise(
+                deleteFile(campaignId, filename, category),
+                {
+                    loading: `Suppression de ${filename}...`,
+                    success: `${filename} supprimé`,
+                    error: `Erreur lors de la suppression de ${filename}`
+                }
+            );
 
-            if (category === "maps") loadMaps;
+            if (category === "maps") loadMaps();
+            if (category === "illustrations") loadIllustrations();
+            if (category === "tokens") loadTokens();
+
         } catch (err: any) {
             console.error(err);
-            alert(err.response?.data?.detail || "Erreur lors de la suppression");
+            toast.error(err.response?.data?.detail || "Erreur lors de la suppression");
         }
     };
 
