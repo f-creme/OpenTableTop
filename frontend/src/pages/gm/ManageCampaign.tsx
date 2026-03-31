@@ -71,7 +71,7 @@ export default function ManageCampaign() {
                     >
                         <option value="general">Général</option>
                         <option value="users">Utilisateurs</option>
-                        <option value="episodes">Épisodes</option>
+                        <option value="resources">Ressources</option>
                     </select>
                 </div>
 
