@@ -16,7 +16,10 @@ def list_illustrations(campaign_id: int):
     campaign_dir_name = f"campaign_{campaign_id:04d}"
     campaign_illus_dir = os.path.join(DATA_DIR, campaign_dir_name, "illustrations")
     try: 
-        files = [f for f in os.listdir(campaign_illus_dir) if f.lower().endswith((".png", ".jpg", ".webp"))]
+        files = sorted(
+            [f for f in os.listdir(campaign_illus_dir) if f.lower().endswith((".png", ".jpg", ".webp"))],
+            key=lambda x: x.lower()
+        )        
         return {"illus": files}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

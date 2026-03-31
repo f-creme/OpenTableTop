@@ -14,7 +14,10 @@ def list_tokens(campaign_id: int):
     campaign_dir_name = f"campaign_{campaign_id:04d}"
     campaign_tokens_dir = os.path.join(DATA_DIR, campaign_dir_name, "tokens")
     try: 
-        files = [f for f in os.listdir(campaign_tokens_dir) if f.lower().endswith((".png", ".jpg", ".webp"))]
+        files = sorted(
+            [f for f in os.listdir(campaign_tokens_dir) if f.lower().endswith((".png", ".jpg", ".webp"))],
+            key=lambda x: x.lower()
+        )        
         data = [{"id": f, "x": 0, "y": 0, "scale": 1} for f in files]
         return {"tokens": data}
     except Exception as e:
