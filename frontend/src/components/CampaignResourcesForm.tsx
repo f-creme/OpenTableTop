@@ -106,15 +106,24 @@ const CampaignResourcesForm: FC<Props> = ({
 }) => {
     const [activeTab, setActiveTab] = useState<"maps" | "illustrations" | "tokens">("maps");
 
+    function formatBytes(bytes: number, decimals = 2) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+    }
+
     return (
         <div className="flex flex-col">
             <p className="text-2xl md:text-4xl text-center font-semibold p-4 md:p-5 mb-3 md:mb-5">
                 Ressources
             </p>
 
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5 p-4">
+            <div className="flex flex-col justify-between items-start md:items-center gap-3 mb-5 p-4">
                 <progress 
-                    className={`progress w-full ${
+                    className={`progress ${
                         campaignQuota.currentSize / campaignQuota.maxSize < 0.5 
                         ? "progress-info"
                         : campaignQuota.currentSize / campaignQuota.maxSize < 0.75 
@@ -125,9 +134,10 @@ const CampaignResourcesForm: FC<Props> = ({
                     }`} 
                     value={campaignQuota.currentSize} max={campaignQuota.maxSize}
                 ></progress>
+                <p className="text-sm">Stockage : {formatBytes(campaignQuota.maxSize - campaignQuota.currentSize)} restants</p>
             </div>
             <div className="flex justify-center">
-                <div className="tabs tabs-lift mb-5">
+                <div className="tabs tabs-lift tabs-lg mb-5">
                     <button 
                         className={`tab ${activeTab === "maps" ? "tab-active" : ""}`}
                         onClick={() => setActiveTab("maps")}
