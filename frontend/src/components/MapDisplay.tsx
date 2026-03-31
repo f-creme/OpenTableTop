@@ -2,6 +2,7 @@ import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import { useEffect, useState, useRef } from "react";
 import type { Token } from "../types/token";
 import type Konva from "konva";
+import { MonitorCog, RotateCcw, Scaling, X } from "lucide-react";
 
 interface TokenDisplay {
   image: HTMLImageElement,
@@ -281,51 +282,54 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
 
   return (
     <div ref={containerRef} className="relative h-[80vh] mx-auto my-8 bg-black border-2 rounded-xl overflow-hidden">
-      <button
-        onClick={resetView}
-        className="absolute btn btn-primary w-40 h-10 top-2 right-2 z-10 px-3 py-1 rounded-lg shadow-md"
-      >
-        Réinitialiser la vue
-      </button>
+      <div className="fab fab-reverse absolute">
+        <div tabIndex={0} role="button" className="btn btn-lg btn-circle btn-secondary"><MonitorCog /></div>
+        <button className="fab-main-action absolute btn btn-circle btn-lg btn-primary"><X /></button>
+        <div className="tooltip tooltip-left" data-tip="Réinitialiser la vue">
+          <button onClick={resetView} className="btn btn-secondary btn-circle z-10"><RotateCcw /></button>
+        </div>  
 
-      {role === "mj" && (
-        <button
-          onClick={() => setShowTokenScaleControl(prev => !prev)}
-          className="absolute btn btn-secondary w-40 h-10 top-2 right-48 z-10 px-3 rounded-lg shadow-md"
-        >
-          Echelle des tokens
-        </button>
-      )}
-
-      {showTokenScaleControl && (
-        <>
-          <div className="absolute top-14 w-80 right-32 bg-white border-2 border-secondary z-10 p-3 rounded-lg shadow-md">
-            <input 
-              className="w-full range range-secondary range-sm"
-              type="range"
-              min={0.1}
-              max={3}
-              step={0.1}
-              value={tokenScale}
-              onChange={(e) => handleTokenScale(Number(e.target.value))}
-            />
-            <div className="text-sm text-center mt-1">
-              x{tokenScale.toFixed(1)}
-            </div>
-            <div 
-              className="btn btn-secondary btn-soft w-full mt-4"
-              onClick={() => send({type: "tokens_scale", tokens: tokens.map(t => ({
-                id: t.image.src.split("/").pop(),
-                x: t.x_coord,
-                y: t.y_coord,
-                scale: t.scale
-              }))})}
+        <div className="tooltip tooltip-left" data-tip="Redimensionner les tokens">
+          {role === "mj" && (
+            <button
+              onClick={() => setShowTokenScaleControl(prev => !prev)}
+              className="btn btn-secondary btn-circle z-10"
             >
-              Partager l'échelle à tous les joueurs
-            </div>
-          </div>
-        </>
-      )}
+              <Scaling />
+            </button>
+          )}
+  
+          {showTokenScaleControl && (
+            <>
+              <div className="absolute -top-10 w-80 z-10 right-20 bg-white border-2 border-secondary p-3 rounded-lg shadow-md">
+                <input
+                  className="w-full range range-secondary range-sm"
+                  type="range"
+                  min={0.1}
+                  max={3}
+                  step={0.1}
+                  value={tokenScale}
+                  onChange={(e) => handleTokenScale(Number(e.target.value))}
+                />
+                <div className="text-sm text-center mt-1">
+                  x{tokenScale.toFixed(1)}
+                </div>
+                <div
+                  className="btn btn-secondary btn-soft w-full mt-4"
+                  onClick={() => send({type: "tokens_scale", tokens: tokens.map(t => ({
+                    id: t.image.src.split("/").pop(),
+                    x: t.x_coord,
+                    y: t.y_coord,
+                    scale: t.scale
+                  }))})}
+                >
+                  Partager l'échelle à tous les joueurs
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
 
       <Stage
         width={containerSize.width}
