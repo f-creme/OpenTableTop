@@ -35,7 +35,11 @@ export default function ManageCampaign() {
 
     const {
         availMaps,
+        availIllustrations,
+        availTokens,
         loadMaps, 
+        loadIllustrations,
+        loadTokens,
         handleUpload,
         handleTrash,
         campaignQuota
@@ -106,7 +110,11 @@ export default function ManageCampaign() {
                         <CampaignResourcesForm 
                             campaignId={campaignId!}
                             availMaps={availMaps}
+                            availIllustrations={availIllustrations}
+                            availTokens={availTokens}
                             loadMaps={loadMaps}
+                            loadIllustrations={loadIllustrations}
+                            loadTokens={loadTokens}
                             uploadFile={handleUpload}
                             deleteFile={handleTrash}
                             campaignQuota={campaignQuota!}

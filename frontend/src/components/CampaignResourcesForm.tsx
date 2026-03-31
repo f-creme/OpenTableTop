@@ -1,5 +1,6 @@
 import { useState, type FC } from "react"; 
-import { Map, Trash } from "lucide-react";
+import { Map, ImageIcon, ChessPawn } from "lucide-react";
+import { Trash } from "lucide-react";
 
 interface Quota {
     currentSize: number,
@@ -9,20 +10,102 @@ interface Quota {
 type Props = {
     campaignId: number;
     availMaps: string[];
+    availIllustrations: string[];
+    availTokens: string[];
     loadMaps: () => void;
+    loadIllustrations: () => void;
+    loadTokens: () => void;
     uploadFile: (file: File, category: "maps" | "illustrations" | "tokens") => Promise<void>;
     deleteFile: (filename: string, category: "maps" | "illustrations" | "tokens") => Promise<void>;
     campaignQuota: Quota
 };
 
+const UploadSection: FC<{
+    files: string[];
+    loadFiles: () => void;
+    uploadFile: (file: File) => void;
+    deleteFile: (filename: string) => void;
+    label: string;
+    Icon: FC;
+}> = ({ files, loadFiles, uploadFile, deleteFile, label, Icon }) => {
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    return (
+        <div className="flex flex-col gap-5">
+            <div className="flex flex-col m-5 md:flex-row justify-between items-start md:items-center gap-3">
+                <div className="text-lg flex gap-4 md:text-xl font-medium">
+                    <Icon /> 
+                    <div>{label}</div>
+                </div>
+                <button className="btn btn-primary w-full md:w-auto" onClick={loadFiles}>
+                    Actualiser la liste
+                </button>
+            </div>
+
+            <div className="hidden md:block bg-base-200 rounded-2xl px-4 divide-y divide-primary/30 w-full">
+                <div className="flex p-3 gap-4 justify-between items-center font-semibold text-sm border-b">
+                    <div className="flex gap-2">
+                        <span>Nom de la ressource</span>
+                    </div>
+                    <div className="w-10 mr-2">Retirer</div>
+                </div>
+                {files.map((file, index) => (
+                    <div
+                        className="flex p-3 gap-4 justify-between items-center"
+                        key={index}
+                    >
+                        <div className="flex gap-2">
+                            <span>{file}</span>
+                        </div>
+                        <button
+                            className="btn btn-primary btn-ghost"
+                            onClick={() => deleteFile(file)}
+                        >
+                            <Trash className="h-4 w-4" />                            
+                        </button>
+                    </div>
+                ))}
+            </div>
+
+            <div className="flex flex-col justify-between items-center mt-5 px-4 gap-4">
+                <fieldset className="flex-1 fieldset w-full">
+                    <legend className="fieldset-legend">Choisir un fichier</legend>
+                    <input type="file" className="file-input w-full" onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                            setSelectedFile(e.target.files[0])
+                        }
+                    }}/>
+                    <label className="label">Taille maximale: 2MB</label>
+                </fieldset>
+                <button
+                    className="btn btn-primary w-full"
+                    disabled={!selectedFile}
+                    onClick={() => {
+                        if (!selectedFile) return;
+                        uploadFile(selectedFile)
+                        setSelectedFile(null)
+                    }}
+                >
+                    Uploader
+                </button>
+            </div>
+        </div>
+    );
+};
+
 const CampaignResourcesForm: FC<Props> = ({
     availMaps,
+    availIllustrations,
+    availTokens,
     loadMaps,
+    loadIllustrations,
+    loadTokens,
     uploadFile,
     deleteFile,
     campaignQuota
 }) => {
-    const [selectedMapFile, setSelectedMapFile] = useState<File | null>(null);
+    const [activeTab, setActiveTab] = useState<"maps" | "illustrations" | "tokens">("maps");
+
     return (
         <div className="flex flex-col">
             <p className="text-2xl md:text-4xl text-center font-semibold p-4 md:p-5 mb-3 md:mb-5">
@@ -43,62 +126,61 @@ const CampaignResourcesForm: FC<Props> = ({
                     value={campaignQuota.currentSize} max={campaignQuota.maxSize}
                 ></progress>
             </div>
-
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5 p-4">
-                <div className="text-lg flex gap-4 md:text-xl font-medium">
-                    <Map/> 
-                    <div>Cartes et arrière-plans</div>
-                </div>
-                <button className="btn btn-primary w-full md:w-auto" onClick={loadMaps}>
-                    Actualiser la liste
-                </button>
-            </div>
-
-            <div className="hidden md:block bg-base-200 rounded-2xl px-4 divide-y divide-primary/30 w-full">
-                <div className="flex p-3 gap-4 justify-between items-center font-semibold text-sm border-b">
-                    <div className="flex gap-2">
-                        <span>Nom de la ressource</span>
-                    </div>
-                    <div className="w-10 mr-2">Retirer</div>
-                </div>
-                {availMaps.map((map, index) => (
-                    <div
-                        className="flex p-3 gap-4 justify-between items-center"
-                        key={index}
+            <div className="flex justify-center">
+                <div className="tabs tabs-lift mb-5">
+                    <button 
+                        className={`tab ${activeTab === "maps" ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab("maps")}
                     >
-                        <div className="flex gap-2">
-                            <span>{map}</span>
-                        </div>
-                        <button
-                            className="btn btn-primary btn-ghost"
-                            onClick={() => deleteFile(map, "maps")}
-                        >
-                            <Trash className="h-4 w-4" />                            
-                        </button>
-                    </div>
-                ))}
+                        Cartes
+                    </button>
+                    <button 
+                        className={`tab ${activeTab === "illustrations" ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab("illustrations")}
+                    >
+                        Illustrations
+                    </button>
+                    <button 
+                        className={`tab ${activeTab === "tokens" ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab("tokens")}
+                    >
+                        Tokens
+                    </button>
+                </div>
             </div>
-            <div className="flex flex-col justify-between items-center mt-5 px-4 gap-4">
-                <fieldset className="flex-1 fieldset w-full">
-                    <legend className="fieldset-legend">Choisir un fichier</legend>
-                    <input type="file" className="file-input w-full" onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                            setSelectedMapFile(e.target.files[0])
-                        }
-                    }}/>
-                    <label className="label">Taille maximale: 2MB</label>
-                </fieldset>
-                <button
-                    className="btn btn-primary w-full"
-                    disabled={!selectedMapFile}
-                    onClick={() => {
-                        if (!selectedMapFile) return;
-                        uploadFile(selectedMapFile, "maps")
-                    }}
-                >
-                    Uploader
-                </button>
-            </div>
+
+            {activeTab === "maps" && (
+                <UploadSection
+                    files={availMaps}
+                    loadFiles={loadMaps}
+                    uploadFile={(file) => uploadFile(file, "maps")}
+                    deleteFile={(filename) => deleteFile(filename, "maps")}
+                    label="Cartes et arrière-plans"
+                    Icon={Map}
+                />
+            )}
+
+            {activeTab === "illustrations" && (
+                <UploadSection
+                    files={availIllustrations}
+                    loadFiles={loadIllustrations}
+                    uploadFile={(file) => uploadFile(file, "illustrations")}
+                    deleteFile={(filename) => deleteFile(filename, "illustrations")}
+                    label="Illustrations"
+                    Icon={ImageIcon}
+                />
+            )}
+
+            {activeTab === "tokens" && (
+                <UploadSection
+                    files={availTokens}
+                    loadFiles={loadTokens}
+                    uploadFile={(file) => uploadFile(file, "tokens")}
+                    deleteFile={(filename) => deleteFile(filename, "tokens")}
+                    label="Tokens"
+                    Icon={ChessPawn}
+                />
+            )}
         </div>
     );
 };

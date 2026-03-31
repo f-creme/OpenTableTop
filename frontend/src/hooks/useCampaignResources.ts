@@ -1,8 +1,9 @@
 import toast from "react-hot-toast";
 import { useCampaign } from "../context/CampaignContext"
-import { getMaps } from "../api/services/mapServices";
+import { getMaps, getIllustrations, getTokens } from "../api/services/mapServices";
 import { useEffect, useState } from "react";
 import { uploadFile, deleteFile, getQuota } from "../api/services/campaignResourcesServices";
+import type { Token } from "../types/token";
 
 interface Quota {
     currentSize: number,
@@ -13,6 +14,8 @@ export const useCampaignResources = () => {
     const { campaignId } = useCampaign()
 
     const [availMaps, setAvailMaps] = useState<string[]>([])
+    const [availIllustrations, setAvailIllustrations] = useState<string[]>([])
+    const [availTokens, setAvailTokens] = useState<string[]>([])
     const [campaignQuota, setCampaignQuota] = useState<Quota | null>(null)
 
     const getCampaignQuota = async () => {
@@ -37,6 +40,37 @@ export const useCampaignResources = () => {
                 loading: "Récupération des cartes et arrière-plans...",
                 success: "Liste des cartes et arrière-plans mise à jour",
                 error: "Echec de la mise à jour des cartes et arrière-plans"
+            }
+        )
+    };
+
+    const loadIllustrations = async () => {
+        if (!campaignId || campaignId < 0) return;
+        await toast.promise(
+            getIllustrations(campaignId)
+                .then((res) => {setAvailIllustrations(res);})
+                .catch((err) => {console.log(err); throw err}),
+            {
+                loading: "Récupération des illustrations...",
+                success: "Liste des illustrations disponibles mise à jour",
+                error: "Echec de la récupération des illustrations"
+            }
+        )
+    };
+
+    const loadTokens = async () => {
+        if (!campaignId || campaignId < 0) return;
+        await toast.promise(
+            getTokens(campaignId)
+                .then((res) => {
+                    const tokenNames = res.map((token: Token) => token.id);
+                    setAvailTokens(tokenNames);
+                })
+                .catch((err) => {console.log(err); throw err}),
+            {
+                loading: "Récupération des illustrations...",
+                success: "Liste des illustrations disponibles mise à jour",
+                error: "Echec de la récupération des illustrations"
             }
         )
     };
@@ -87,11 +121,15 @@ export const useCampaignResources = () => {
 
     useEffect(() => {
         getCampaignQuota();
-    }, [availMaps])
+    }, [availMaps, availIllustrations, availTokens])
 
     return {
         availMaps,
+        availIllustrations,
+        availTokens,
         loadMaps,
+        loadIllustrations,
+        loadTokens,
         handleUpload,
         handleTrash,
         campaignQuota
