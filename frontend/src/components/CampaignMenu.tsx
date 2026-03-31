@@ -34,7 +34,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                 error: "Impossible de supprimer la campagne.",
             });
         setCampaignId(-1);
-        setTimeout(() => setRedirect(true), 5000)
+        setTimeout(() => setRedirect(true), 3000)
     };
 
     return (
@@ -78,7 +78,11 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
 
             <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
             <div className="flex flex-col gap-4 justify-between m-4 mb-0">
-                <button className="flex-1 btn btn-error text-error-content p-3" disabled={disabledMenu} onClick={() => deleteCampaign()}>Supprimer</button>
+                <button 
+                    className="flex-1 btn btn-error text-error-content p-3" 
+                    disabled={disabledMenu} 
+                    onClick={() => {if (confirm("Supprimer définitivement la campagne et toutes les données ?")) deleteCampaign()}}
+                >Supprimer</button>
                 {redirect === true && (
                     <Navigate to="/room/role-selection"/>
                 )}
