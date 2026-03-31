@@ -1,19 +1,26 @@
 import { useState, type FC } from "react"; 
 import { Map, Trash } from "lucide-react";
 
+interface Quota {
+    currentSize: number,
+    maxSize: number
+}
+
 type Props = {
     campaignId: number;
     availMaps: string[];
     loadMaps: () => void;
     uploadFile: (file: File, category: "maps" | "illustrations" | "tokens") => Promise<void>;
     deleteFile: (filename: string, category: "maps" | "illustrations" | "tokens") => Promise<void>;
+    campaignQuota: Quota
 };
 
 const CampaignResourcesForm: FC<Props> = ({
     availMaps,
     loadMaps,
     uploadFile,
-    deleteFile
+    deleteFile,
+    campaignQuota
 }) => {
     const [selectedMapFile, setSelectedMapFile] = useState<File | null>(null);
     return (
@@ -21,6 +28,21 @@ const CampaignResourcesForm: FC<Props> = ({
             <p className="text-2xl md:text-4xl text-center font-semibold p-4 md:p-5 mb-3 md:mb-5">
                 Ressources
             </p>
+
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5 p-4">
+                <progress 
+                    className={`progress w-full ${
+                        campaignQuota.currentSize / campaignQuota.maxSize < 0.5 
+                        ? "progress-info"
+                        : campaignQuota.currentSize / campaignQuota.maxSize < 0.75 
+                            ? "progress-warning" 
+                            : campaignQuota.currentSize / campaignQuota.maxSize < 1 
+                                ? "progress-error"
+                                : "progress-neutral" 
+                    }`} 
+                    value={campaignQuota.currentSize} max={campaignQuota.maxSize}
+                ></progress>
+            </div>
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5 p-4">
                 <div className="text-lg flex gap-4 md:text-xl font-medium">

@@ -37,7 +37,8 @@ export default function ManageCampaign() {
         availMaps,
         loadMaps, 
         handleUpload,
-        handleTrash
+        handleTrash,
+        campaignQuota
     } = useCampaignResources()
 
     const [view, setView] = useState<"general" | "users" | "resources">("general");
@@ -108,6 +109,7 @@ export default function ManageCampaign() {
                             loadMaps={loadMaps}
                             uploadFile={handleUpload}
                             deleteFile={handleTrash}
+                            campaignQuota={campaignQuota!}
                         />
                     )}
                 </div>
