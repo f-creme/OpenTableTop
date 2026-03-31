@@ -31,8 +31,8 @@ const UploadSection: FC<{
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     return (
-        <div className="flex flex-col gap-5">
-            <div className="flex flex-col m-5 md:flex-row justify-between items-start md:items-center gap-3">
+        <div className="flex flex-col gap-5 p-4">
+            <div className="flex flex-col m-1 md:flex-row justify-between items-start md:items-center gap-3">
                 <div className="text-lg flex gap-4 md:text-xl font-medium">
                     <Icon /> 
                     <div>{label}</div>
@@ -67,7 +67,7 @@ const UploadSection: FC<{
                 ))}
             </div>
 
-            <div className="flex flex-col justify-between items-center mt-5 px-4 gap-4">
+            <div className="flex flex-col justify-between items-center mt-5 gap-4">
                 <fieldset className="flex-1 fieldset w-full">
                     <legend className="fieldset-legend">Choisir un fichier</legend>
                     <input type="file" className="file-input w-full" onChange={(e) => {
@@ -75,7 +75,7 @@ const UploadSection: FC<{
                             setSelectedFile(e.target.files[0])
                         }
                     }}/>
-                    <label className="label">Taille maximale: 2MB</label>
+                    <label className="label">Taille maximale: 2MB. Formats autorisés: .webp, .png, .jpg</label>
                 </fieldset>
                 <button
                     className="btn btn-primary w-full"
@@ -191,6 +191,80 @@ const CampaignResourcesForm: FC<Props> = ({
                     Icon={ChessPawn}
                 />
             )}
+
+            <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent mt-8 mb-5"></div>
+
+            <div className="flex flex-col w-full p-4">
+                <div className="collapse collapse-arrow bg-base-100 border border-base-300">
+                    <input type="radio" name="accordion-1" />
+                    <div className="collapse-title font-semibold">Types de ressources</div>
+                    <div className="collapse-content text-sm">
+                        <p className="mb-1">Les ressources sont réparties en trois catégories, chacune correspondant à un calque différent sur la table:</p>
+                        <ul className="list-disc flex flex-col gap-1 mx-4 p-1">
+                            <li>
+                                <p><b>Cartes:</b> images de fond du canvas. Il peut s'agir de cartes, de décors ou de simples arrière-plans. Elles sont toujours affichées sur le calque inférieur.</p>
+                            </li>
+                            <li>
+                                <p><b>Illustrations:</b> éléments visuels affichés au centre de la carte, sur un claque intermédiaire. Leur taille est automatiquement ajustée pour être visible.</p>
+                            </li>
+                            <li>
+                                <p><b>Tokens:</b> éléments interactifs positionnés au-dessus des autres calques. Ils peuvent-être déplacés librement sur la carte et redimentsionnés manuellement.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div className="collapse collapse-arrow bg-base-100 border border-base-300">
+                    <input type="radio" name="accordion-1" />
+                    <div className="collapse-title font-semibold">Performances et formats</div>
+                    <div className="collapse-content text-sm">
+                        <p className="mb-1">Pour garantir une expérience fluide:</p>
+                        <ul className="list-disc flex flex-col gap-1 mx-4 p-1">
+                            <li>
+                                <p>Privilégiez des fichiers <b>légers</b>, surtout pour les tokens qui sont amenés à être déplacés en temps réel.</p>
+                            </li>
+                            <li>
+                                <p>Le format <b>WEBPB</b> et recommandé pour un bon compromis qualité/poids.</p>
+                            </li>
+                            <li>
+                                <p>Les formats <b>JPEG</b> et <b>PNG</b> sont également acceptés.</p>
+                            </li>
+                        </ul>                        
+                    </div>
+                </div>
+                <div className="collapse collapse-arrow bg-base-100 border border-base-300">
+                    <input type="radio" name="accordion-1" />
+                    <div className="collapse-title font-semibold">Nommage des fichiers</div>
+                    <div className="collapse-content text-sm">
+                        <p className="mb-1">Pour éviter les problèmes techniques et faciliter l'organisation de vos parties:</p>
+                        <ul className="list-disc flex flex-col gap-1 mx-4 p-1">
+                            <li>
+                                <p>N'utilisez pas d'espaces ni de caractères spéciaux comme <kbd className="kbd">/</kbd>, <kbd className="kbd">?</kbd>, <kbd className="kbd">#</kbd>, etc.</p>
+                                <p>Remplacez les par <kbd className="kbd">_</kbd> ou <kbd className="kbd">-</kbd></p>
+                            </li>
+                            <li>
+                                <p>Les ressources s'affichent des les sélecteurs <b>par ordre alphabétique</b>. Il est vivement conseillé d'utiliser un préfixe pour les organiser, par exemple :</p>
+                                <p><kbd className="kbd">01.village_nuit.webp</kbd>, <kbd className="kbd">02.donjon_entree.webp</kbd>, etc.</p>
+                            </li>
+                        </ul>                        
+                    </div>
+                </div>
+                <div className="collapse collapse-arrow bg-base-100 border border-base-300">
+                    <input type="radio" name="accordion-1" />
+                    <div className="collapse-title font-semibold">Dimensions et qualité</div>
+                    <div className="collapse-content text-sm">
+                        <p className="mb-1">Certains ajustements sont automatiques, mais pour un meilleur rendu: </p>
+                        <ul className="list-disc flex flex-col gap-1 mx-4 p-1">
+                            <li>
+                                <p>Utilisez des images avec des dimensions adaptés dès le départ</p>
+                            </li>
+                            <li>
+                                <p>Évitez les images trop petites par rapport à l'arrière-plan qui nécessiteraient un zoom, et également les images inutilement grandes qui alourdissent le chargement.</p>
+                            </li>
+                        </ul>                        
+                    </div>
+                </div>
+            </div>
+                        
         </div>
     );
 };
