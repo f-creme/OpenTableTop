@@ -116,8 +116,6 @@ const Table = () => {
                     </ul>
                 </div>
 
-                <DiceResults {...dice} />
-
                 <div className="flex-1 flex items-center justify-center min-h-0">
                     <MapDisplay
                         role={role}
@@ -127,6 +125,7 @@ const Table = () => {
                         selectedIllustration={selectedIllustration}
                         activeTokens={activeTokens}
                         send={send}
+                        diceUI={<DiceResults {...dice} />}
                     />
                 </div>
             </div>

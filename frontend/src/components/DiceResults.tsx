@@ -19,11 +19,11 @@ const DiceResults = ({
 }: DiceResultsProps) => (
   <div className="flex flex-col justify-center items-center gap-4 min-h-20 max-w-4xl mx-auto">
     {showRoll && (
-      <p className={`text-lg ${isClearing ? "animate-[fadeOut_0.3s_ease]" : "animate-[fadeIn_1.0s_ease]"}`}>
+      <p className={`text-lg font-normal pt-4 ${isClearing ? "animate-[fadeOut_0.3s_ease]" : "animate-[fadeIn_1.0s_ease]"}`}>
         Results for {countDices}d{selectedDice}:
       </p>
     )}
-    <div className="flex flex-wrap items-center justify-center gap-4">
+    <div className="flex flex-wrap items-center justify-center gap-4 pb-4 px-8">
       {displayedResults.map((value, index) => (
         <div
           key={index}
@@ -52,7 +52,7 @@ const DiceResults = ({
       {(displayedResults.length > 0 || showSum) && (
         <button
           onClick={clearResults}
-          className="ml-4 btn btn-sm btn-error btn-outline animate-[fadeIn_0.5s_ease]"
+          className="ml-4 btn btn-sm btn-error animate-[fadeIn_0.5s_ease]"
         >
           Clear
         </button>

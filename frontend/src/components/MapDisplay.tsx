@@ -19,9 +19,10 @@ type Props = {
   selectedIllustration: string | null;
   activeTokens: Token[];
   send: (payload: any) => any;
+  diceUI: React.ReactNode;
 };
 
-const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send }: Props) => {
+const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send, diceUI }: Props) => {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [illustration, setIllustration] = useState<HTMLImageElement | null>(null);
   const [tokens, setTokens] = useState<TokenDisplay[]>([]);
@@ -330,6 +331,16 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
           )}
         </div>
       </div>
+      
+      {diceUI && (
+        <>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+            <div className="pointer-events-auto bg-base-100/30 backdrop-blur-md rounded-2xl shadow-2xl shadow-black/75">
+              {diceUI}
+            </div>
+          </div>
+        </>
+      )}
 
       <Stage
         width={containerSize.width}
