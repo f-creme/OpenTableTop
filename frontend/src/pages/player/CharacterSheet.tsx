@@ -5,8 +5,7 @@ import { useEffect, useState } from "react"
 import { useCharacterSheet } from "../../hooks/useCharacterSheet"
 import { Toaster } from "react-hot-toast"
 import type { Character, Player } from "../../types/character"
-import { useSendOnce } from "../../hooks/useSendOnce"
-import { useCampaign } from "../../context/CampaignContext"
+import { useWebSocket } from "../../context/WebSocketContext"
 
 export default function CharacterSheet() {
     const { role } = useRole()
@@ -22,10 +21,7 @@ export default function CharacterSheet() {
         updateCharacter
     } = useCharacterSheet()
 
-    const { campaignId } = useCampaign()
-
-    const apiURL = import.meta.env.VITE_API_URL;
-    const { sendOnce, enableSend } = useSendOnce(campaignId, apiURL)
+    const { send } = useWebSocket();
 
     const [selectedCharacterId, setSelectedCharacterId] = useState<number>(-1)
     const [characterName, setCharacterName] = useState<string>("")
@@ -46,7 +42,7 @@ export default function CharacterSheet() {
             userPublicName: localStorage.getItem("publicName")!            
         };
 
-        sendOnce({ type: "join_player", player: player }, 10000)
+        send({ type: "join_player", player: player})
     }
 
     useEffect(() => {
@@ -200,13 +196,6 @@ export default function CharacterSheet() {
                     </button>
                     <button 
                         className="btn btn-primary flex-1"
-                        disabled={
-                            (selectedCharacterId < 0) 
-                                ? true 
-                                : (enableSend) 
-                                    ? false
-                                    : true
-                        }
                         onClick={() => joinTable()}
                     >Rejoindre la table de jeu</button>
                 </div>
