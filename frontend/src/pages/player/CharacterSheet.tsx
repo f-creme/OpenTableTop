@@ -46,7 +46,7 @@ export default function CharacterSheet() {
 
     return (
         <div className="flex flex-row mx-20 mt-10 gap-10">
-            <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
+            <Toaster position="top-center" containerClassName="text-center" toastOptions={{ duration: 4000 }} />
             <div className="flex flex-1 bg-base-200 min-h-100 flex-col p-4 gap-1 rounded-2xl shadow-2xl">
                 <span className="flex flex-row gap-4 items-center mb-8">
                     <p>Sélectionner un de vos personnages :</p>
