@@ -1,3 +1,12 @@
+def get_user_characters(db, user_id: int):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT id, name, class, appearance, personality, bio FROM characters " \
+            "WHERE user_id = %s;",
+            (user_id, )
+        )
+        return cursor.fetchall()
+
 def create_new_character(
         db, 
         user_id: int,

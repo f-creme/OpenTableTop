@@ -1,7 +1,7 @@
 // pages/player/CharacterSheet.tsx
 import { Navigate } from "react-router-dom"
 import { useRole } from "../../context/RoleContext"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useCharacterSheet } from "../../hooks/useCharacterSheet"
 import { Toaster } from "react-hot-toast"
 
@@ -11,6 +11,8 @@ export default function CharacterSheet() {
         return <Navigate to="/room" />
     }
     const {
+        availCharacters,
+        loadCharacters,
         createCharacter
     } = useCharacterSheet()
 
@@ -20,6 +22,10 @@ export default function CharacterSheet() {
     const [characterAppearance, setCharacterAppearance] = useState<string>("")
     const [characterPersonality, setCharacterPersonality] = useState<string>("")  
     const [characterBio, setCharacterBio] = useState<string>("")
+
+    useEffect(() => {
+        loadCharacters();
+    }, [])
 
     return (
         <div className="flex flex-row mx-20 mt-10 gap-10">
@@ -31,7 +37,10 @@ export default function CharacterSheet() {
                         className="flex-1 select select-sm"
                         onChange={(e) => setCharacterId(Number(e.target.value))}
                     >
-                        <option value={-1}>Nouveau personnage</option>
+                        <option value={-1} key={-1}>Nouveau personnage</option>
+                        {availCharacters.length > 0 && availCharacters.map((c) => (
+                            <option value={c.id} key={c.id}>{c.name}</option>
+                        ))}
                     </select>
                 </span>
 

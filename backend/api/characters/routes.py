@@ -18,6 +18,18 @@ class CharacterRequest(BaseModel):
     personality: str
     bio: str
 
+@router.get("/")
+def get_characters(user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+    try: 
+        response = repository.get_user_characters(db, user_id)
+        formated_response = [
+            {"id": r["id"], "name": r["name"], "classOrRole": r["class"],
+            "appearance": r["appearance"], "personality": r["personality"], "bio": r["bio"]}
+            for r in response
+        ]
+        return {"message": "characters loaded", "data": formated_response}
+    except Exception:
+        raise HTTPException(400, detail="Unable to load the characters")
 
 @router.post("/create")
 def create_character(
@@ -34,5 +46,6 @@ def create_character(
         db.commit()
         return {"message": "character created", "characterId": character_id}
     
-    except Exception as e:
+    except Exception:
+        db.rollback()
         raise HTTPException(400, detail="Unable to create the character")
