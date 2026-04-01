@@ -15,8 +15,9 @@ import { useTableSocket } from "../hooks/useTableSocket";
 import { useIllustrations } from "../hooks/useIllustration";
 import { useTokens } from "../hooks/useTokens";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Token } from "../types/token";
+import type { Player } from "../types/character";
 
 const Table = () => {
     const { role } = useRole();
@@ -28,13 +29,20 @@ const Table = () => {
     const { tokens, activeTokens, setActiveTokens, ToggleToken } = useTokens();
     const dice = useDice();
 
+    const [activePlayers, setActivePlayers] = useState<Player[]>([])
+
+    useEffect(() => {
+        console.log(activePlayers)
+    }, [activePlayers])
+
     const { send } = useTableSocket({
         campaignId,
         apiURL,
         onMapUpdate: setSelectedMap,
         onIllusUpdate: setSelectedIllustration,
         onDiceResult: dice.handleDiceResult,
-        setActiveToken: setActiveTokens
+        setActiveToken: setActiveTokens,
+        setActivePlayers: setActivePlayers
     });
 
     const changeMap = (mapName: string) => {

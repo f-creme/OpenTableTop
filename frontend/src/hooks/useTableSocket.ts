@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { Token } from "../types/token";
+import type { Player } from "../types/character";
 
 type Props = {
     campaignId: number | null;
@@ -9,6 +10,7 @@ type Props = {
     onIllusUpdate: (illus: string) => void;
     onDiceResult: (data: any) => void;
     setActiveToken: Dispatch<SetStateAction<Token[]>>;
+    setActivePlayers: Dispatch<SetStateAction<Player[]>>;
 };
 
 export const useTableSocket = ({
@@ -17,7 +19,8 @@ export const useTableSocket = ({
     onMapUpdate,
     onIllusUpdate, 
     onDiceResult,
-    setActiveToken
+    setActiveToken, 
+    setActivePlayers
 }: Props) => {
     const wsRef = useRef<WebSocket | null>(null);
 
@@ -74,6 +77,22 @@ export const useTableSocket = ({
 
             if (data.type === "tokens_scale") {
                 setActiveToken(data.tokens);
+            }
+
+            if (data.type === "new_player") {
+                const newPlayer = data.player as Player;
+    
+                setActivePlayers((prev) => {
+                    const exists = prev.some((p) => p.userPublicName === newPlayer.userPublicName);
+                    
+                    if (exists) {
+                        return prev.map(p => 
+                            p.userPublicName === newPlayer.userPublicName ? newPlayer : p
+                        );
+                    } else {
+                        return [...prev, newPlayer];
+                    }
+                })
             }
 
         };

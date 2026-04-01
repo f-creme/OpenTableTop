@@ -8,10 +8,9 @@ export const useSendOnce = (campaignId: number | null, apiURL: string) => {
         if (!enableSend) return;
 
         setEnableSend(false);
+        console.log(payload)
+        const ws = new WebSocket(`${apiURL.replace("http", "ws")}/table_ws/ws/${campaignId}`);
 
-        const ws = new WebSocket(
-            `${apiURL.replace("http", "ws")}/table_ws/ws/${campaignId}`
-        );
         ws.onopen = () => {
             ws.send(JSON.stringify(payload));
             ws.close();

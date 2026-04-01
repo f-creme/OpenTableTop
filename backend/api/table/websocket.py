@@ -12,12 +12,20 @@ class Token(BaseModel):
     y: float
     scale: float
 
+class Player(BaseModel):
+    characterId: int
+    characterName: str
+    characterRole: str | None
+    characterPortrait: str | None
+    userPublicName: str 
+
 class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.current_map: str | None = None
         self.current_illustration: str | None = None
         self.current_active_tokens: List[dict] = []
+        self.current_active_players: List[dict] = []
 
 
     async def connect(self, websocket: WebSocket):
@@ -36,6 +44,13 @@ class ConnectionManager:
             await websocket.send_json({
                 "type": "init_tokens",
                 "tokens": self.current_active_tokens
+            })
+        
+        # Sync active players while connecting
+        if len(self.current_active_players) > 0:
+            await websocket.send_json({
+                "type": "init_players",
+                "active_players": self.current_active_players
             })
 
     def disconnect(self, websocket: WebSocket):
@@ -100,6 +115,18 @@ class ConnectionManager:
         self.current_active_tokens = tokens
         await self.broadcast({"type": "tokens_scale", "tokens": tokens})
 
+    async def broadcast_new_player(self, player: dict):
+        exists = any(p.get("userPublicName") == player["userPublicName"] for p in self.current_active_players)
+        if not exists: 
+            self.current_active_players.append(player)
+        else: 
+            self.current_active_players = [
+                player if player["userPublicName"] == p["userPublicName"] 
+                else p 
+                for p in self.current_active_players
+            ]
+        await self.broadcast({"type": "new_player", "player": player})
+
 # Dictionnary to store a connection manager per campaign 
 campaign_managers: Dict[int, ConnectionManager] = {}
 
@@ -142,6 +169,10 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
 
             elif msg_type == "tokens_scale":
                 await manager.broadcast_token_scale(data["tokens"])
+
+            elif msg_type == "join_player":
+                player = Player(**(data["player"])).model_dump()
+                await manager.broadcast_new_player(player=player)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
