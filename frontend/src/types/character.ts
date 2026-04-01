@@ -6,3 +6,11 @@ export interface Character {
     personality: string;
     bio: string;
 }
+
+export interface Player {
+    characterId: number;
+    characterName: string;
+    characterRole: string;
+    characterPortrait: string | null;
+    userPublicName: string;
+}

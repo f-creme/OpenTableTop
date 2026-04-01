@@ -4,7 +4,9 @@ import { useRole } from "../../context/RoleContext"
 import { useEffect, useState } from "react"
 import { useCharacterSheet } from "../../hooks/useCharacterSheet"
 import { Toaster } from "react-hot-toast"
-import type { Character } from "../../types/character"
+import type { Character, Player } from "../../types/character"
+import { useSendOnce } from "../../hooks/useSendOnce"
+import { useCampaign } from "../../context/CampaignContext"
 
 export default function CharacterSheet() {
     const { role } = useRole()
@@ -20,6 +22,11 @@ export default function CharacterSheet() {
         updateCharacter
     } = useCharacterSheet()
 
+    const { campaignId } = useCampaign()
+
+    const apiURL = import.meta.env.VITE_API_URL;
+    const { sendOnce, enableSend } = useSendOnce(campaignId, apiURL)
+
     const [selectedCharacterId, setSelectedCharacterId] = useState<number>(-1)
     const [characterName, setCharacterName] = useState<string>("")
     const [characterClass, setCharacterClass] = useState<string>("")
@@ -29,6 +36,18 @@ export default function CharacterSheet() {
     const [fileToUpload, setFileToUpload] = useState<File | null>(null)
     const [characterPortrait, setCharacterPortrait] = useState<string | null>(null)
     const [characterToken, setCharacterToken] = useState<string | null>(null)
+
+    const joinTable = () => {
+        const player: Player = {
+            characterId: selectedCharacterId,
+            characterName: characterName,
+            characterRole: characterClass,
+            characterPortrait: characterPortrait,
+            userPublicName: localStorage.getItem("publicName")!            
+        };
+
+        sendOnce({ type: "join_player", player: player }, 10000)
+    }
 
     useEffect(() => {
         if (selectedCharacterId < 0) {
@@ -61,8 +80,6 @@ export default function CharacterSheet() {
                 };                
             }
             loadImages();
-            
-            
     }}, [selectedCharacterId])
 
     useEffect(() => {
@@ -181,7 +198,17 @@ export default function CharacterSheet() {
                     >
                         Valider les informations
                     </button>
-                    <button className="btn btn-primary flex-1">Rejoindre la table de jeu</button>
+                    <button 
+                        className="btn btn-primary flex-1"
+                        disabled={
+                            (selectedCharacterId < 0) 
+                                ? true 
+                                : (enableSend) 
+                                    ? false
+                                    : true
+                        }
+                        onClick={() => joinTable()}
+                    >Rejoindre la table de jeu</button>
                 </div>
             </div>
             <div className="flex flex-1 min-h-100 flex-col items-center justify-center">
