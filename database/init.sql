@@ -46,3 +46,19 @@ CREATE TABLE IF NOT EXISTS users_campaigns (
         ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
+
+-- Characters
+CREATE TABLE IF NOT EXISTS characters (
+    id SERIAL PRIMARY KEY, 
+    user_id INT NOT NULL,
+    name VARCHAR(30) NOT NULL, 
+    class VARCHAR(30), 
+    appearance VARCHAR(33),
+    personality VARCHAR(33),
+    bio VARCHAR(144), 
+    CONSTRAINT fk_user 
+        FOREIGN KEY(user_id) 
+        REFERENCES users(id)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
+);
