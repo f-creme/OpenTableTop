@@ -2,7 +2,8 @@ import toast from "react-hot-toast";
 import type { Character } from "../types/character";
 import { 
     addNewCharacterToDB, getMyCharacters, uploadCharacterImage,
-    getCharacterPortrait, getCharacterToken
+    getCharacterPortrait, getCharacterToken,
+    updateCharacterInDB
  } from "../api/services/characterServices";
 import axios from "axios";
 import { useState } from "react";
@@ -71,7 +72,7 @@ export const useCharacterSheet = () => {
             addNewCharacterToDB(character),
             {
                 loading: "Création du personnage...",
-                success: "Personnage créé.\n Rechargez la page pour le sélectionner",
+                success: "Personnage créé.\nRechargez la page pour le sélectionner",
                 error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || "Erreur lors de la création" : "Erreur lors de la création",
             }
         );
@@ -80,11 +81,29 @@ export const useCharacterSheet = () => {
         uploadImage(characterId, file);
     };
 
+    const updateCharacter = async (
+        character: Character,
+        file: File | null
+    ) => {
+        await toast.promise(
+            updateCharacterInDB(character),
+            {
+                loading: "Mise à jour du personnage...", 
+                success: "Personnage mis à jour.\nRechargez la page.",
+                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || "Erreur lors de la mise à jour" : "Erreur lors de la mise à jour",
+            }
+        );
+        if (!file) return;
+        if (character.id < 0) return;
+        uploadImage(character.id, file)
+    }
+
     return {
         availCharacters,
         loadCharacterPortrait, 
         loadCharacterToken,
         loadCharacters,
-        createCharacter
+        createCharacter,
+        updateCharacter
     }
 };

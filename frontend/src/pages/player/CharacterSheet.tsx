@@ -16,7 +16,8 @@ export default function CharacterSheet() {
         loadCharacterPortrait,
         loadCharacterToken,
         loadCharacters,
-        createCharacter
+        createCharacter,
+        updateCharacter
     } = useCharacterSheet()
 
     const [selectedCharacterId, setSelectedCharacterId] = useState<number>(-1)
@@ -163,6 +164,13 @@ export default function CharacterSheet() {
                         onClick={() => {
                             if (selectedCharacterId < 0) {
                                 createCharacter(
+                                {
+                                    id: selectedCharacterId, name: characterName, classOrRole: characterClass,
+                                    appearance: characterAppearance, personality: characterPersonality, 
+                                    bio: characterBio
+                                }, fileToUpload
+                            )} else if (confirm("Mettre à jour le personnage ?")) {
+                                updateCharacter(
                                 {
                                     id: selectedCharacterId, name: characterName, classOrRole: characterClass,
                                     appearance: characterAppearance, personality: characterPersonality, 

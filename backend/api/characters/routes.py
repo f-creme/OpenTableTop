@@ -79,6 +79,21 @@ def create_character(
         db.rollback()
         raise HTTPException(400, detail="Unable to create the character")
     
+@router.put("/update")
+async def update_character(data: CharacterRequest, user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+    try:
+        repository.update_character(
+            db, data.id, user_id, data.name, data.classOrRole,
+            data.appearance, data.personality, data.bio
+        )
+        db.commit()
+        return {"message": "character updated"}
+    
+    except Exception:
+        db.rollback()
+        raise HTTPException(400, detail="Unable to create the character")
+
+    
 @router.post("/image/{character_id}")
 async def save_character_image(character_id: int, user_id: int = Depends(get_current_user_id), file: UploadFile = File(...)):
     # check file type

@@ -30,3 +30,21 @@ def create_new_character(
         )
 
         return cursor.fetchone()["id"]
+    
+def update_character(
+        db,
+        character_id: int, 
+        user_id: int,
+        name: str, 
+        class_or_role: str, 
+        appearance: str, 
+        personality: str, 
+        bio: str,
+):
+    with db.cursor() as cursor: 
+        cursor.execute(
+            "UPDATE characters " \
+            "SET name = %s, class = %s, appearance = %s, personality = %s, bio = %s " \
+            "WHERE id = %s AND user_id = %s;", 
+            (name, class_or_role, appearance, personality, bio, character_id, user_id)
+        )

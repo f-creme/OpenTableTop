@@ -6,6 +6,11 @@ export async function addNewCharacterToDB(character: Character) {
     return res.data.characterId
 };
 
+export async function updateCharacterInDB(character:Character) {
+    const res = await axiosInstance.put("/characters/update", character)
+    return res.data
+}
+
 export async function getMyCharacters() {
     const res = await axiosInstance.get("/characters/");
     return res.data
