@@ -9,4 +9,9 @@ export async function addNewCharacterToDB(character: Character) {
 export async function getMyCharacters() {
     const res = await axiosInstance.get("/characters/");
     return res.data
+};
+
+export async function uploadCharacterImage(characterId: number, file: FormData) {
+    const res = await axiosInstance.post(`/characters/image/${characterId}`, file);
+    return res.data;
 }

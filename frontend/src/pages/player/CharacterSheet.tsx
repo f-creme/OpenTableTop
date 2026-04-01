@@ -23,6 +23,7 @@ export default function CharacterSheet() {
     const [characterAppearance, setCharacterAppearance] = useState<string>("")
     const [characterPersonality, setCharacterPersonality] = useState<string>("")  
     const [characterBio, setCharacterBio] = useState<string>("")
+    const [fileToUpload, setFileToUpload] = useState<File | null>(null)
 
     useEffect(() => {
         if (selectedCharacterId < 0) {
@@ -119,7 +120,15 @@ export default function CharacterSheet() {
                         </fieldset>      
                             <fieldset className="fieldset">
                             <legend className="fieldset-legend">Portrait</legend>
-                            <input type="file" className="file-input" />
+                            <input 
+                                type="file" 
+                                className="file-input" 
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files.length > 0) {
+                                        setFileToUpload(e.target.files[0])
+                                    }
+                                }}
+                            />
                             <label className="label">Taille maximale: 1MB (type WEBP, PNG ou JPG)<br/>Format recommandé: 1:1 (carré)</label>
                         </fieldset>   
                
@@ -135,7 +144,7 @@ export default function CharacterSheet() {
                                     id: selectedCharacterId, name: characterName, classOrRole: characterClass,
                                     appearance: characterAppearance, personality: characterPersonality, 
                                     bio: characterBio
-                                }
+                                }, fileToUpload
                             )}
                         }}
                     >
