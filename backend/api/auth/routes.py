@@ -8,6 +8,7 @@ from api.auth.auth_utils import (
     hash_password, verify_password, create_token, decode_token
 )
 from api.dependencies.auth import get_current_user_id
+from core.config_storage import create_user_storage
 
 
 class LoginRequest(BaseModel):
@@ -39,6 +40,9 @@ def register(data: RegisterRequest, db=Depends(get_db)):
             (user_id, data.public_name)
         )
         db.commit()
+
+        # Create storage
+        create_user_storage(user_id)
 
     except:
         db.rollback()
