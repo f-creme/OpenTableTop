@@ -1,144 +1,147 @@
-// pages/Table.tsx
 import { useRole } from "../context/RoleContext";
 import { useCampaign } from "../context/CampaignContext";
-
 import DiceMenu from "../components/DiceMenu";
 import DiceResults from "../components/DiceResults";
 import MapSelector from "../components/MapSelector";
 import MapDisplay from "../components/MapDisplay";
 import TokenSelector from "../components/TokenSelector";
 import IllustrationSelector from "../components/IllustrationSelector";
-
 import { useMaps } from "../hooks/useMaps";
 import { useDice } from "../hooks/useDice";
 import { useTableSocket } from "../hooks/useTableSocket";
 import { useIllustrations } from "../hooks/useIllustration";
 import { useTokens } from "../hooks/useTokens";
-
 import { useEffect, useRef, useState } from "react";
 import type { Token } from "../types/token";
 import type { Player } from "../types/character";
+import { RefreshCcw } from "lucide-react";
 
 const Table = () => {
-    const { role } = useRole();
-    const { campaignId } = useCampaign();
-    const apiURL = import.meta.env.VITE_API_URL;
+  const { role } = useRole();
+  const { campaignId } = useCampaign();
+  const apiURL = import.meta.env.VITE_API_URL;
 
-    const { maps, selectedMap, setSelectedMap } = useMaps();
-    const { illustrations, selectedIllustration, setSelectedIllustration } = useIllustrations();
-    const { tokens, activeTokens, setActiveTokens, ToggleToken } = useTokens();
-    const dice = useDice();
+  const { maps, selectedMap, setSelectedMap } = useMaps();
+  const { illustrations, selectedIllustration, setSelectedIllustration } = useIllustrations();
+  const { tokens, activeTokens, setActiveTokens, ToggleToken } = useTokens();
+  const dice = useDice();
 
-    const [activePlayers, setActivePlayers] = useState<Player[]>([])
+  const [activePlayers, setActivePlayers] = useState<Player[]>([]);
 
-    useEffect(() => {
-        console.log(activePlayers)
-    }, [activePlayers])
+  useEffect(() => {
+    console.log(activePlayers);
+  }, [activePlayers]);
 
-    const { send } = useTableSocket({
-        campaignId,
-        apiURL,
-        onMapUpdate: setSelectedMap,
-        onIllusUpdate: setSelectedIllustration,
-        onDiceResult: dice.handleDiceResult,
-        setActiveToken: setActiveTokens,
-        setActivePlayers: setActivePlayers
-    });
+  const { send } = useTableSocket(
+    setSelectedMap,
+    setSelectedIllustration,
+    dice.handleDiceResult,
+    setActiveTokens,
+    setActivePlayers
+  );
 
-    const changeMap = (mapName: string) => {
-        send({ type: "map_change", selected_map: mapName });
-    };
+  const changeMap = (mapName: string) => {
+    send({ type: "map_change", selected_map: mapName });
+  };
 
-    const changeIllustration = (illusName: string | null) => {
-        send({ type: "illustration_change", selected_illustration: illusName });
-    };
+  const changeIllustration = (illusName: string | null) => {
+    send({ type: "illustration_change", selected_illustration: illusName });
+  };
 
-    const rollDices = (die: number) => {
-        send({ type: "dice_roll", dice: die, count: dice.countDices });
-    };
+  const rollDices = (die: number) => {
+    send({ type: "dice_roll", dice: die, count: dice.countDices });
+  };
 
-    const prevActiveRef = useRef<Token[]>([]);
+  const prevActiveRef = useRef<Token[]>([]);
 
-    useEffect(() => {
-        if (!send) return;
+  useEffect(() => {
+    if (!send) return;
 
-        const prevActive = prevActiveRef.current;
+    const prevActive = prevActiveRef.current;
 
-        const added = activeTokens.filter(
-            (t) => !prevActive.some((p) => p.id === t.id)
-        );
-
-        const removed = prevActive.filter(
-            (t) => !activeTokens.some((p) => p.id === t.id)
-        );
-
-        added.forEach((t) => send({ type: "token_update", action: "add", token: t }));
-        removed.forEach((t) => send({ type: "token_update", action: "remove", token: t }));
-
-        prevActiveRef.current = activeTokens;
-    }, [activeTokens, send]);
-
-    const menuItems = [
-        role === "mj" && (
-            <MapSelector
-                key="map"
-                role={role}
-                maps={maps}
-                selectedMap={selectedMap}
-                changeMap={changeMap}
-            />
-        ),
-        role === "mj" && (
-            <IllustrationSelector
-                key="illustration"
-                role={role}
-                illustrations={illustrations}
-                selectedIllustration={selectedIllustration}
-                changeIllustration={changeIllustration}
-            />
-        ),
-        role === "mj" && (
-            <TokenSelector
-                key="token"
-                role={role}
-                tokens={tokens}
-                activeTokens={activeTokens}
-                toggleToken={ToggleToken}
-            />
-        ),
-        <DiceMenu
-            key="dice"
-            dices={[4,6,10,12,20,50,100]}
-            countDices={dice.countDices}
-            setCountDices={dice.setCountDices}
-            rollDices={rollDices}
-        />
-    ].filter(Boolean);
-
-    return (
-        <div className="min-h-screen flex flex-col">
-            <div className="flex flex-col gap-4 flex-1 p-4 items-center">
-                <div className="bg-base-300 min-w-1/3 max-w-4xl mx-auto mt-4 p-2 rounded-2xl shadow-2xl relative z-20">
-                    <ul className="flex items-center justify-center gap-6">
-                        {menuItems.map((item, idx) => <li key={idx}>{item}</li>)}
-                    </ul>
-                </div>
-
-                <div className="flex-1 flex items-center justify-center min-h-0">
-                    <MapDisplay
-                        role={role}
-                        apiURL={apiURL}
-                        selectedMap={selectedMap}
-                        campaignId={Number(campaignId)}
-                        selectedIllustration={selectedIllustration}
-                        activeTokens={activeTokens}
-                        send={send}
-                        diceUI={<DiceResults {...dice} />}
-                    />
-                </div>
-            </div>
-        </div>
+    const added = activeTokens.filter(
+      (t) => !prevActive.some((p) => p.id === t.id)
     );
+
+    const removed = prevActive.filter(
+      (t) => !activeTokens.some((p) => p.id === t.id)
+    );
+
+    added.forEach((t) => send({ type: "token_update", action: "add", token: t }));
+    removed.forEach((t) => send({ type: "token_update", action: "remove", token: t }));
+
+    prevActiveRef.current = activeTokens;
+  }, [activeTokens, send]);
+
+  const menuItems = [
+    role === "mj" && (
+      <MapSelector
+        key="map"
+        role={role}
+        maps={maps}
+        selectedMap={selectedMap}
+        changeMap={changeMap}
+      />
+    ),
+    role === "mj" && (
+      <IllustrationSelector
+        key="illustration"
+        role={role}
+        illustrations={illustrations}
+        selectedIllustration={selectedIllustration}
+        changeIllustration={changeIllustration}
+      />
+    ),
+    role === "mj" && (
+      <TokenSelector
+        key="token"
+        role={role}
+        tokens={tokens}
+        activeTokens={activeTokens}
+        toggleToken={ToggleToken}
+      />
+    ),
+    <DiceMenu
+      key="dice"
+      dices={[4,6,10,12,20,50,100]}
+      countDices={dice.countDices}
+      setCountDices={dice.setCountDices}
+      rollDices={rollDices}
+    />,
+
+    <button
+        className="btn btn-ghost"
+        onClick={() => send({ type: "request_init_tokens"})}
+    >
+        <RefreshCcw/>
+    </button>
+
+  ].filter(Boolean);
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <div className="flex flex-col gap-4 flex-1 p-4 items-center">
+        <div className="bg-base-300 min-w-1/3 max-w-4xl mx-auto mt-4 p-2 rounded-2xl shadow-2xl relative z-20">
+          <ul className="flex items-center justify-center gap-6">
+            {menuItems.map((item, idx) => <li key={idx}>{item}</li>)}
+          </ul>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center min-h-0">
+          <MapDisplay
+            role={role}
+            apiURL={apiURL}
+            selectedMap={selectedMap}
+            campaignId={Number(campaignId)}
+            selectedIllustration={selectedIllustration}
+            activeTokens={activeTokens}
+            send={send}
+            diceUI={<DiceResults {...dice} />}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Table;

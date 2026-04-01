@@ -115,6 +115,12 @@ class ConnectionManager:
         self.current_active_tokens = tokens
         await self.broadcast({"type": "tokens_scale", "tokens": tokens})
 
+    async def request_reinit_tokens(self, websocket: WebSocket):
+        await websocket.send_json({
+                "type": "init_tokens",
+                "tokens": self.current_active_tokens
+            })
+
     async def broadcast_new_player(self, player: dict):
         exists = any(p.get("userPublicName") == player["userPublicName"] for p in self.current_active_players)
         if not exists: 
@@ -173,6 +179,9 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
             elif msg_type == "join_player":
                 player = Player(**(data["player"])).model_dump()
                 await manager.broadcast_new_player(player=player)
+
+            elif msg_type =="request_init_tokens":
+                await manager.request_reinit_tokens(websocket)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)

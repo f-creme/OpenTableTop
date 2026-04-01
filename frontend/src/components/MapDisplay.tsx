@@ -5,14 +5,14 @@ import type Konva from "konva";
 import { MonitorCog, RotateCcw, Scaling, X } from "lucide-react";
 
 interface TokenDisplay {
-  image: HTMLImageElement,
-  x_coord: number,
-  y_coord: number,
-  scale: number
+  image: HTMLImageElement;
+  x_coord: number;
+  y_coord: number;
+  scale: number;
 }
 
 type Props = {
-  role: "player" | "mj" | null
+  role: "player" | "mj" | null;
   apiURL: string;
   campaignId: number;
   selectedMap: string | null;
@@ -31,7 +31,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
   const [showTokenScaleControl, setShowTokenScaleControl] = useState<boolean>(false);
-  const [tokenScale, settokenScale] = useState<number>(1);
+  const [tokenScale, setTokenScale] = useState<number>(1);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<any>(null);
@@ -77,7 +77,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
                 image: img,
                 x_coord: t.x,
                 y_coord: transformedY(t.y, index),
-                scale: t.scale
+                scale: t.scale,
               });
               resolve();
             };
@@ -97,7 +97,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
       if (containerRef.current) {
         setContainerSize({
           width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight
+          height: containerRef.current.offsetHeight,
         });
       }
     };
@@ -115,7 +115,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
     setScale(initialScale);
     setPosition({
       x: (containerSize.width - image.width * initialScale) / 2,
-      y: (containerSize.height - image.height * initialScale) / 2
+      y: (containerSize.height - image.height * initialScale) / 2,
     });
   }, [image, containerSize]);
 
@@ -195,7 +195,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
     if (stage) {
       stage.scale({ x: initialScale, y: initialScale });
       stage.position({ x: posX, y: posY });
-      stage.batchDraw(); // force la réactualisation
+      stage.batchDraw();
       stage.draggable(true);
     }
   };
@@ -229,26 +229,26 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
     const currentWidth = width * currentScale;
     const currentHeight = height * currentScale;
 
-    const centerX = x + (currentWidth / 2);
-    const centerY = y + (currentHeight / 2);
+    const centerX = x + currentWidth / 2;
+    const centerY = y + currentHeight / 2;
 
     const newWidth = width * newScale;
     const newHeight = height * newScale;
 
-    const x_new = centerX - (newWidth / 2);
-    const y_new = centerY - (newHeight / 2);
+    const x_new = centerX - newWidth / 2;
+    const y_new = centerY - newHeight / 2;
 
     return { x_new, y_new };
   };
 
   const handleTokenScale = (newScale: number) => {
-    settokenScale(newScale);
+    setTokenScale(newScale);
     setTokens((prev) =>
       prev.map((t) => {
         const { x_new, y_new } = scaleFromCenter(
           t.x_coord,
           t.y_coord,
-          t.scale, 
+          t.scale,
           newScale,
           t.image.width,
           t.image.height
@@ -257,29 +257,29 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
           ...t,
           x_coord: x_new,
           y_coord: y_new,
-          scale: newScale
+          scale: newScale,
         };
       })
     );
   };
 
-    // send({
-    //   type: "tokens_scale",
-    //   tokens: tokens.map(t => ({
-    //     id: t.image.src.split("/").pop(),
-    //     x: t.x_coord,
-    //     y: t.y_coord,
-    //     scale: t.scale
-    //   }))
-    // });
-
-
-
+  // --- Send token scale to all players ---
+  const sendTokenScale = () => {
+    send({
+      type: "tokens_scale",
+      tokens: tokens.map((t) => ({
+        id: t.image.src.split("/").pop(),
+        x: t.x_coord,
+        y: t.y_coord,
+        scale: t.scale,
+      })),
+    });
+  };
 
   const onTokenDragEnd = (index: number, newX: number, newY: number) => {
-    const token = activeTokens[index]
-    send({type: "token_move", token: {...token, x: newX, y: newY}})
-  }
+    const token = activeTokens[index];
+    send({ type: "token_move", token: { ...token, x: newX, y: newY } });
+  };
 
   return (
     <div ref={containerRef} className="relative h-[80vh] mx-auto my-8 bg-black border-2 rounded-xl overflow-hidden">
@@ -288,7 +288,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
         <button className="fab-main-action absolute btn btn-xl btn-circle btn-primary"><X /></button>
         <div className="tooltip tooltip-left" data-tip="Réinitialiser la vue">
           <button onClick={resetView} className="btn btn-xl btn-secondary btn-circle z-10"><RotateCcw /></button>
-        </div>  
+        </div>
 
         <div className="tooltip tooltip-left" data-tip="Redimensionner les tokens">
           {role === "mj" && (
@@ -299,7 +299,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
               <Scaling />
             </button>
           )}
-  
+
           {showTokenScaleControl && (
             <>
               <div className="absolute -top-10 w-80 z-10 right-20 bg-white border-2 border-secondary p-3 rounded-lg shadow-md">
@@ -317,12 +317,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
                 </div>
                 <div
                   className="btn btn-secondary btn-soft w-full mt-4"
-                  onClick={() => send({type: "tokens_scale", tokens: tokens.map(t => ({
-                    id: t.image.src.split("/").pop(),
-                    x: t.x_coord,
-                    y: t.y_coord,
-                    scale: t.scale
-                  }))})}
+                  onClick={sendTokenScale}
                 >
                   Partager l'échelle à tous les joueurs
                 </div>
@@ -331,7 +326,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
           )}
         </div>
       </div>
-      
+
       {diceUI && (
         <>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
@@ -351,7 +346,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
         scaleY={scale}
         onWheel={handleWheel}
         draggable
-        dragBoundFunc={(pos) => pos} // Map draggable anywhere
+        dragBoundFunc={(pos) => pos}
         ref={stageRef}
         onDragStart={(e) => {
           if (e.target.getClassName() === "Image") {
