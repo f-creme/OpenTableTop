@@ -4,6 +4,7 @@ import { useRole } from "../../context/RoleContext"
 import { useEffect, useState } from "react"
 import { useCharacterSheet } from "../../hooks/useCharacterSheet"
 import { Toaster } from "react-hot-toast"
+import type { Character } from "../../types/character"
 
 export default function CharacterSheet() {
     const { role } = useRole()
@@ -16,12 +17,28 @@ export default function CharacterSheet() {
         createCharacter
     } = useCharacterSheet()
 
-    const [characterId, setCharacterId] = useState<number>(-1)
+    const [selectedCharacterId, setSelectedCharacterId] = useState<number>(-1)
     const [characterName, setCharacterName] = useState<string>("")
     const [characterClass, setCharacterClass] = useState<string>("")
     const [characterAppearance, setCharacterAppearance] = useState<string>("")
     const [characterPersonality, setCharacterPersonality] = useState<string>("")  
     const [characterBio, setCharacterBio] = useState<string>("")
+
+    useEffect(() => {
+        if (selectedCharacterId < 0) {
+            setCharacterName("");
+            setCharacterClass("");
+            setCharacterAppearance("");
+            setCharacterPersonality("");
+            setCharacterBio("");       
+        } else {
+            const selectedCharacter: Character = availCharacters.filter((t) => t.id === selectedCharacterId)[0];
+            setCharacterName(selectedCharacter.name);
+            setCharacterClass(selectedCharacter.classOrRole);
+            setCharacterAppearance(selectedCharacter.appearance);
+            setCharacterPersonality(selectedCharacter.personality);
+            setCharacterBio(selectedCharacter.bio);
+    }}, [selectedCharacterId])
 
     useEffect(() => {
         loadCharacters();
@@ -35,7 +52,7 @@ export default function CharacterSheet() {
                     <p>Sélectionner un de vos personnages :</p>
                     <select 
                         className="flex-1 select select-sm"
-                        onChange={(e) => setCharacterId(Number(e.target.value))}
+                        onChange={(e) => setSelectedCharacterId(Number(e.target.value))}
                     >
                         <option value={-1} key={-1}>Nouveau personnage</option>
                         {availCharacters.length > 0 && availCharacters.map((c) => (
@@ -112,10 +129,10 @@ export default function CharacterSheet() {
                     <button 
                         className="btn btn-secondary flex-1"
                         onClick={() => {
-                            if (characterId < 0) {
+                            if (selectedCharacterId < 0) {
                                 createCharacter(
                                 {
-                                    id: characterId, name: characterName, classOrRole: characterClass,
+                                    id: selectedCharacterId, name: characterName, classOrRole: characterClass,
                                     appearance: characterAppearance, personality: characterPersonality, 
                                     bio: characterBio
                                 }
