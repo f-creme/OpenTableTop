@@ -13,6 +13,8 @@ export default function CharacterSheet() {
     }
     const {
         availCharacters,
+        loadCharacterPortrait,
+        loadCharacterToken,
         loadCharacters,
         createCharacter
     } = useCharacterSheet()
@@ -24,6 +26,8 @@ export default function CharacterSheet() {
     const [characterPersonality, setCharacterPersonality] = useState<string>("")  
     const [characterBio, setCharacterBio] = useState<string>("")
     const [fileToUpload, setFileToUpload] = useState<File | null>(null)
+    const [characterPortrait, setCharacterPortrait] = useState<string | null>(null)
+    const [characterToken, setCharacterToken] = useState<string | null>(null)
 
     useEffect(() => {
         if (selectedCharacterId < 0) {
@@ -39,10 +43,29 @@ export default function CharacterSheet() {
             setCharacterAppearance(selectedCharacter.appearance);
             setCharacterPersonality(selectedCharacter.personality);
             setCharacterBio(selectedCharacter.bio);
+
+            async function loadImages() {
+                const portraitURL = await loadCharacterPortrait(selectedCharacterId);
+                if (portraitURL) {
+                    setCharacterPortrait(portraitURL)
+                } else {
+                    setCharacterPortrait(null)
+                };
+
+                const tokenURL = await loadCharacterToken(selectedCharacterId);
+                if (tokenURL) {
+                    setCharacterToken(tokenURL)
+                } else {
+                    setCharacterToken(null)
+                };                
+            }
+            loadImages();
+            
+            
     }}, [selectedCharacterId])
 
     useEffect(() => {
-        loadCharacters();
+        loadCharacters();        
     }, [])
 
     return (
@@ -154,7 +177,7 @@ export default function CharacterSheet() {
                 </div>
             </div>
             <div className="flex flex-1 min-h-100 flex-col items-center justify-center">
-                <a href="#" className="hover-3d my-12 mx-2 cursor-pointer">
+                <a href="#" className="hover-3d mx-2 cursor-pointer">
                 
                     <div className="card w-110 aspect-8/5 bg-black text-white bg-[radial-gradient(circle_at_bottom_left,#ffffff04_35%,transparent_36%),radial-gradient(circle_at_top_right,#ffffff04_35%,transparent_36%)] bg-size-[4.95em_4.95em]">
                         <div className="card-body">
@@ -165,7 +188,13 @@ export default function CharacterSheet() {
                                     <div className="font-bold opacity-30 text-xs mt-2">BIO</div>
                                     <div className="font-bold opacity-50 text-xs text-justify">{characterBio}</div>
                                 </div>
-                                <div className="w-1/3 bg-amber-50 aspect-square"></div>
+                                <div className="w-1/3 bg-amber-50 aspect-square flex items-center">
+                                    {characterPortrait ? (
+                                        <img src={characterPortrait} alt="Portrait" />
+                                    ) : (
+                                        <p className="text text-black text-center m-4">Ajouter un portrait à votre personnage</p>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex flex-row justify-between">
                                 <div>
@@ -189,7 +218,26 @@ export default function CharacterSheet() {
                     <div></div>
                 </a>
                 <div>
-                    
+                    <a href="#" className="hover-3d my-2 mx-2 cursor-pointer">
+                
+                    <div className="card w-50 text-white bg-[radial-gradient(circle_at_bottom_left,#ffffff04_35%,transparent_36%),radial-gradient(circle_at_top_right,#ffffff04_35%,transparent_36%)]">
+                        <div className="card-body">
+                            {characterToken ? (
+                                <img src={characterToken} alt="Portrait" />
+                            ) : (
+                                <p className="text text-black text-center m-4">Ajouter un portrait à votre personnage</p>
+                            )}
+                        </div>
+                    </div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </a>
                 </div>
             </div>
         </div>

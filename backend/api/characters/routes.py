@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, File, UploadFile
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from pathlib import Path
 from PIL import Image
@@ -114,3 +115,22 @@ async def save_character_image(character_id: int, user_id: int = Depends(get_cur
     token.save(get_token_path(user_id=user_id, character_id=character_id))
 
     return {"message": "Files saved"}
+
+@router.get("/{character_id}/portrait")
+async def get_character_image(character_id: int, user_id: int = Depends(get_current_user_id)):
+    image_path = get_image_path(user_id, character_id)
+    exists_image = Path(image_path).exists()
+    is_file_image = os.path.isfile(image_path)
+    if exists_image and is_file_image:
+        return FileResponse(image_path)
+    raise HTTPException(404, detail="Portrait not found")
+
+@router.get("/{character_id}/token")
+async def get_character_token(character_id: int, user_id: int = Depends(get_current_user_id)):
+    token_path = get_token_path(user_id, character_id)
+    exists_token = Path(token_path).exists()
+    is_file_token = os.path.isfile(token_path)
+    if exists_token and is_file_token:
+        return FileResponse(token_path)
+    raise HTTPException(404, detail="Portrait not found")
+    

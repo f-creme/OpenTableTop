@@ -1,11 +1,14 @@
 import toast from "react-hot-toast";
 import type { Character } from "../types/character";
-import { addNewCharacterToDB, getMyCharacters, uploadCharacterImage } from "../api/services/characterServices";
+import { 
+    addNewCharacterToDB, getMyCharacters, uploadCharacterImage,
+    getCharacterPortrait, getCharacterToken
+ } from "../api/services/characterServices";
 import axios from "axios";
 import { useState } from "react";
 
 export const useCharacterSheet = () => {
-    const [availCharacters, setAvailCharacters] = useState<Character[]>([])
+    const [availCharacters, setAvailCharacters] = useState<Character[]>([]);
 
     const loadCharacters = async () => {
         await toast.promise(
@@ -18,6 +21,29 @@ export const useCharacterSheet = () => {
             }
         )
     };
+
+    const loadCharacterPortrait = async(characterId: number) => {
+        try {
+            const blob = await getCharacterPortrait(characterId);
+            const url = URL.createObjectURL(blob);
+            return url;
+        } catch {
+            console.error("Erreur lors du téléchargement du portrait")
+            return null;
+        };
+    };
+
+    const loadCharacterToken = async(characterId: number) => {
+        try {
+            const blob = await getCharacterToken(characterId);
+            const url = URL.createObjectURL(blob);
+            return url;
+        } catch {
+            console.error("Erreur lors du téléchargement du token")
+            return null;
+        };
+    };
+
     const uploadImage = async (characterId: number, file: File) => {
         if (characterId < 0) return;
         try {
@@ -56,6 +82,8 @@ export const useCharacterSheet = () => {
 
     return {
         availCharacters,
+        loadCharacterPortrait, 
+        loadCharacterToken,
         loadCharacters,
         createCharacter
     }
