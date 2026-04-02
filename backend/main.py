@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from pathlib import Path
+from dotenv import load_dotenv
+
 from api.maps import routes as maps_route
 from api.auth import routes as auth_route
 from api.campaigns import routes as campaigns_routes
@@ -10,6 +13,9 @@ from api.upload import routes as upload_route
 from api.characters import routes as characters_route
 
 from api.table import websocket
+
+dotenv_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path)
 
 app = FastAPI(title="OpenTableTop API")
 
