@@ -19,8 +19,8 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
     const [redirect, setRedirect] = useState<boolean>(false)
 
     useEffect(() => {
-        if (campaignId === null) return;
-        if (campaignId > 0) setDisabledMenu(false);
+        if (!campaignId || campaignId === "__NULL__") return;
+        setDisabledMenu(false);
     }, [campaignId])
 
     const deleteCampaign = async () => {
@@ -33,7 +33,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                 success: "Campagne supprimée. \nRetour à l'écran d'accueil.",
                 error: "Impossible de supprimer la campagne.",
             });
-        setCampaignId(-1);
+        setCampaignId("__NULL__");
         setTimeout(() => setRedirect(true), 3000)
     };
 
