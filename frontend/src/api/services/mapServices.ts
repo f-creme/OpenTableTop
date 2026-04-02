@@ -5,8 +5,8 @@ export async function getMaps(campaignUuid: string) {
     return res.data.maps
 }
 
-export async function getIllustrations(campaignId: string) {
-    const res = await axiosInstance.get(`/illus/${campaignId}`);
+export async function getIllustrations(campaignUuid: string) {
+    const res = await axiosInstance.get(`/illus/${campaignUuid}`);
     return res.data.illus
 }
 

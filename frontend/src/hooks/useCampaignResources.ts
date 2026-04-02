@@ -15,7 +15,7 @@ export const useCampaignResources = () => {
     const { campaignId } = useCampaign()
 
     const [availMaps, setAvailMaps] = useState<FileType[]>([])
-    const [availIllustrations, setAvailIllustrations] = useState<string[]>([])
+    const [availIllustrations, setAvailIllustrations] = useState<FileType[]>([])
     const [availTokens, setAvailTokens] = useState<string[]>([])
     const [campaignQuota, setCampaignQuota] = useState<Quota | null>(null)
 
@@ -31,14 +31,14 @@ export const useCampaignResources = () => {
         }
     }
 
-    const mapApiToMap = ( {uuid, file_name }: FileTypeAPI): FileType => ({uuid: uuid, fileName: file_name})
+    const mapApiToFile = ( {uuid, file_name }: FileTypeAPI): FileType => ({uuid: uuid, fileName: file_name})
 
     const loadMaps = async () => {
         if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getMaps(campaignId)
                 .then((res) => {
-                    const maps: FileType[] = res.map(mapApiToMap);
+                    const maps: FileType[] = res.map(mapApiToFile);
                     setAvailMaps(maps);
                 })
                 .catch((err) => {console.log(err); throw err}),
@@ -54,7 +54,10 @@ export const useCampaignResources = () => {
         if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getIllustrations(campaignId)
-                .then((res) => {setAvailIllustrations(res);})
+                .then((res) => {
+                    const illus: FileType[] = res.map(mapApiToFile)
+                    setAvailIllustrations(illus);
+                })
                 .catch((err) => {console.log(err); throw err}),
             {
                 loading: "Récupération des illustrations...",

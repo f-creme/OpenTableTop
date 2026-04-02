@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 import os
 
+from db.db import get_db
 from core.config import DATA_DIR
 from services import secure_urls
 
@@ -9,18 +10,17 @@ router = APIRouter(prefix="/illus", tags=["illus"])
 
 DATA_DIR = os.path.abspath(DATA_DIR)
 
-@router.get("/{campaign_id}")
-def list_illustrations(campaign_id: int):
+@router.get("/{campaign_uuid}")
+def list_illustrations(campaign_uuid: str, db = Depends(get_db)):
     """Return list of available illustrations"""
-
-    campaign_dir_name = f"campaign_{campaign_id:04d}"
-    campaign_illus_dir = os.path.join(DATA_DIR, campaign_dir_name, "illustrations")
     try: 
-        files = sorted(
-            [f for f in os.listdir(campaign_illus_dir) if f.lower().endswith((".png", ".jpg", ".webp"))],
-            key=lambda x: x.lower()
-        )        
-        return {"illus": files}
+        with db.cursor() as cursor:
+            cursor.execute("" \
+            "SELECT uuid, file_name FROM files " \
+            "WHERE file_type = 'illustration' AND campaign_uuid = %s;", (campaign_uuid, )
+            )
+            illustrations = cursor.fetchall()
+        return {"illus": illustrations}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
