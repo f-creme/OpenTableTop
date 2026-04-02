@@ -1,13 +1,13 @@
-def get_user_campaigns(db, user_id: int):
+def get_user_campaigns(db, user_uuid: str):
     with db.cursor() as cs:
         cs.execute(
             """
-            SELECT campaign_id, campaign_title, users_campaigns.role
+            SELECT campaign_uuid, campaign_title, users_campaigns.role
             FROM users_campaigns
-            LEFT JOIN campaigns ON campaigns.id = users_campaigns.campaign_id
-            WHERE user_id = %s;
+            LEFT JOIN campaigns ON campaigns.campaign_uuid = users_campaigns.campaign_uuid
+            WHERE user_uuid = %s;
             """,
-            (user_id,)
+            (user_uuid, )
         )
         return cs.fetchall()
 

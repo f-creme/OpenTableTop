@@ -13,11 +13,11 @@ MAX_CAMPAIGN_PER_USER = 2
 
 
 @router.get("/")
-def get_user_campaigns(user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+def get_user_campaigns(user_uuid: str = Depends(get_current_user_id), db=Depends(get_db)):
     try:
-        campaigns = repository.get_user_campaigns(db, user_id)
+        campaigns = repository.get_user_campaigns(db, user_uuid)
 
-        return [{"id": c["campaign_id"], "title": c["campaign_title"], "user_role": c["role"]} for c in campaigns]
+        return [{"id": c["campaign_uuid"], "title": c["campaign_title"], "user_role": c["role"]} for c in campaigns]
 
     except psycopg2.Error as e:
         raise HTTPException(status_code=500, detail=str(e))

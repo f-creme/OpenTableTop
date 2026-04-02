@@ -3,20 +3,20 @@ import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
 interface CampaignContextType {
-    campaignId: number | null
-    setCampaignId: (id: number) => void
+    campaignId: string | null
+    setCampaignId: (id: string) => void
 }
 
 const CampaignContext = createContext<CampaignContextType | undefined>(undefined);
 
 export function CampaignProvider({ children }: { children: ReactNode }) {
     // On initialise à partir de localStorage si disponible
-    const [campaignId, setCampaignIdState] = useState<number | null>(() => {
+    const [campaignId, setCampaignIdState] = useState<string | null>(() => {
         const saved = localStorage.getItem("campaignId");
-        return saved ? Number(saved) : null;
+        return saved ? String(saved) : null;
     });
 
-    const setCampaignId = (id: number) => {
+    const setCampaignId = (id: string) => {
         setCampaignIdState(id);
         localStorage.setItem("campaignId", String(id));
     };

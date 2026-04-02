@@ -25,7 +25,7 @@ export default function RoleSelection() {
     const { setCampaignId } = useCampaign();
 
     const [campaigns, setCampaigns] = useState<Campaign[] | null>(null);
-    const [selectedCampaign, setSelectedCampaign] = useState<number>(0);
+    const [selectedCampaign, setSelectedCampaign] = useState<string>("__NULL__");
     const [disabledPlayer, setDisabledPlayer] = useState<boolean>(true);
     const [disabledMaster, setDisabledMaster] = useState<boolean>(true);
 
@@ -56,7 +56,7 @@ export default function RoleSelection() {
             .then((data) => {
                 setCampaigns(data);
                 if (!data || data.length === 0) {
-                    setSelectedCampaign(-1);
+                    setSelectedCampaign("__NULL__");
                 } else {
                     setSelectedCampaign(data[0].id);
                 }
@@ -66,14 +66,14 @@ export default function RoleSelection() {
 
     // Update CampaignContext
     useEffect(() => {
-        if (selectedCampaign !== 0) {
+        if (selectedCampaign) {
             setCampaignId(selectedCampaign);
         }
     }, [selectedCampaign]);
 
     // Enable/disable buttons
     useEffect(() => {
-        if (selectedCampaign === -1) {
+        if (!selectedCampaign) {
             setDisabledMaster(false);
             setDisabledPlayer(true);
         } else {
@@ -111,7 +111,7 @@ export default function RoleSelection() {
                         <select
                             className="select w-full"
                             value={selectedCampaign}
-                            onChange={(e) => setSelectedCampaign(Number(e.target.value))}
+                            onChange={(e) => setSelectedCampaign(String(e.target.value))}
                         >
                             <option key={0} disabled value={0}>
                                 Sélection de la campagne
