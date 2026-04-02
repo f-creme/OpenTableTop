@@ -119,28 +119,32 @@ const Table = () => {
   ].filter(Boolean);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex flex-col gap-4 flex-1 p-4 items-center">
-        <div className="bg-base-300 min-w-1/3 max-w-4xl mx-auto mt-4 p-2 rounded-2xl shadow-2xl relative z-20">
-          <ul className="flex items-center justify-center gap-6">
-            {menuItems.map((item, idx) => <li key={idx}>{item}</li>)}
-          </ul>
-        </div>
+        <div className="min-h-screen flex mx-auto max-w-screen-2xl px-[5vw] gap-[5vw]">
+            <div className="w-1/3 bg-base-300 rounded-2xl">
 
-        <div className="flex-1 flex items-center justify-center min-h-0">
-          <MapDisplay
-            role={role}
-            apiURL={apiURL}
-            selectedMap={selectedMap}
-            campaignId={Number(campaignId)}
-            selectedIllustration={selectedIllustration}
-            activeTokens={activeTokens}
-            send={send}
-            diceUI={<DiceResults {...dice} />}
-          />
+            </div>
+
+            <div className="w-2/3 flex flex-col gap-4">
+                <div className="bg-base-300 w-full p-2 rounded-2xl shadow-2xl">
+                    <ul className="flex items-center justify-center gap-6">
+                        {menuItems.map((item, idx) => <li key={idx}>{item}</li>)}
+                    </ul>
+                </div>
+
+                <div className="flex-1 min-h-0">
+                    <MapDisplay
+                        role={role}
+                        apiURL={apiURL}
+                        selectedMap={selectedMap}
+                        campaignId={Number(campaignId)}
+                        selectedIllustration={selectedIllustration}
+                        activeTokens={activeTokens}
+                        send={send}
+                        diceUI={<DiceResults {...dice} />}
+                    />
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
   );
 };
 
