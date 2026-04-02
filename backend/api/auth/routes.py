@@ -29,20 +29,20 @@ def register(data: RegisterRequest, db=Depends(get_db)):
     try: 
         # Create user and get his/her id
         cs.execute(
-            "INSERT INTO users (username, password_hash) VALUES (%s, %s) RETURNING id;",
+            "INSERT INTO users (username, password_hash) VALUES (%s, %s) RETURNING uuid;",
             (data.username, hash_password(data.password))
         )
-        user_id = cs.fetchone()["id"]
+        user_uuid = str(cs.fetchone()["uuid"])
 
         # Create profile
         cs.execute(
-            "INSERT INTO profiles (user_id, public_name) VALUES (%s, %s);",
-            (user_id, data.public_name)
+            "INSERT INTO profiles (user_uuid, public_name) VALUES (%s, %s);",
+            (user_uuid, data.public_name)
         )
         db.commit()
 
         # Create storage
-        create_user_storage(user_id)
+        create_user_storage(user_uuid)
 
     except:
         db.rollback()

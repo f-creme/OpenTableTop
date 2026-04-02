@@ -13,8 +13,8 @@ def create_campaign_storage(campaign_id: int):
     os.makedirs(join(main_folder_path, "items"), exist_ok=True)
     os.makedirs(join(main_folder_path, "illustrations"), exist_ok=True)
 
-def create_user_storage(user_id: int):
-    user_folder_name = f"user_{user_id:04d}"
+def create_user_storage(uuid: str):
+    user_folder_name = f"user_{uuid}"
     user_folder_path = join(DATA_DIR, user_folder_name)
 
     os.makedirs(user_folder_path, exist_ok=True)
