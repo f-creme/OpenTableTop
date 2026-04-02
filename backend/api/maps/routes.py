@@ -1,26 +1,29 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import FileResponse
 import os
 
 from core.config import DATA_DIR
+from core.config_storage import get_campaign_dir
 from services import secure_urls
+from db.db import get_db
 
 router = APIRouter(prefix="/maps", tags=["maps"])
 
 DATA_DIR = os.path.abspath(DATA_DIR)
 
-@router.get("/{campaign_id}")
-def list_maps(campaign_id: int):
+@router.get("/{campaign_uuid}")
+def list_maps(campaign_uuid: str, db = Depends(get_db)):
     """Return list of available maps"""
-
-    campaign_dir_name = f"campaign_{campaign_id:04d}"
-    campaign_maps_dir = os.path.join(DATA_DIR, campaign_dir_name, "maps")
-    try: 
-        files = sorted(
-            [f for f in os.listdir(campaign_maps_dir) if f.lower().endswith((".png", ".jpg", ".webp"))],
-            key=lambda x: x.lower()
-        )
-        return {"maps": files}
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                "SELECT uuid, file_name FROM files " \
+                "WHERE file_type = 'map' AND campaign_uuid = %s;", (campaign_uuid, )
+            )
+            maps = cursor.fetchall()
+        
+        print(maps, flush=True)
+        return {"maps": maps}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     

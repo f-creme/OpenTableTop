@@ -1,6 +1,7 @@
-import { useState, type FC } from "react"; 
+import { useEffect, useState, type FC } from "react"; 
 import { Map, ImageIcon, ChessPawn } from "lucide-react";
 import { Trash } from "lucide-react";
+import type { FileType } from "../types/file"
 
 interface Quota {
     currentSize: number,
@@ -9,9 +10,9 @@ interface Quota {
 
 type Props = {
     campaignId: string;
-    availMaps: string[];
-    availIllustrations: string[];
-    availTokens: string[];
+    availMaps: FileType[];
+    availIllustrations: FileType[];
+    availTokens: FileType[];
     loadMaps: () => void;
     loadIllustrations: () => void;
     loadTokens: () => void;
@@ -21,7 +22,7 @@ type Props = {
 };
 
 const UploadSection: FC<{
-    files: string[];
+    files: FileType[];
     loadFiles: () => void;
     uploadFile: (file: File) => void;
     deleteFile: (filename: string) => void;
@@ -55,11 +56,11 @@ const UploadSection: FC<{
                         key={index}
                     >
                         <div className="flex gap-2">
-                            <span>{file}</span>
+                            <span>{file.fileName} - {file.uuid}</span>
                         </div>
                         <button
                             className="btn btn-primary btn-ghost"
-                            onClick={() => deleteFile(file)}
+                            onClick={() => deleteFile(file.uuid)}
                         >
                             <Trash className="h-4 w-4" />                            
                         </button>
@@ -105,6 +106,10 @@ const CampaignResourcesForm: FC<Props> = ({
     campaignQuota
 }) => {
     const [activeTab, setActiveTab] = useState<"maps" | "illustrations" | "tokens">("maps");
+
+    useEffect(() => {
+        console.log(availMaps);
+    }, [availMaps])
 
     function formatBytes(bytes: number, decimals = 2) {
         if (bytes === 0) return "0 Bytes";

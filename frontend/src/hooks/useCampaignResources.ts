@@ -4,6 +4,7 @@ import { getMaps, getIllustrations, getTokens } from "../api/services/mapService
 import { useEffect, useState } from "react";
 import { uploadFile, deleteFile, getQuota } from "../api/services/campaignResourcesServices";
 import type { Token } from "../types/token";
+import type { FileType, FileTypeAPI } from "../types/file";
 
 interface Quota {
     currentSize: number,
@@ -13,7 +14,7 @@ interface Quota {
 export const useCampaignResources = () => {
     const { campaignId } = useCampaign()
 
-    const [availMaps, setAvailMaps] = useState<string[]>([])
+    const [availMaps, setAvailMaps] = useState<FileType[]>([])
     const [availIllustrations, setAvailIllustrations] = useState<string[]>([])
     const [availTokens, setAvailTokens] = useState<string[]>([])
     const [campaignQuota, setCampaignQuota] = useState<Quota | null>(null)
@@ -30,11 +31,16 @@ export const useCampaignResources = () => {
         }
     }
 
+    const mapApiToMap = ( {uuid, file_name }: FileTypeAPI): FileType => ({uuid: uuid, fileName: file_name})
+
     const loadMaps = async () => {
         if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getMaps(campaignId)
-                .then((res) => {setAvailMaps(res);})
+                .then((res) => {
+                    const maps: FileType[] = res.map(mapApiToMap);
+                    setAvailMaps(maps);
+                })
                 .catch((err) => {console.log(err); throw err}),
             {
                 loading: "Récupération des cartes et arrière-plans...",

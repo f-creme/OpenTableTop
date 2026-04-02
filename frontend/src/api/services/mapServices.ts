@@ -1,7 +1,7 @@
 import axiosInstance from "../axiosInstance";
 
-export async function getMaps(campaignId: string) {
-    const res = await axiosInstance.get(`/maps/${campaignId}`)
+export async function getMaps(campaignUuid: string) {
+    const res = await axiosInstance.get(`/maps/${campaignUuid}`)
     return res.data.maps
 }
 
