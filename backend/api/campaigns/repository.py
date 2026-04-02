@@ -45,29 +45,29 @@ def update_campaign_global(db, user_id: int, campaign_id: int, title: str, chara
             (character_name, campaign_id, user_id)
         )
 
-def count_user_campaigns(db, user_id: int):
+def count_user_campaigns(db, user_uuid: str):
     with db.cursor() as cursor:
         cursor.execute(
-            "SELECT COUNT(*) FROM users_campaigns WHERE user_id = %s AND role = 'gm';",
-            (user_id, )
+            "SELECT COUNT(*) FROM users_campaigns WHERE user_uuid = %s AND role = 'gm';",
+            (user_uuid, )
         )
         count = cursor.fetchone()["count"]
         return count
 
-def create_campaign(db, user_id: int, title: str, character_name: str):
+def create_campaign(db, user_uuid: str, title: str, character_name: str):
     with db.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO campaigns (campaign_title) VALUES (%s) RETURNING id;",
+            "INSERT INTO campaigns (campaign_title) VALUES (%s) RETURNING campaign_uuid;",
             (title, )
         )
-        campaign_id = cursor.fetchall()[0]["id"]
+        campaign_uuid = cursor.fetchall()[0]["campaign_uuid"]
 
         cursor.execute(
-            "INSERT INTO users_campaigns (campaign_id, user_id, role, character_name) " \
+            "INSERT INTO users_campaigns (campaign_uuid, user_uuid, role, character_name) " \
             "VALUES (%s, %s, 'gm', %s);",
-            (campaign_id, user_id, character_name)
+            (campaign_uuid, user_uuid, character_name)
         )
-        return campaign_id
+        return campaign_uuid
     
 def delete_campaign(db, user_id: int, campaign_id: int):
     with db.cursor() as cursor:

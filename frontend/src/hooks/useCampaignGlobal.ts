@@ -44,7 +44,7 @@ export const useCampaignGlobal = () => {
     };
 
     const createCampaign = async () => {
-        if (campaignId !== -1 || campaignTitle.length === 0 || campaignTitle.length >= 35 || !localPublicName) return;
+        if (campaignId !== "__NULL__" || campaignTitle.length === 0 || campaignTitle.length >= 35 || !localPublicName) return;
         await toast.promise(
             postNewCampaign(campaignTitle, localPublicName)
                 .then(res => {

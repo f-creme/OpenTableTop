@@ -44,16 +44,16 @@ def update_campaign_global(campaign_id: int, data: CampaignGlobalRequest, user_i
         raise HTTPException(status_code=400, detail="Unable to update campaign information")
     
 @router.post("/create")
-def create_campaign(data: CampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+def create_campaign(data: CampaignGlobalRequest, user_uuid: str = Depends(get_current_user_id), db=Depends(get_db)):
     try:
-        count = repository.count_user_campaigns(db, user_id)
+        count = repository.count_user_campaigns(db, user_uuid)
 
         if count < MAX_CAMPAIGN_PER_USER:
-            new_campaign_id = repository.create_campaign(db, user_id, data.title, data.name)
+            new_campaign_uuid = repository.create_campaign(db, user_uuid, data.title, data.name)
             db.commit()
 
-            create_campaign_storage(new_campaign_id)
-            return {"message": "campaign created", "campaignId": new_campaign_id}
+            create_campaign_storage(new_campaign_uuid)
+            return {"message": "campaign created", "campaignId": new_campaign_uuid}
         
         else:
             raise HTTPException(status_code=400, detail="User has reached the campaign limit")

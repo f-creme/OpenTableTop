@@ -48,7 +48,7 @@ export default function ManageCampaign() {
     const [view, setView] = useState<"general" | "users" | "resources">("general");
 
     const handleSave = () => {
-        if (campaignId === -1) {
+        if (campaignId === "__NULL__") {
             createCampaign();
         } else {
             updateCampaign();
@@ -90,7 +90,7 @@ export default function ManageCampaign() {
                             disabledEditGlobal={disabledEditGlobal}
                             setDisabledEditGlobal={setDisabledEditGlobal}
                             onSave={handleSave}
-                            isNewCampaign={campaignId === -1}
+                            isNewCampaign={campaignId === "__NULL__"}
                         />
                     )}
 
