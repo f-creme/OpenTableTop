@@ -62,6 +62,10 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_json(message)
 
+    async def request_reinit(self, websocket: WebSocket):
+        await websocket.send_json({"type": "map_update", "selected_map": self.current_map})
+        await websocket.send_json({"type": "init_tokens", "tokens": self.current_active_tokens})
+        await websocket.send_json({"type": "illus_update", "selected_illustration": self.current_illustration})
 
     async def broadcast_map(self, map_name: str):
         """Map broadcast"""
@@ -114,12 +118,6 @@ class ConnectionManager:
     async def broadcast_token_scale(self, tokens: list):
         self.current_active_tokens = tokens
         await self.broadcast({"type": "tokens_scale", "tokens": tokens})
-
-    async def request_reinit_tokens(self, websocket: WebSocket):
-        await websocket.send_json({
-                "type": "init_tokens",
-                "tokens": self.current_active_tokens
-            })
 
     async def broadcast_new_player(self, player: dict):
         exists = any(p.get("userPublicName") == player["userPublicName"] for p in self.current_active_players)
@@ -180,8 +178,8 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
                 player = Player(**(data["player"])).model_dump()
                 await manager.broadcast_new_player(player=player)
 
-            elif msg_type =="request_init_tokens":
-                await manager.request_reinit_tokens(websocket)
+            elif msg_type =="request_init":
+                await manager.request_reinit(websocket)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)

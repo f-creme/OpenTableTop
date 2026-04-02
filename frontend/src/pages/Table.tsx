@@ -111,7 +111,7 @@ const Table = () => {
 
     <button
         className="btn btn-ghost"
-        onClick={() => send({ type: "request_init_tokens"})}
+        onClick={() => send({ type: "request_init"})}
     >
         <RefreshCcw/>
     </button>
