@@ -15,7 +15,8 @@ def list_tokens(campaign_uuid: str, db = Depends(get_db)):
         with db.cursor() as cursor:
             cursor.execute(
                 "SELECT uuid, file_name FROM files " \
-                "WHERE file_type = 'token' AND campaign_uuid = %s;", (campaign_uuid, )
+                "WHERE file_type = 'token' AND campaign_uuid = %s " \
+                "ORDER BY file_name ASC;", (campaign_uuid, )
             ) 
             files = cursor.fetchall() 
         data = [{"uuid": file["uuid"], "file_name": file["file_name"], "x": 0, "y": 0, "scale": 1} for file in files]

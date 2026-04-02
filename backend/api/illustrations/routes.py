@@ -17,7 +17,8 @@ def list_illustrations(campaign_uuid: str, db = Depends(get_db)):
         with db.cursor() as cursor:
             cursor.execute("" \
             "SELECT uuid, file_name FROM files " \
-            "WHERE file_type = 'illustration' AND campaign_uuid = %s;", (campaign_uuid, )
+            "WHERE file_type = 'illustration' AND campaign_uuid = %s " \
+            "ORDER BY file_name ASC;", (campaign_uuid, )
             )
             illustrations = cursor.fetchall()
         return {"illus": illustrations}

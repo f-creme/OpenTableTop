@@ -18,7 +18,8 @@ def list_maps(campaign_uuid: str, db = Depends(get_db)):
         with db.cursor() as cursor:
             cursor.execute(
                 "SELECT uuid, file_name FROM files " \
-                "WHERE file_type = 'map' AND campaign_uuid = %s;", (campaign_uuid, )
+                "WHERE file_type = 'map' AND campaign_uuid = %s " \
+                "ORDER BY file_name ASC;", (campaign_uuid, )
             )
             maps = cursor.fetchall()
         
