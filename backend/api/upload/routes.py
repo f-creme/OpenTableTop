@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from pathlib import Path
 import imghdr
-import shutil
 import os
 
 from core.config import DATA_DIR
@@ -9,6 +8,7 @@ from services import secure_urls
 from api.dependencies.auth import get_current_user_id
 from db.db import get_db
 from api.upload import repository
+from core.config_storage import get_campaign_dir
 
 router = APIRouter(prefix="/upload", tags=["upload"])
 
@@ -18,10 +18,6 @@ MAX_FILE_SIZE = 2 * 1024 * 1024
 MAX_CAMPAIGN_SIZE = 100 * 1024 * 1024
 
 dict_category = {"maps": "maps", "illustrations": "illustrations", "tokens": "tokens"}
-
-def get_campaign_path(campaign_id: int) -> Path:
-    path = Path(f"{DATA_DIR}/campaign_{campaign_id:04d}")
-    return path
 
 def get_folder_size(folder: Path) -> int:
     return sum(f.stat().st_size for f in folder.rglob("*") if f.is_file())
@@ -119,9 +115,9 @@ def delete_file(category: str, campaign_id: int, filename: str, user_id: int = D
     return {"detail": "File deleted"}
 
 
-@router.get("/{campaign_id}/quota")
-def get_campaign_quota(campaign_id: int):
-    folder = get_campaign_path(campaign_id)
-    current_size = get_folder_size(folder)
+@router.get("/{campaign_uuid}/quota")
+def get_campaign_quota(campaign_uuid: str):
+    folder = get_campaign_dir(campaign_uuid)
+    current_size = get_folder_size(Path(folder))
     max_size = MAX_CAMPAIGN_SIZE
     return {"quota": {"currentSize": current_size, "maxSize": max_size}}

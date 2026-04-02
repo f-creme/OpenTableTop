@@ -8,7 +8,7 @@ export async function deleteFile(campaignId: number, filename: string, category:
     await axiosInstance.delete(`/upload/${category}/${campaignId}/${filename}`);
 }
 
-export async function getQuota(campaignId: number) {
+export async function getQuota(campaignId: string) {
     const res = await axiosInstance.get(`/upload/${campaignId}/quota`);
     return res.data.quota;
 }

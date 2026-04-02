@@ -8,7 +8,7 @@ interface Quota {
 }
 
 type Props = {
-    campaignId: number;
+    campaignId: string;
     availMaps: string[];
     availIllustrations: string[];
     availTokens: string[];
