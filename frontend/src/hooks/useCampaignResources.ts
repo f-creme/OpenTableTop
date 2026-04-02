@@ -3,7 +3,7 @@ import { useCampaign } from "../context/CampaignContext"
 import { getMaps, getIllustrations, getTokens } from "../api/services/mapServices";
 import { useEffect, useState } from "react";
 import { uploadFile, deleteFile, getQuota } from "../api/services/campaignResourcesServices";
-import type { Token } from "../types/token";
+import type { TokenAPI } from "../types/token";
 import type { FileType, FileTypeAPI } from "../types/file";
 
 interface Quota {
@@ -16,7 +16,7 @@ export const useCampaignResources = () => {
 
     const [availMaps, setAvailMaps] = useState<FileType[]>([])
     const [availIllustrations, setAvailIllustrations] = useState<FileType[]>([])
-    const [availTokens, setAvailTokens] = useState<string[]>([])
+    const [availTokens, setAvailTokens] = useState<FileType[]>([])
     const [campaignQuota, setCampaignQuota] = useState<Quota | null>(null)
 
     const getCampaignQuota = async () => {
@@ -32,6 +32,7 @@ export const useCampaignResources = () => {
     }
 
     const mapApiToFile = ( {uuid, file_name }: FileTypeAPI): FileType => ({uuid: uuid, fileName: file_name})
+    const mapTokenApiToFile = ( {uuid, file_name}: TokenAPI): FileType => ({uuid: uuid, fileName: file_name})
 
     const loadMaps = async () => {
         if (!campaignId || campaignId === "__NULL__") return;
@@ -72,8 +73,9 @@ export const useCampaignResources = () => {
         await toast.promise(
             getTokens(campaignId)
                 .then((res) => {
-                    const tokenNames = res.map((token: Token) => token.id);
-                    setAvailTokens(tokenNames);
+                    console.log(res)
+                    const tokens: FileType[] = res.map(mapTokenApiToFile)
+                    setAvailTokens(tokens);
                 })
                 .catch((err) => {console.log(err); throw err}),
             {

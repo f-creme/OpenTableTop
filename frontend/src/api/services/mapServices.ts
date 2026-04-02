@@ -10,7 +10,7 @@ export async function getIllustrations(campaignUuid: string) {
     return res.data.illus
 }
 
-export async function getTokens(campaignId: string) {
-    const res = await axiosInstance.get(`tokens/${campaignId}`);
+export async function getTokens(campaignUuid: string) {
+    const res = await axiosInstance.get(`tokens/${campaignUuid}`);
     return res.data.tokens;
 }

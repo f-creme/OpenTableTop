@@ -1,24 +1,24 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import FileResponse
 import os
 
 from core.config import DATA_DIR
 from services import secure_urls
+from db.db import get_db
 
 router = APIRouter(prefix="/tokens", tags=["tokens"])
 
-@router.get("/{campaign_id}")
-def list_tokens(campaign_id: int):
+@router.get("/{campaign_uuid}")
+def list_tokens(campaign_uuid: str, db = Depends(get_db)):
     """Return list of available tokens"""
-
-    campaign_dir_name = f"campaign_{campaign_id:04d}"
-    campaign_tokens_dir = os.path.join(DATA_DIR, campaign_dir_name, "tokens")
     try: 
-        files = sorted(
-            [f for f in os.listdir(campaign_tokens_dir) if f.lower().endswith((".png", ".jpg", ".webp"))],
-            key=lambda x: x.lower()
-        )        
-        data = [{"id": f, "x": 0, "y": 0, "scale": 1} for f in files]
+        with db.cursor() as cursor:
+            cursor.execute(
+                "SELECT uuid, file_name FROM files " \
+                "WHERE file_type = 'token' AND campaign_uuid = %s;", (campaign_uuid, )
+            ) 
+            files = cursor.fetchall() 
+        data = [{"uuid": file["uuid"], "file_name": file["file_name"], "x": 0, "y": 0, "scale": 1} for file in files]
         return {"tokens": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
