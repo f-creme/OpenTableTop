@@ -1,11 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 import psycopg2
+import shutil
 from psycopg2 import errors
 from db.db import get_db
 from api.dependencies.auth import get_current_user_id
 from api.campaigns.schemas import CampaignGlobalRequest, NewParticipantRequest
 from api.campaigns import repository
-from core.config_storage import create_campaign_storage
+from core.config_storage import create_campaign_storage, get_campaign_dir
+from services import secure_urls
+
+from core.config import DATA_DIR
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
@@ -65,12 +69,16 @@ def create_campaign(data: CampaignGlobalRequest, user_uuid: str = Depends(get_cu
         db.rollback()
         raise HTTPException(status_code=400, detail="Unable to create campaign.")
     
-@router.delete("/{campaign_id}/delete")
-def delete_campaign(campaign_id: int, user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+@router.delete("/{campaign_uuid}/delete")
+def delete_campaign(campaign_uuid: str, user_uuid: str = Depends(get_current_user_id), db = Depends(get_db)):
     try:
-        repository.delete_campaign(db, user_id, campaign_id)
+        repository.delete_campaign(db, user_uuid, campaign_uuid)
         db.commit()
+
+        dir_to_delete = get_campaign_dir(campaign_uuid=campaign_uuid)
+        shutil.rmtree(dir_to_delete)
         return {"message": "campaign deleted"}
+    
     except Exception:
         db.rollback()
         raise HTTPException(status_code=400, detail="Unable to delete campaign.")

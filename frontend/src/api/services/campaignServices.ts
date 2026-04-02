@@ -48,7 +48,7 @@ export async function postNewCampaign(title: string, name: string) {
     return res.data;
 }
 
-export async function DeleteCampaign(id: number) {
+export async function DeleteCampaign(id: string) {
     const res = await axiosInstance.delete(`/campaigns/${id}/delete`);
     return res.data;
 }
