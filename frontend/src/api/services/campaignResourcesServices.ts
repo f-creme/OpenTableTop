@@ -1,6 +1,6 @@
 import axiosInstance from "../axiosInstance";
 
-export async function uploadFile(campaignId: number, file: FormData, category: "maps" | "illustrations" | "tokens") {
+export async function uploadFile(campaignId: string, file: FormData, category: "maps" | "illustrations" | "tokens") {
     await axiosInstance.post(`/upload/${category}/${campaignId}`, file);
 }
 

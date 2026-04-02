@@ -17,20 +17,20 @@ DATA_DIR = os.path.abspath(DATA_DIR)
 MAX_FILE_SIZE = 2 * 1024 * 1024
 MAX_CAMPAIGN_SIZE = 100 * 1024 * 1024
 
-dict_category = {"maps": "maps", "illustrations": "illustrations", "tokens": "tokens"}
+dict_category = {"maps": "map", "illustrations": "illustration", "tokens": "token"}
 
 def get_folder_size(folder: Path) -> int:
     return sum(f.stat().st_size for f in folder.rglob("*") if f.is_file())
 
 
-async def upload_file(category: str, campaign_id: int, user_id: int = Depends(get_current_user_id), file: UploadFile = File(...), db = Depends(get_db)):
+async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depends(get_current_user_id), file: UploadFile = File(...), db = Depends(get_db)):
     # Check file type
     file_type = imghdr.what(file.file)
     if file_type not in ["png", "jpeg", "webp"]:
         raise HTTPException(400, detail="Unauthorized file type")
     
     # Check role of user for the campaign
-    is_user_gm = repository.get_user_role_for_campaign(db, user_id, campaign_id)
+    is_user_gm = repository.get_user_role_for_campaign(db, user_uuid=user_uuid, campaign_uuid=campaign_uuid)
     if not is_user_gm:
         raise HTTPException(403, detail="Unauthorized access")
 
@@ -40,8 +40,8 @@ async def upload_file(category: str, campaign_id: int, user_id: int = Depends(ge
 
     contents = await file.read()
     # Check user space
-    folder = get_campaign_path(campaign_id=campaign_id)
-    current_size = get_folder_size(folder)
+    folder = get_campaign_dir(campaign_uuid=campaign_uuid)
+    current_size = get_folder_size(Path(folder))
     if current_size + len(contents) > MAX_CAMPAIGN_SIZE:
         raise HTTPException(400, detail="Campaign quota exceeded")
 
@@ -50,39 +50,47 @@ async def upload_file(category: str, campaign_id: int, user_id: int = Depends(ge
         raise HTTPException(400, detail="File is too large")
 
     safe_name = str(file.filename).replace("..", "_").replace("/", "_")
-    file_path = folder / dict_category[category] / safe_name
+
+    # Register safe name in database and get a file uuid
+    try: 
+        new_file_uuid = repository.record_file(db, safe_name, dict_category[category], user_uuid, campaign_uuid)
+    except:
+        raise HTTPException(400, detail="Unable to record file in the database")
+    
+    file_path = Path(folder) / category / f"{new_file_uuid}.{file_type}"
     with open(file_path, "wb") as f:
         f.write(contents)
 
+    db.commit()
     return {"filename": safe_name}
 
-@router.post("/maps/{campaign_id}")
+@router.post("/maps/{campaign_uuid}")
 async def upload_map(
-    campaign_id: int,
-    user_id: int = Depends(get_current_user_id),
+    campaign_uuid: str,
+    user_uuid: str = Depends(get_current_user_id),
     file: UploadFile = File(...),
     db = Depends(get_db)
 ):
-    return await upload_file("maps", campaign_id, user_id, file, db)
+    return await upload_file("maps", campaign_uuid, user_uuid, file, db)
 
 
-@router.post("/illustrations/{campaign_id}")
+@router.post("/illustrations/{campaign_uuid}")
 async def upload_illustration(
-    campaign_id: int,
-    user_id: int = Depends(get_current_user_id),
+    campaign_uuid: str,
+    user_uuid: str = Depends(get_current_user_id),
     file: UploadFile = File(...),
     db = Depends(get_db)
 ):
-    return await upload_file("illustrations", campaign_id, user_id, file, db)
+    return await upload_file("illustrations", campaign_uuid, user_uuid, file, db)
 
-@router.post("/tokens/{campaign_id}")
+@router.post("/tokens/{campaign_uuid}")
 async def upload_token(
-    campaign_id: int,
-    user_id: int = Depends(get_current_user_id),
+    campaign_uuid: str,
+    user_uuid: str = Depends(get_current_user_id),
     file: UploadFile = File(...),
     db = Depends(get_db)
 ):
-    return await upload_file("tokens", campaign_id, user_id, file, db)
+    return await upload_file("tokens", campaign_uuid, user_uuid, file, db)
 
 @router.delete("/{category}/{campaign_id}/{filename}")
 def delete_file(category: str, campaign_id: int, filename: str, user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
