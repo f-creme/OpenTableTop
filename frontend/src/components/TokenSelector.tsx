@@ -26,7 +26,7 @@ const TokenSelector = ({
             </div>
 
         {tokens.length > 0 ? (
-            <ul tabIndex={-1} className="dropdown-content z-1 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
+            <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
             <li className="menu-title">Select tokens to display</li>
             {tokens.map((token, index) => (
                 <li key={index}>

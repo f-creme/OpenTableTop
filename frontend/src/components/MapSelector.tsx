@@ -21,7 +21,7 @@ const MapSelector = ({ role, maps, selectedMap, changeMap }: MapSelectorProps) =
       </div>
 
       {maps.length > 0 ? (
-        <ul tabIndex={-1} className="dropdown-content z-1 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
+        <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
           <li className="menu-title">Select a map to display</li>
           {maps.map((gameMap) => (
             <li key={gameMap}>
