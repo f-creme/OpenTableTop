@@ -116,12 +116,12 @@ export default function RoleSelection() {
                             <option key={0} disabled value={0}>
                                 Sélection de la campagne
                             </option>
-                            {campaigns?.map((c) => (
-                                <option key={c.id} value={c.id}>
+                            {campaigns?.map((c, index) => (
+                                <option key={index} value={c.id}>
                                     {c.title}
                                 </option>
                             ))}
-                            <option key={-1} value={-1}>
+                            <option key={-1} value={"__NULL__"}>
                                 {t("page.role-selection.selector.campaign.create")}
                             </option>
                         </select>

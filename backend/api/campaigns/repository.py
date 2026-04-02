@@ -4,7 +4,7 @@ def get_user_campaigns(db, user_uuid: str):
             """
             SELECT c.campaign_uuid, c.campaign_title, uc.role 
             FROM users_campaigns AS uc 
-            LEFT JOIN campaigns AS c ON c.campaign_uuid = c.campaign_uuid 
+            LEFT JOIN campaigns AS c ON uc.campaign_uuid = c.campaign_uuid 
             WHERE uc.user_uuid = %s;
             """,
             (user_uuid, )
