@@ -144,17 +144,17 @@ class ConnectionManager:
         await self.broadcast({"type": "new_player", "player": player})
 
 # Dictionnary to store a connection manager per campaign 
-campaign_managers: Dict[int, ConnectionManager] = {}
+campaign_managers: Dict[str, ConnectionManager] = {}
 
-def get_manager(campaign_id: int) -> ConnectionManager:
-    if campaign_id not in campaign_managers:
-        campaign_managers[campaign_id] = ConnectionManager()
-    return campaign_managers[campaign_id]
+def get_manager(campaign_uuid: str) -> ConnectionManager:
+    if campaign_uuid not in campaign_managers:
+        campaign_managers[campaign_uuid] = ConnectionManager()
+    return campaign_managers[campaign_uuid]
 
 # Websocket endpoint per campaign
-@router.websocket("/ws/{campaign_id}")
-async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
-    manager = get_manager(campaign_id)
+@router.websocket("/ws/{campaign_uuid}")
+async def websocket_endpoint(websocket: WebSocket, campaign_uuid: str):
+    manager = get_manager(campaign_uuid)
     await manager.connect(websocket)
 
     try:
