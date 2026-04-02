@@ -75,6 +75,11 @@ export const useTableSocket = (
           }
         });
       }
+
+      if (data.type === "player_disconnect") {
+        const leavingUser = data.userPublicName;
+        setActivePlayers(prev => prev.filter(p => p.userPublicName !== leavingUser));
+      }
     };
 
     ws.addEventListener("message", handleMessage as EventListener);

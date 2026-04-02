@@ -1,5 +1,6 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import List, Dict
+import asyncio
 import random
 
 from pydantic import BaseModel
@@ -26,7 +27,7 @@ class ConnectionManager:
         self.current_illustration: str | None = None
         self.current_active_tokens: List[dict] = []
         self.current_active_players: List[dict] = []
-
+        self.ws_to_player: dict[WebSocket, str] = {}
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -54,8 +55,18 @@ class ConnectionManager:
             })
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
-
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+        
+        player_public_name = self.ws_to_player.pop(websocket, None)
+        if player_public_name:
+            self.current_active_players = [
+                p for p in self.current_active_players
+                if p["userPublicName"] != player_public_name
+            ]
+        asyncio.create_task(self.broadcast(
+            {"type": "player_disconnected", "userPublicName": player_public_name}
+        ))
 
     async def broadcast(self, message: dict):
         """General broadcast"""
@@ -84,7 +95,6 @@ class ConnectionManager:
             "type": "illus_update",
             "selected_illustration": illus
         })
-
 
     async def broadcast_dice(self, dice: int, count: int, player: str | None = None):
         results = [random.randint(1, dice) for _ in range(count)]
@@ -119,10 +129,11 @@ class ConnectionManager:
         self.current_active_tokens = tokens
         await self.broadcast({"type": "tokens_scale", "tokens": tokens})
 
-    async def broadcast_new_player(self, player: dict):
+    async def broadcast_new_player(self, player: dict, websocket: WebSocket):
         exists = any(p.get("userPublicName") == player["userPublicName"] for p in self.current_active_players)
         if not exists: 
             self.current_active_players.append(player)
+            self.ws_to_player[websocket] = player["userPublicName"]
         else: 
             self.current_active_players = [
                 player if player["userPublicName"] == p["userPublicName"] 
@@ -176,7 +187,7 @@ async def websocket_endpoint(websocket: WebSocket, campaign_id: int):
 
             elif msg_type == "join_player":
                 player = Player(**(data["player"])).model_dump()
-                await manager.broadcast_new_player(player=player)
+                await manager.broadcast_new_player(player=player, websocket=websocket)
 
             elif msg_type =="request_init":
                 await manager.request_reinit(websocket)
