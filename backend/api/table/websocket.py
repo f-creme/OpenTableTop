@@ -77,6 +77,7 @@ class ConnectionManager:
         await websocket.send_json({"type": "map_update", "selected_map": self.current_map})
         await websocket.send_json({"type": "init_tokens", "tokens": self.current_active_tokens})
         await websocket.send_json({"type": "illus_update", "selected_illustration": self.current_illustration})
+        await websocket.send_json({"type": "init_players", "players": self.current_active_players})
 
     async def broadcast_map(self, map_name: str):
         """Map broadcast"""

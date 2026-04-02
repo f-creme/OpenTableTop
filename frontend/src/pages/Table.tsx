@@ -73,6 +73,10 @@ const Table = () => {
     prevActiveRef.current = activeTokens;
   }, [activeTokens, send]);
 
+  useEffect(() => {
+    send({ type: "request_init"});
+  }, [])
+
   const menuItems = [
     role === "mj" && (
       <MapSelector

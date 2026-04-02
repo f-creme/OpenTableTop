@@ -76,6 +76,11 @@ export const useTableSocket = (
         });
       }
 
+      if (data.type === "init_players") {
+        const players = data.players as Player[];
+        setActivePlayers(players);
+      }
+
       if (data.type === "player_disconnect") {
         const leavingUser = data.userPublicName;
         setActivePlayers(prev => prev.filter(p => p.userPublicName !== leavingUser));
