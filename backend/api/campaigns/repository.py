@@ -80,15 +80,15 @@ def delete_campaign(db, user_uuid: str, campaign_uuid: str):
             (campaign_uuid, user_uuid)
         )
 
-def get_campaign_users(db, campaign_id: int):
+def get_campaign_users(db, campaign_uuid: str):
     with db.cursor() as cursor:
         cursor.execute(
             "SELECT id, character_name, role, public_name " \
             "FROM users_campaigns " \
-            "LEFT JOIN profiles ON users_campaigns.user_id = profiles.user_id " \
-            "WHERE campaign_id = %s " \
+            "LEFT JOIN profiles ON users_campaigns.user_uuid = profiles.user_uuid " \
+            "WHERE campaign_uuid = %s " \
             "ORDER BY role ASC;", 
-            (campaign_id, )
+            (campaign_uuid, )
         )
         return cursor.fetchall()
     
@@ -98,15 +98,15 @@ def remove_user_from_campaign(db, user_campaign_id: int):
 
 def find_user(db, public_name: str):
     with db.cursor() as cursor:
-        cursor.execute("SELECT user_id FROM profiles WHERE public_name = %s;", (public_name, ))
+        cursor.execute("SELECT user_uuid FROM profiles WHERE public_name = %s;", (public_name, ))
         response = cursor.fetchone()
-        return response["user_id"]
+        return response["user_uuid"]
     
-def add_user_to_campaign(db, participant_user_id: int, campaign_id: int, participant_public_name: str):
+def add_user_to_campaign(db, participant_user_uuid: str, campaign_uuid: str, participant_public_name: str):
     with db.cursor() as cursor:
         cursor.execute(
             "INSERT INTO users_campaigns "
-            "(user_id, campaign_id, character_name, role) VALUES " \
+            "(user_uuid, campaign_uuid, character_name, role) VALUES " \
             "(%s, %s, %s, 'player');",
-            (participant_user_id, campaign_id, participant_public_name)
+            (participant_user_uuid, campaign_uuid, participant_public_name)
         )

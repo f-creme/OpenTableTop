@@ -83,10 +83,10 @@ def delete_campaign(campaign_uuid: str, user_uuid: str = Depends(get_current_use
         db.rollback()
         raise HTTPException(status_code=400, detail="Unable to delete campaign.")
     
-@router.get("/{campaign_id}/users")
-def get_campaign_users(campaign_id: int, db = Depends(get_db)):
+@router.get("/{campaign_uuid}/users")
+def get_campaign_users(campaign_uuid: str, db = Depends(get_db)):
     try: 
-        response = repository.get_campaign_users(db, campaign_id)
+        response = repository.get_campaign_users(db, campaign_uuid)
         return response
     except:
         raise HTTPException(status_code=400, detail="Unable to get campaign's users.")
@@ -100,15 +100,15 @@ def remove_user_from_campaign(user_campaign_id: int, db = Depends(get_db)):
     except:
         raise HTTPException(status_code=400, detail="Unable to get campaign's users.")
     
-@router.post("/{campaign_id}/add_participant")
-def add_participant_to_campaign(campaign_id: int, data: NewParticipantRequest, db = Depends(get_db)):
+@router.post("/{campaign_uuid}/add_participant")
+def add_participant_to_campaign(campaign_uuid: str, data: NewParticipantRequest, db = Depends(get_db)):
     try:
-        participant_user_id = repository.find_user(db, data.participantName)
+        participant_user_uuid = repository.find_user(db, data.participantName)
     except:
         raise HTTPException(status_code=400, detail="The name provided does not match any known user.")
     # return [participant_user_id, campaign_id, data.participantName]
     try: 
-        repository.add_user_to_campaign(db, participant_user_id, campaign_id, data.participantName)
+        repository.add_user_to_campaign(db, participant_user_uuid, campaign_uuid, data.participantName)
         db.commit()
         return {"message": "Participant added to the campaign"}
     except:

@@ -13,7 +13,7 @@ export const useCampaignUsers = () => {
     const [newParticipant, setNewParticipant] = useState<string>("")
 
     const loadUsers = async () => {
-        if (!campaignId || campaignId < 0) return;
+        if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getInvitedUsers(campaignId)
                 .then((res) => {setUsersList(res); console.log(res)})

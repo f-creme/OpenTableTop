@@ -53,7 +53,7 @@ export async function DeleteCampaign(id: string) {
     return res.data;
 }
 
-export async function getInvitedUsers(id: number) {
+export async function getInvitedUsers(id: string) {
     const res = await axiosInstance.get(`/campaigns/${id}/users`)
     return res.data.map(mapCampaignUsers)
 }
@@ -64,7 +64,7 @@ export async function removeUserFromCampaign(idCampaignUser: number) {
     return res.data;
 }
 
-export async function addParticipantToCampaign(campaignId: number, participantName: string) {
+export async function addParticipantToCampaign(campaignId: string, participantName: string) {
     const res = await axiosInstance.post(`/campaigns/${campaignId}/add_participant`, {participantName})
     return res.data;
 }
