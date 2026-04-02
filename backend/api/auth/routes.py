@@ -76,7 +76,7 @@ def login(data: LoginRequest, db=Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     token = create_token({
-        "user_id": userData["id"],
+        "user_uuid": userData["uuid"],
         "role": userData["role"]
     })
 
@@ -92,12 +92,12 @@ def me(credentials: HTTPAuthorizationCredentials = Depends(security)):
         raise HTTPException(status_code=401, detail="Invalid token")
     
 @router.get("/public")
-def get_public_profile(user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+def get_public_profile(user_uuid: str = Depends(get_current_user_id), db = Depends(get_db)):
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                "SELECT public_name FROM profiles WHERE user_id = %s;",
-                (user_id, )
+                "SELECT public_name FROM profiles WHERE user_uuid = %s;",
+                (user_uuid, )
             )
             response = cursor.fetchone()
             return {"publicName": response["public_name"]} 
