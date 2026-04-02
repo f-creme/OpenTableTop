@@ -169,7 +169,7 @@ const CampaignResourcesForm: FC<Props> = ({
                     files={availMaps}
                     loadFiles={loadMaps}
                     uploadFile={(file) => uploadFile(file, "maps")}
-                    deleteFile={(filename) => deleteFile(filename, "maps")}
+                    deleteFile={(fileUuid) => deleteFile(fileUuid, "maps")}
                     label="Cartes et arrière-plans"
                     Icon={Map}
                 />
@@ -180,7 +180,7 @@ const CampaignResourcesForm: FC<Props> = ({
                     files={availIllustrations}
                     loadFiles={loadIllustrations}
                     uploadFile={(file) => uploadFile(file, "illustrations")}
-                    deleteFile={(filename) => deleteFile(filename, "illustrations")}
+                    deleteFile={(fileUuid) => deleteFile(fileUuid, "illustrations")}
                     label="Illustrations"
                     Icon={ImageIcon}
                 />
@@ -191,7 +191,7 @@ const CampaignResourcesForm: FC<Props> = ({
                     files={availTokens}
                     loadFiles={loadTokens}
                     uploadFile={(file) => uploadFile(file, "tokens")}
-                    deleteFile={(filename) => deleteFile(filename, "tokens")}
+                    deleteFile={(fileUuid) => deleteFile(fileUuid, "tokens")}
                     label="Tokens"
                     Icon={ChessPawn}
                 />

@@ -92,34 +92,41 @@ async def upload_token(
 ):
     return await upload_file("tokens", campaign_uuid, user_uuid, file, db)
 
-@router.delete("/{category}/{campaign_id}/{filename}")
-def delete_file(category: str, campaign_id: int, filename: str, user_id: int = Depends(get_current_user_id), db = Depends(get_db)):
+@router.delete("/{category}/{campaign_uuid}/{file_uuid}")
+def delete_file(category: str, campaign_uuid: str, file_uuid: str, user_uuid: str = Depends(get_current_user_id), db = Depends(get_db)):
     _ALLOWED_CATEGORIES = {"maps", "illustrations", "tokens"}
     if category not in _ALLOWED_CATEGORIES:
-        raise HTTPException(400, "Invalid Ca")
+        raise HTTPException(400, "Invalid Category")
     
-    is_user_gm = repository.get_user_role_for_campaign(db, user_id, campaign_id)
+    is_user_gm = repository.get_user_role_for_campaign(db, user_uuid, campaign_uuid)
     if not is_user_gm:
         raise HTTPException(403, "Unauthorized access")
     
-    if not secure_urls.is_safe_filename(filename):
-        raise HTTPException(400, "Invalid file name")
-    
-    folder = get_campaign_path(campaign_id)
-    file_path = folder / category / filename
-    file_path = file_path.resolve()
-
-    if not str(file_path).startswith(str(folder)):
-        raise HTTPException(400, "File path is invalid")
-    
-    if not file_path.exists() or not file_path.is_file():
+    deleted_uuid = repository.delete_file(db, file_uuid=file_uuid, campaign_uuid=campaign_uuid)
+    if deleted_uuid is None:
+        db.rollback()
         raise HTTPException(404, "File not found")
     
+    folder = Path(get_campaign_dir(campaign_uuid)).resolve()
+    category_path = folder / category
+    
+    files = list(category_path.glob(f"{deleted_uuid}.*"))
+    if not files:
+        raise HTTPException(404, "File not found")
+    
+    file_path = files[0]
+
     try: 
+        file_path.relative_to(folder)
+    except ValueError:
+        raise HTTPException(400, "File path is invalid")
+    
+    try:
         file_path.unlink()
     except Exception as e:
         raise HTTPException(500, f"Cannot delete file: {str(e)}")
-    
+
+    db.commit()    
     return {"detail": "File deleted"}
 
 

@@ -25,3 +25,14 @@ def record_file(db, file_name: str, file_type: str, owner_uuid: str, campaign_uu
         )
         new_file_uuid = cursor.fetchone()["uuid"]
         return new_file_uuid
+    
+def delete_file(db, file_uuid: str, campaign_uuid: str):
+    with db.cursor() as cursor: 
+        cursor.execute(
+            "DELETE FROM files " \
+            "WHERE uuid = %s AND campaign_uuid = %s " \
+            "RETURNING uuid;",
+            (file_uuid, campaign_uuid)
+        )
+        deleted = cursor.fetchone()["uuid"]
+        return deleted

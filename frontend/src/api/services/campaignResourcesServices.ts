@@ -1,14 +1,14 @@
 import axiosInstance from "../axiosInstance";
 
-export async function uploadFile(campaignId: string, file: FormData, category: "maps" | "illustrations" | "tokens") {
-    await axiosInstance.post(`/upload/${category}/${campaignId}`, file);
+export async function uploadFile(campaignUuid: string, file: FormData, category: "maps" | "illustrations" | "tokens") {
+    await axiosInstance.post(`/upload/${category}/${campaignUuid}`, file);
 }
 
-export async function deleteFile(campaignId: number, filename: string, category: "maps" | "illustrations" | "tokens") {
-    await axiosInstance.delete(`/upload/${category}/${campaignId}/${filename}`);
+export async function deleteFile(campaignUuid: string, fileUuid: string, category: "maps" | "illustrations" | "tokens") {
+    await axiosInstance.delete(`/upload/${category}/${campaignUuid}/${fileUuid}`);
 }
 
-export async function getQuota(campaignId: string) {
-    const res = await axiosInstance.get(`/upload/${campaignId}/quota`);
+export async function getQuota(campaignUuid: string) {
+    const res = await axiosInstance.get(`/upload/${campaignUuid}/quota`);
     return res.data.quota;
 }
