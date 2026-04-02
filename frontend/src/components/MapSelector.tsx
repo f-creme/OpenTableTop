@@ -1,12 +1,13 @@
 // components/MapSelector.tsx
 
 import { Map } from "lucide-react";
+import type { FileType } from "../types/file";
 
 type Role = "mj" | "player" | null
 
 interface MapSelectorProps {
   role: Role;
-  maps: string[];
+  maps: FileType[];
   selectedMap: string | null;
   changeMap: (map: string) => void;
 }
@@ -23,13 +24,13 @@ const MapSelector = ({ role, maps, selectedMap, changeMap }: MapSelectorProps) =
       {maps.length > 0 ? (
         <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
           <li className="menu-title">Select a map to display</li>
-          {maps.map((gameMap) => (
-            <li key={gameMap}>
+          {maps.map((gameMap, index) => (
+            <li key={index}>
               <button
-                className={`btn btn-info w-full justify-start ${selectedMap === gameMap ? "" : "btn-soft"}`}
-                onClick={() => changeMap(gameMap)}
+                className={`btn btn-info w-full justify-start ${selectedMap === gameMap.uuid ? "" : "btn-soft"}`}
+                onClick={() => changeMap(gameMap.uuid)}
               >
-                {gameMap}
+                {gameMap.fileName}
               </button>
             </li>
           ))}
