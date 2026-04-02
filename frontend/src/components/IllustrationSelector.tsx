@@ -1,11 +1,12 @@
 // components/IllustrationSelector.tsx
 import { ImagePlus } from "lucide-react";
+import type { FileType } from "../types/file";
 
 type Role = "mj" | "player" | null
 
 interface IllusSelectorProps {
     role: Role;
-    illustrations: string[];
+    illustrations: FileType[];
     selectedIllustration: string | null;
     changeIllustration: (image: string | null) => void;
 }
@@ -35,13 +36,13 @@ const IllustrationSelector = ({
                     Aucune
                 </button>
             </li>
-            {illustrations.map((ill) => (
-                <li key={ill}>
+            {illustrations.map((ill, index) => (
+                <li key={index}>
                 <button
-                    className={`btn btn-info w-full justify-start ${selectedIllustration === ill ? "" : "btn-soft"}`}
-                    onClick={() => changeIllustration(ill)}
+                    className={`btn btn-info w-full justify-start ${selectedIllustration === ill.uuid ? "" : "btn-soft"}`}
+                    onClick={() => changeIllustration(ill.uuid)}
                 >
-                    {ill}
+                    {ill.fileName}
                 </button>
                 </li>
             ))}

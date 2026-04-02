@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react";
 import { useCampaign } from "../context/CampaignContext";
 import { getIllustrations } from "../api/services/mapServices";
+import type { FileType, FileTypeAPI } from "../types/file";
 
 export const useIllustrations = () => {
     const { campaignId } = useCampaign()
-    const [illustrations, setIllustrations] = useState<string[]>([]);
+    const [illustrations, setIllustrations] = useState<FileType[]>([]);
     const [selectedIllustration, setSelectedIllustration] = useState<string | null>(null)
 
+    const mapFileType = ({uuid, file_name}: FileTypeAPI): FileType => ({uuid: uuid, fileName: file_name}) 
+
     useEffect(() => {
-        if (!campaignId) return;
+        if (!campaignId || campaignId === "__NULL__") return;
 
         getIllustrations(campaignId)
-            .then((illus) => {
+            .then((res) => {
+                const illus: FileType[] = res.map(mapFileType)
                 setIllustrations(illus);
             })
             .catch(console.error)
     }, []);
-
-    useEffect(() => {
-        if (selectedIllustration) {
-            localStorage.setItem("selectedIllus", selectedIllustration);
-        }
-    }, [selectedIllustration]);
 
     return {
         illustrations,
