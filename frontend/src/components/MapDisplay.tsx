@@ -14,7 +14,7 @@ interface TokenDisplay {
 type Props = {
   role: "player" | "mj" | null;
   apiURL: string;
-  campaignId: number;
+  campaignId: string;
   selectedMap: string | null;
   selectedIllustration: string | null;
   activeTokens: Token[];
