@@ -33,7 +33,7 @@ export async function getCampaigns() {
     return res.data.map(mapCampaign)
 }
 
-export async function getCampaignGlobal(id: number) {
+export async function getCampaignGlobal(id: string) {
     const res = await axiosInstance.get(`/campaigns/${id}/global`);
     return res.data.map(mapCampaignGlobal)[0];
 }

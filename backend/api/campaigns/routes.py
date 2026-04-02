@@ -23,9 +23,9 @@ def get_user_campaigns(user_uuid: str = Depends(get_current_user_id), db=Depends
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{campaign_id}/global")
-def get_campaign_global(campaign_id: int, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
-    result = repository.get_campaign_global(db, user_id, campaign_id)
+@router.get("/{campaign_uuid}/global")
+def get_campaign_global(campaign_uuid: str, user_uuid: str = Depends(get_current_user_id), db=Depends(get_db)):
+    result = repository.get_campaign_global(db, user_uuid, campaign_uuid)
     return [{
         "campaign_title": result[0]["campaign_title"], 
         "public_name": result[0]["public_name"], 

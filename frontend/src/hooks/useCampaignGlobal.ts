@@ -16,7 +16,7 @@ export const useCampaignGlobal = () => {
     const [disabledEditGlobal, setDisabledEditGlobal] = useState<boolean>(true);
 
     useEffect(() => {
-        if (!campaignId || campaignId < 0) return;
+        if (!campaignId || campaignId === "__NULL__") return;
         const fetchGlobal = async () => {
             try {
                 const res: CampaignGlobal = await getCampaignGlobal(campaignId);
