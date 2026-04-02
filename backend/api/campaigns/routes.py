@@ -33,10 +33,10 @@ def get_campaign_global(campaign_uuid: str, user_uuid: str = Depends(get_current
     }]
 
 
-@router.put("/{campaign_id}/update-global")
-def update_campaign_global(campaign_id: int, data: CampaignGlobalRequest, user_id: int = Depends(get_current_user_id), db=Depends(get_db)):
+@router.put("/{campaign_uuid}/update-global")
+def update_campaign_global(campaign_uuid: str, data: CampaignGlobalRequest, user_uuid: str = Depends(get_current_user_id), db=Depends(get_db)):
     try:
-        repository.update_campaign_global(db, user_id, campaign_id, data.title, data.name)
+        repository.update_campaign_global(db, user_uuid, campaign_uuid, data.title, data.name)
         db.commit()
         return {"message": "database update"}
 

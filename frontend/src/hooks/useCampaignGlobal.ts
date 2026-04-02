@@ -30,7 +30,7 @@ export const useCampaignGlobal = () => {
     }, [campaignId]);
 
     const updateCampaign = async () => {
-        if (!campaignId || campaignTitle.length === 0 || campaignTitle.length >= 35 || !localPublicName) return;
+        if (!campaignId || campaignId === "__NULL__" || campaignTitle.length === 0 || campaignTitle.length >= 35 || !localPublicName) return;
         await toast.promise(
             putCampaignGlobal(campaignId, campaignTitle, localPublicName).then(() => {
                 setPublicName(localPublicName);

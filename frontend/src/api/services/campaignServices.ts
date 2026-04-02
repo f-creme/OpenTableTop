@@ -38,7 +38,7 @@ export async function getCampaignGlobal(id: string) {
     return res.data.map(mapCampaignGlobal)[0];
 }
 
-export async function putCampaignGlobal(id: number, title: string, name: string) {
+export async function putCampaignGlobal(id: string, title: string, name: string) {
     const res = await axiosInstance.put(`/campaigns/${id}/update-global`, {title, name});
     return res.data;
 }
