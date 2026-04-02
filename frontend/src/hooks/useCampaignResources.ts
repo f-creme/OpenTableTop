@@ -31,7 +31,7 @@ export const useCampaignResources = () => {
     }
 
     const loadMaps = async () => {
-        if (!campaignId || campaignId < 0) return;
+        if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getMaps(campaignId)
                 .then((res) => {setAvailMaps(res);})
@@ -45,7 +45,7 @@ export const useCampaignResources = () => {
     };
 
     const loadIllustrations = async () => {
-        if (!campaignId || campaignId < 0) return;
+        if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getIllustrations(campaignId)
                 .then((res) => {setAvailIllustrations(res);})
@@ -59,7 +59,7 @@ export const useCampaignResources = () => {
     };
 
     const loadTokens = async () => {
-        if (!campaignId || campaignId < 0) return;
+        if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getTokens(campaignId)
                 .then((res) => {
