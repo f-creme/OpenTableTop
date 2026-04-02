@@ -1,15 +1,15 @@
 def get_user_campaigns(db, user_uuid: str):
-    with db.cursor() as cs:
-        cs.execute(
+    with db.cursor() as cursor:
+        cursor.execute(
             """
-            SELECT campaign_uuid, campaign_title, users_campaigns.role
-            FROM users_campaigns
-            LEFT JOIN campaigns ON campaigns.campaign_uuid = users_campaigns.campaign_uuid
-            WHERE user_uuid = %s;
+            SELECT c.campaign_uuid, c.campaign_title, uc.role 
+            FROM users_campaigns AS uc 
+            LEFT JOIN campaigns AS c ON c.campaign_uuid = c.campaign_uuid 
+            WHERE uc.user_uuid = %s;
             """,
             (user_uuid, )
         )
-        return cs.fetchall()
+        return cursor.fetchall()
 
 def get_campaign_global(db, user_uuid: str, campaign_uuid: str):
     with db.cursor() as cursor:
