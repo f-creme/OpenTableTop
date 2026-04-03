@@ -1,5 +1,5 @@
 export interface Character {
-    id: number;
+    uuid: string;
     name: string;
     classOrRole: string;
     appearance: string;
@@ -8,7 +8,7 @@ export interface Character {
 }
 
 export interface Player {
-    characterId: number;
+    characterUuid: string;
     characterName: string;
     characterRole: string;
     characterPortrait: string | null;

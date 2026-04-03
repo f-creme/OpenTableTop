@@ -23,7 +23,7 @@ export default function CharacterSheet() {
 
     const { send } = useWebSocket();
 
-    const [selectedCharacterId, setSelectedCharacterId] = useState<number>(-1)
+    const [selectedCharacterId, setSelectedCharacterId] = useState<string>("__NULL__")
     const [characterName, setCharacterName] = useState<string>("")
     const [characterClass, setCharacterClass] = useState<string>("")
     const [characterAppearance, setCharacterAppearance] = useState<string>("")
@@ -35,7 +35,7 @@ export default function CharacterSheet() {
 
     const joinTable = () => {
         const player: Player = {
-            characterId: selectedCharacterId,
+            characterUuid: selectedCharacterId,
             characterName: characterName,
             characterRole: characterClass,
             characterPortrait: characterPortrait,
@@ -46,14 +46,16 @@ export default function CharacterSheet() {
     }
 
     useEffect(() => {
-        if (selectedCharacterId < 0) {
+        if (selectedCharacterId === "__NULL__") {
             setCharacterName("");
             setCharacterClass("");
             setCharacterAppearance("");
             setCharacterPersonality("");
-            setCharacterBio("");       
+            setCharacterBio("");  
+            setCharacterPortrait(null);
+            setCharacterToken(null);     
         } else {
-            const selectedCharacter: Character = availCharacters.filter((t) => t.id === selectedCharacterId)[0];
+            const selectedCharacter: Character = availCharacters.filter((t) => t.uuid === selectedCharacterId)[0];
             setCharacterName(selectedCharacter.name);
             setCharacterClass(selectedCharacter.classOrRole);
             setCharacterAppearance(selectedCharacter.appearance);
@@ -63,24 +65,24 @@ export default function CharacterSheet() {
             async function loadImages() {
                 const portraitURL = await loadCharacterPortrait(selectedCharacterId);
                 if (portraitURL) {
-                    setCharacterPortrait(portraitURL)
+                    setCharacterPortrait(portraitURL);
                 } else {
-                    setCharacterPortrait(null)
+                    setCharacterPortrait(null);
                 };
 
                 const tokenURL = await loadCharacterToken(selectedCharacterId);
                 if (tokenURL) {
-                    setCharacterToken(tokenURL)
+                    setCharacterToken(tokenURL);
                 } else {
-                    setCharacterToken(null)
+                    setCharacterToken(null);
                 };                
             }
             loadImages();
-    }}, [selectedCharacterId])
+    }}, [selectedCharacterId]);
 
     useEffect(() => {
         loadCharacters();        
-    }, [])
+    }, []);
 
     return (
         <div className="flex flex-row mx-20 mt-10 gap-10">
@@ -90,11 +92,11 @@ export default function CharacterSheet() {
                     <p>Sélectionner un de vos personnages :</p>
                     <select 
                         className="flex-1 select select-sm"
-                        onChange={(e) => setSelectedCharacterId(Number(e.target.value))}
+                        onChange={(e) => setSelectedCharacterId(String(e.target.value))}
                     >
-                        <option value={-1} key={-1}>Nouveau personnage</option>
-                        {availCharacters.length > 0 && availCharacters.map((c) => (
-                            <option value={c.id} key={c.id}>{c.name}</option>
+                        <option value={"__NULL__"} key={-1}>Nouveau personnage</option>
+                        {availCharacters.length > 0 && availCharacters.map((c, index) => (
+                            <option value={c.uuid} key={index}>{c.name}</option>
                         ))}
                     </select>
                 </span>
@@ -175,17 +177,17 @@ export default function CharacterSheet() {
                     <button 
                         className="btn btn-secondary flex-1"
                         onClick={() => {
-                            if (selectedCharacterId < 0) {
+                            if (selectedCharacterId === "__NULL__") {
                                 createCharacter(
                                 {
-                                    id: selectedCharacterId, name: characterName, classOrRole: characterClass,
+                                    uuid: selectedCharacterId, name: characterName, classOrRole: characterClass,
                                     appearance: characterAppearance, personality: characterPersonality, 
                                     bio: characterBio
                                 }, fileToUpload
                             )} else if (confirm("Mettre à jour le personnage ?")) {
                                 updateCharacter(
                                 {
-                                    id: selectedCharacterId, name: characterName, classOrRole: characterClass,
+                                    uuid: selectedCharacterId, name: characterName, classOrRole: characterClass,
                                     appearance: characterAppearance, personality: characterPersonality, 
                                     bio: characterBio
                                 }, fileToUpload

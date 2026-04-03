@@ -23,9 +23,9 @@ export const useCharacterSheet = () => {
         )
     };
 
-    const loadCharacterPortrait = async(characterId: number) => {
+    const loadCharacterPortrait = async(characterUuid: string) => {
         try {
-            const blob = await getCharacterPortrait(characterId);
+            const blob = await getCharacterPortrait(characterUuid);
             const url = URL.createObjectURL(blob);
             return url;
         } catch {
@@ -34,9 +34,9 @@ export const useCharacterSheet = () => {
         };
     };
 
-    const loadCharacterToken = async(characterId: number) => {
+    const loadCharacterToken = async(characterUuid: string) => {
         try {
-            const blob = await getCharacterToken(characterId);
+            const blob = await getCharacterToken(characterUuid);
             const url = URL.createObjectURL(blob);
             return url;
         } catch {
@@ -45,14 +45,14 @@ export const useCharacterSheet = () => {
         };
     };
 
-    const uploadImage = async (characterId: number, file: File) => {
-        if (characterId < 0) return;
+    const uploadImage = async (characterUuid: string, file: File) => {
+        if (characterUuid === "__NULL__") return;
         try {
             const formData = new FormData();
             formData.append("file", file);
 
             await toast.promise(
-                uploadCharacterImage(characterId, formData),
+                uploadCharacterImage(characterUuid, formData),
                     {
                         loading: "Enregistrement des images...",
                         success: "Image sauvegardée avec succès",
@@ -94,8 +94,8 @@ export const useCharacterSheet = () => {
             }
         );
         if (!file) return;
-        if (character.id < 0) return;
-        uploadImage(character.id, file)
+        if (character.uuid === "__NULL__") return;
+        uploadImage(character.uuid, file)
     }
 
     return {
