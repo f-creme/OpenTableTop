@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS files (
     file_type TEXT CHECK (file_type IN ('map', 'token', 'illustration', 'portrait')), 
     owner_uuid UUID NOT NULL, 
     campaign_uuid UUID, 
+    character_uuid UUID, 
     created_at TIMESTAMP DEFAULT now(), 
     CONSTRAINT fk_owner 
         FOREIGN KEY(owner_uuid) 
@@ -79,6 +80,11 @@ CREATE TABLE IF NOT EXISTS files (
     CONSTRAINT fk_campaign 
         FOREIGN KEY(campaign_uuid) 
         REFERENCES campaigns(campaign_uuid) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE, 
+    CONSTRAINT fk_character 
+        FOREIGN KEY(character_uuid) 
+        REFERENCES characters(character_uuid) 
         ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
