@@ -38,7 +38,7 @@ const CharacterCard = ({ player }: CharacterCardProps) => {
 
     return (
         <div 
-            className="relative flex z-50 items-center justify-between rounded-2xl shadow-md p-4 m-5 opacity-90 hover:scale-110 transition"
+            className="relative flex z-50 items-center justify-between rounded-2xl shadow-md p-4 m-5 opacity-90 hover:scale-105 transition"
             style={{ backgroundColor: player.color, color: textColor }}
         >
             <div className="flex-3 flex flex-col space-y-1 text-left">
