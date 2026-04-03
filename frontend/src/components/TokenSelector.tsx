@@ -34,10 +34,10 @@ const TokenSelector = ({
                         <input
                             type="checkbox"
                             className="toggle toggle-primary toggle-xs"
-                            checked={activeTokens.some((t) => t.id === token.id)}
+                            checked={activeTokens.some((t) => t.uuid === token.uuid)}
                             onChange={(e) => toggleToken(Boolean(e.target.checked), token)}
                         />
-                        {token.id.split(".")[0]}
+                        {token.fileName}
                     </div>
                 </li>
             ))}
