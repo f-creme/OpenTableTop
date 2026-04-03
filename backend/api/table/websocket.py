@@ -20,6 +20,7 @@ class Player(BaseModel):
     characterRole: str | None
     characterPortrait: bool
     userPublicName: str 
+    color: str
 
 class ConnectionManager:
     def __init__(self):
