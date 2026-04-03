@@ -40,12 +40,12 @@ export const useTableSocket = (
         const token = data.token as Token;
         if (data.action === "add") {
           setActiveToken((prev) => {
-            if (prev.some((t) => t.id === token.id)) return prev;
+            if (prev.some((t) => t.uuid === token.uuid)) return prev;
             return [...prev, token];
           });
         }
         if (data.action === "remove") {
-          setActiveToken((prev) => prev.filter((t) => t.id !== token.id));
+          setActiveToken((prev) => prev.filter((t) => t.uuid !== token.uuid));
         }
       }
 
@@ -53,7 +53,7 @@ export const useTableSocket = (
         const token = data.token as Token;
         setActiveToken((prev) =>
           prev.map((t) =>
-            t.id === token.id ? { ...t, x: token.x, y: token.y } : t
+            t.uuid === token.uuid ? { ...t, x: token.x, y: token.y } : t
           )
         );
       }
