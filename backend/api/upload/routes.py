@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
+from fastapi import APIRouter, Form, HTTPException, UploadFile, File, Depends
 from pathlib import Path
+from PIL import Image
 import imghdr
 import os
 
+from services.token_generator import is_square, make_token
 from core.config import DATA_DIR
 from services import secure_urls
 from api.dependencies.auth import get_current_user_id
@@ -23,7 +25,7 @@ def get_folder_size(folder: Path) -> int:
     return sum(f.stat().st_size for f in folder.rglob("*") if f.is_file())
 
 
-async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depends(get_current_user_id), file: UploadFile = File(...), db = Depends(get_db)):
+async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depends(get_current_user_id), file: UploadFile = File(...), db = Depends(get_db), token_size: str | None = "medium"):
     # Check file type
     file_type = imghdr.what(file.file)
     if file_type not in ["png", "jpeg", "webp"]:
@@ -54,12 +56,29 @@ async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depend
     # Register safe name in database and get a file uuid
     try: 
         new_file_uuid = repository.record_file(db, safe_name, dict_category[category], user_uuid, campaign_uuid)
+        file_path = Path(folder) / category / f"{new_file_uuid}.{file_type}"
+
+        if category != "tokens":
+            with open(file_path, "wb") as f:
+                f.write(contents)
+
+        elif category == "tokens":
+            img = Image.open(file.file)
+            if not is_square(img=img):
+                raise HTTPException(400, detail="Invalid image format. Token image must be a square")
+            print(token_size, flush=True)
+            if token_size is None or token_size == "medium":
+                token = make_token(img=img, final_size="medium")
+            elif token_size == "small": 
+                token = make_token(img=img, final_size="small")
+            elif token_size == "giant":
+                token = make_token(img=img, final_size="giant")
+            
+            token.save(file_path) # type: ignore
+
     except:
+        db.rollback()
         raise HTTPException(400, detail="Unable to record file in the database")
-    
-    file_path = Path(folder) / category / f"{new_file_uuid}.{file_type}"
-    with open(file_path, "wb") as f:
-        f.write(contents)
 
     db.commit()
     return {"filename": safe_name}
@@ -69,6 +88,7 @@ async def upload_map(
     campaign_uuid: str,
     user_uuid: str = Depends(get_current_user_id),
     file: UploadFile = File(...),
+    token_size: str | None = Form(None),
     db = Depends(get_db)
 ):
     return await upload_file("maps", campaign_uuid, user_uuid, file, db)
@@ -79,6 +99,7 @@ async def upload_illustration(
     campaign_uuid: str,
     user_uuid: str = Depends(get_current_user_id),
     file: UploadFile = File(...),
+    token_size: str | None = Form(None),
     db = Depends(get_db)
 ):
     return await upload_file("illustrations", campaign_uuid, user_uuid, file, db)
@@ -88,9 +109,10 @@ async def upload_token(
     campaign_uuid: str,
     user_uuid: str = Depends(get_current_user_id),
     file: UploadFile = File(...),
+    size: str | None = Form(None),
     db = Depends(get_db)
-):
-    return await upload_file("tokens", campaign_uuid, user_uuid, file, db)
+):  
+    return await upload_file("tokens", campaign_uuid, user_uuid, file, db, size)
 
 @router.delete("/{category}/{campaign_uuid}/{file_uuid}")
 def delete_file(category: str, campaign_uuid: str, file_uuid: str, user_uuid: str = Depends(get_current_user_id), db = Depends(get_db)):

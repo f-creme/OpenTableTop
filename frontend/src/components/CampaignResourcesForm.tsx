@@ -16,7 +16,7 @@ type Props = {
     loadMaps: () => void;
     loadIllustrations: () => void;
     loadTokens: () => void;
-    uploadFile: (file: File, category: "maps" | "illustrations" | "tokens") => Promise<void>;
+    uploadFile: (file: File, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "giant") => Promise<void>;
     deleteFile: (filename: string, category: "maps" | "illustrations" | "tokens") => Promise<void>;
     campaignQuota: Quota
 };
@@ -24,7 +24,7 @@ type Props = {
 const UploadSection: FC<{
     files: FileType[];
     loadFiles: () => void;
-    uploadFile: (file: File) => void;
+    uploadFile: (file: File, tokenSize?: "small" | "medium" | "giant") => void;
     deleteFile: (filename: string) => void;
     label: string;
     activeTab: string;
@@ -113,8 +113,14 @@ const UploadSection: FC<{
                     disabled={!selectedFile}
                     onClick={() => {
                         if (!selectedFile) return;
-                        uploadFile(selectedFile)
-                        setSelectedFile(null)
+                        if (activeTab === "tokens") {
+                            uploadFile(selectedFile, tokenSize);
+                            setSelectedFile(null);
+                        } else {
+                            uploadFile(selectedFile);
+                            setSelectedFile(null);
+                        };
+                        
                     }}
                 >
                     Uploader
@@ -222,7 +228,7 @@ const CampaignResourcesForm: FC<Props> = ({
                 <UploadSection
                     files={availTokens}
                     loadFiles={loadTokens}
-                    uploadFile={(file) => uploadFile(file, "tokens")}
+                    uploadFile={(file, size) => uploadFile(file, "tokens", size)}
                     deleteFile={(fileUuid) => deleteFile(fileUuid, "tokens")}
                     label="Tokens"
                     Icon={ChessPawn}

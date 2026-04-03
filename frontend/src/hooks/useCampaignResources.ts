@@ -86,7 +86,7 @@ export const useCampaignResources = () => {
         )
     };
 
-    const handleUpload = async (file: File | null, category: "maps" | "illustrations" | "tokens") => {
+    const handleUpload = async (file: File | null, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "giant") => {
         if (!campaignId) return;
         if (!file) {
             toast.error("Aucun fichier sélectionné");
@@ -106,7 +106,7 @@ export const useCampaignResources = () => {
             formData.append("file", file);
 
             await toast.promise(
-                uploadFile(campaignId, formData, category),
+                uploadFile(campaignId, formData, category, tokenSize),
                 {
                     loading: "Upload en cours...",
                     success: "Fichier uploadé avec succès",
