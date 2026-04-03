@@ -28,19 +28,22 @@ const TokenSelector = ({
         {tokens.length > 0 ? (
             <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
             <li className="menu-title">Select tokens to display</li>
-            {tokens.map((token, index) => (
-                <li key={index}>
-                    <div className="flex gap-4">
-                        <input
-                            type="checkbox"
-                            className="toggle toggle-primary toggle-xs"
-                            checked={activeTokens.some((t) => t.uuid === token.uuid)}
-                            onChange={(e) => toggleToken(Boolean(e.target.checked), token)}
-                        />
-                        {token.fileName}
-                    </div>
-                </li>
-            ))}
+            {tokens.map((token, index) => {
+                const dotIndex = token.fileName.lastIndexOf(".")
+                const displayName = dotIndex !== -1 ? token.fileName.slice(0, dotIndex): token.fileName;
+                return (
+                    <li key={index}>
+                        <div className="flex gap-4">
+                            <input
+                                type="checkbox"
+                                className="toggle toggle-primary toggle-xs"
+                                checked={activeTokens.some((t) => t.uuid === token.uuid)}
+                                onChange={(e) => toggleToken(Boolean(e.target.checked), token)}
+                            />
+                            {displayName}
+                        </div>
+                    </li>
+            )})}
             </ul>
         ) : (
             <ul tabIndex={-1} className="dropdown-content z-1 bg-base-200 rounded-box w-60 menu shadow shadow-info">

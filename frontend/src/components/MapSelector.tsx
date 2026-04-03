@@ -24,16 +24,21 @@ const MapSelector = ({ role, maps, selectedMap, changeMap }: MapSelectorProps) =
       {maps.length > 0 ? (
         <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
           <li className="menu-title">Select a map to display</li>
-          {maps.map((gameMap, index) => (
-            <li key={index}>
-              <button
-                className={`btn btn-info w-full justify-start ${selectedMap === gameMap.uuid ? "" : "btn-soft"}`}
-                onClick={() => changeMap(gameMap.uuid)}
-              >
-                {gameMap.fileName}
-              </button>
-            </li>
-          ))}
+          {maps.map((gameMap, index) => {
+            const dotIndex = gameMap.fileName.lastIndexOf(".")
+            const displayName = dotIndex !== -1 ? gameMap.fileName.slice(0, dotIndex): gameMap.fileName;
+
+            return (
+              <li key={index}>
+                <button
+                  className={`btn btn-info w-full justify-start ${selectedMap === gameMap.uuid ? "" : "btn-soft"}`}
+                  onClick={() => changeMap(gameMap.uuid)}
+                >
+                  {displayName}
+                </button>
+              </li>
+            )
+          })}
         </ul>
       ) : (
         <ul tabIndex={-1} className="dropdown-content z-1 bg-base-200 rounded-box w-60 menu shadow shadow-info">

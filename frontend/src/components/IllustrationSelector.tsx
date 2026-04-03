@@ -36,16 +36,19 @@ const IllustrationSelector = ({
                     Aucune
                 </button>
             </li>
-            {illustrations.map((ill, index) => (
-                <li key={index}>
-                <button
-                    className={`btn btn-info w-full justify-start ${selectedIllustration === ill.uuid ? "" : "btn-soft"}`}
-                    onClick={() => changeIllustration(ill.uuid)}
-                >
-                    {ill.fileName}
-                </button>
-                </li>
-            ))}
+            {illustrations.map((ill, index) => {
+                const dotIndex = ill.fileName.lastIndexOf(".")
+                const displayName = dotIndex !== -1 ? ill.fileName.slice(0, dotIndex): ill.fileName;
+                return (
+                    <li key={index}>
+                    <button
+                        className={`btn btn-info w-full justify-start ${selectedIllustration === ill.uuid ? "" : "btn-soft"}`}
+                        onClick={() => changeIllustration(ill.uuid)}
+                    >
+                        {displayName}
+                    </button>
+                    </li>
+            )})}
             </ul>
         ) : (
             <ul tabIndex={-1} className="dropdown-content z-1 bg-base-200 rounded-box w-60 menu shadow shadow-info">
