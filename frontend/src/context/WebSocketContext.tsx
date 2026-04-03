@@ -18,7 +18,7 @@ export const useWebSocket = () => {
 
 type Props = {
   children: React.ReactNode;
-  campaignId: number | null;
+  campaignId: string | null;
   apiURL: string;
 };
 
