@@ -370,18 +370,6 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
         </Layer>
 
         <Layer>
-          {illustration && (
-            <KonvaImage
-              image={illustration}
-              x={illustrationX}
-              y={illustrationY}
-              scaleX={illustrationScale}
-              scaleY={illustrationScale}
-            />
-          )}
-        </Layer>
-
-        <Layer>
           {tokens.map((t, index) => (
             <KonvaImage
               key={index}
@@ -395,6 +383,18 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
               onDragEnd={(e) => onTokenDragEnd(index, e.target.x(), e.target.y())}
             />
           ))}
+        </Layer>
+
+        <Layer>
+          {illustration && (
+            <KonvaImage
+              image={illustration}
+              x={illustrationX}
+              y={illustrationY}
+              scaleX={illustrationScale}
+              scaleY={illustrationScale}
+            />
+          )}
         </Layer>
       </Stage>
     </div>
