@@ -27,9 +27,11 @@ const UploadSection: FC<{
     uploadFile: (file: File) => void;
     deleteFile: (filename: string) => void;
     label: string;
+    activeTab: string;
     Icon: FC;
-}> = ({ files, loadFiles, uploadFile, deleteFile, label, Icon }) => {
+}> = ({ files, loadFiles, uploadFile, deleteFile, label, Icon, activeTab }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [tokenSize, setTokenSize] = useState<"small" | "medium" | "giant">("medium")
 
     return (
         <div className="flex flex-col gap-5 p-4">
@@ -68,7 +70,7 @@ const UploadSection: FC<{
                 ))}
             </div>
 
-            <div className="flex flex-col justify-between items-center mt-5 gap-4">
+            <div className="flex flex-col justify-between items-center mt-5 gap-8">
                 <fieldset className="flex-1 fieldset w-full">
                     <legend className="fieldset-legend">Choisir un fichier</legend>
                     <input type="file" className="file-input w-full" onChange={(e) => {
@@ -78,6 +80,34 @@ const UploadSection: FC<{
                     }}/>
                     <label className="label">Taille maximale: 2MB. Formats autorisés: .webp, .png, .jpg</label>
                 </fieldset>
+                {activeTab === "tokens" && (
+                    <>
+                        <div className="flex flex-row justify-between w-full items-center gap-4">
+                            <div>Taille du token : </div>
+                            <div className="flex-1 flex flex-row justify-between gap-4">
+                                <button
+                                    className={`flex-1 btn btn-primary ${(tokenSize !== "small") ? "btn-soft" : ""}`}
+                                    onClick={() => setTokenSize("small")}
+                                >
+                                    Petit
+                                </button>
+                                <button
+                                    className={`flex-1 btn btn-primary ${(tokenSize !== "medium") ? "btn-soft" : ""}`}
+                                    onClick={() => setTokenSize("medium")}
+                                >
+                                    Moyen
+                                </button>
+                                <button
+                                    className={`flex-1 btn btn-primary ${(tokenSize !== "giant") ? "btn-soft" : ""}`}
+                                    onClick={() => setTokenSize("giant")}
+                                >
+                                    Grand
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex text-xs -mt-4"><i>Adaptez vos jetons par rapport à celles des jetons des joueurs, de taille moyenne</i></div>
+                    </>
+                )}
                 <button
                     className="btn btn-primary w-full"
                     disabled={!selectedFile}
@@ -172,6 +202,7 @@ const CampaignResourcesForm: FC<Props> = ({
                     deleteFile={(fileUuid) => deleteFile(fileUuid, "maps")}
                     label="Cartes et arrière-plans"
                     Icon={Map}
+                    activeTab={activeTab}
                 />
             )}
 
@@ -183,6 +214,7 @@ const CampaignResourcesForm: FC<Props> = ({
                     deleteFile={(fileUuid) => deleteFile(fileUuid, "illustrations")}
                     label="Illustrations"
                     Icon={ImageIcon}
+                    activeTab={activeTab}
                 />
             )}
 
@@ -194,6 +226,7 @@ const CampaignResourcesForm: FC<Props> = ({
                     deleteFile={(fileUuid) => deleteFile(fileUuid, "tokens")}
                     label="Tokens"
                     Icon={ChessPawn}
+                    activeTab={activeTab}
                 />
             )}
 
