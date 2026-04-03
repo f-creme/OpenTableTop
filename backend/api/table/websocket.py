@@ -8,7 +8,8 @@ from pydantic import BaseModel
 router = APIRouter(prefix="/table_ws", tags=["table_ws"])
 
 class Token(BaseModel):
-    id: str
+    uuid: str
+    fileName: str
     x: float
     y: float
     scale: float
@@ -123,7 +124,7 @@ class ConnectionManager:
         await self.broadcast(message)
 
     async def broadcast_token_move(self, token: dict):
-        self.current_active_tokens = [token if t["id"] == token["id"] else t for t in self.current_active_tokens]
+        self.current_active_tokens = [token if t["uuid"] == token["uuid"] else t for t in self.current_active_tokens]
         await self.broadcast({"type": "token_move", "token": token})
         
     async def broadcast_token_scale(self, tokens: list):
