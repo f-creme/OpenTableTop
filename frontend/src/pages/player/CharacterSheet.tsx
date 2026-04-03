@@ -33,11 +33,13 @@ export default function CharacterSheet() {
     const [fileToUpload, setFileToUpload] = useState<File | null>(null)
     const [characterPortrait, setCharacterPortrait] = useState<string | null>(null)
     const [characterToken, setCharacterToken] = useState<string | null>(null)
+    const [disabledJoin, setDisabledJoin] = useState<boolean>(false)
 
     const navigate = useNavigate() 
 
     const joinTable = () => {
         if (selectedCharacterId === "__NULL__") return;
+        setDisabledJoin(true);
         const player: Player = {
             characterUuid: selectedCharacterId,
             characterName: characterName,
@@ -48,7 +50,10 @@ export default function CharacterSheet() {
 
         send({ type: "join_player", player: player});
         toast("Redirection vers la table de jeu...");
-        setTimeout(() => navigate("/room/table"), 2000);
+        setTimeout(() => {
+            navigate("/room/table");
+            setDisabledJoin(false);
+        }, 2000);
     }
 
     useEffect(() => {
@@ -205,7 +210,11 @@ export default function CharacterSheet() {
                     <button 
                         className="btn btn-primary flex-1"
                         onClick={() => joinTable()}
-                        disabled={selectedCharacterId === "__NULL__"}
+                        disabled={
+                            selectedCharacterId === "__NULL__"
+                            ? true 
+                            : disabledJoin
+                        }
                     >Rejoindre la table de jeu</button>
                 </div>
             </div>
