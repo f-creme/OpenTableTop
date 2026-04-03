@@ -16,7 +16,7 @@ type Props = {
     loadMaps: () => void;
     loadIllustrations: () => void;
     loadTokens: () => void;
-    uploadFile: (file: File, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "giant") => Promise<void>;
+    uploadFile: (file: File, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "big" | "giant") => Promise<void>;
     deleteFile: (filename: string, category: "maps" | "illustrations" | "tokens") => Promise<void>;
     campaignQuota: Quota
 };
@@ -24,14 +24,14 @@ type Props = {
 const UploadSection: FC<{
     files: FileType[];
     loadFiles: () => void;
-    uploadFile: (file: File, tokenSize?: "small" | "medium" | "giant") => void;
+    uploadFile: (file: File, tokenSize?: "small" | "medium" | "big" | "giant") => void;
     deleteFile: (filename: string) => void;
     label: string;
     activeTab: string;
     Icon: FC;
 }> = ({ files, loadFiles, uploadFile, deleteFile, label, Icon, activeTab }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [tokenSize, setTokenSize] = useState<"small" | "medium" | "giant">("medium")
+    const [tokenSize, setTokenSize] = useState<"small" | "medium" | "big" | "giant">("medium")
 
     return (
         <div className="flex flex-col gap-5 p-4">
@@ -84,7 +84,7 @@ const UploadSection: FC<{
                     <>
                         <div className="flex flex-row justify-between w-full items-center gap-4">
                             <div>Taille du token : </div>
-                            <div className="flex-1 flex flex-row justify-between gap-4">
+                            <div className="flex-1 flex flex-row justify-between gap-2">
                                 <button
                                     className={`flex-1 btn btn-primary ${(tokenSize !== "small") ? "btn-soft" : ""}`}
                                     onClick={() => setTokenSize("small")}
@@ -98,10 +98,16 @@ const UploadSection: FC<{
                                     Moyen
                                 </button>
                                 <button
+                                    className={`flex-1 btn btn-primary ${(tokenSize !== "big") ? "btn-soft" : ""}`}
+                                    onClick={() => setTokenSize("big")}
+                                >
+                                    Grand
+                                </button>
+                                <button
                                     className={`flex-1 btn btn-primary ${(tokenSize !== "giant") ? "btn-soft" : ""}`}
                                     onClick={() => setTokenSize("giant")}
                                 >
-                                    Grand
+                                    Géant
                                 </button>
                             </div>
                         </div>

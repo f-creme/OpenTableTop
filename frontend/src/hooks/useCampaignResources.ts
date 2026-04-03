@@ -86,7 +86,7 @@ export const useCampaignResources = () => {
         )
     };
 
-    const handleUpload = async (file: File | null, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "giant") => {
+    const handleUpload = async (file: File | null, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "big" | "giant") => {
         if (!campaignId) return;
         if (!file) {
             toast.error("Aucun fichier sélectionné");

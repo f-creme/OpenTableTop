@@ -1,6 +1,6 @@
 import axiosInstance from "../axiosInstance";
 
-export async function uploadFile(campaignUuid: string, file: FormData, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "giant") {
+export async function uploadFile(campaignUuid: string, file: FormData, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "big" | "giant") {
     if (tokenSize) file.append("size", tokenSize);
     await axiosInstance.post(`/upload/${category}/${campaignUuid}`, file);
 }

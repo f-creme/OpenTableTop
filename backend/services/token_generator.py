@@ -10,18 +10,20 @@ def is_square(img: Image.Image):
 from PIL import Image, ImageDraw
 from typing import Literal
 
-def resize(img: Image.Image, size: Literal["small", "medium", "giant"] = "medium"):
+def resize(img: Image.Image, size: Literal["small", "medium", "big", "giant"] = "medium"):
     if size == "small":
         final_size = (128, 128)
     elif size == "medium":
         final_size = (256, 256)
+    elif size == "big":
+        final_size = (384, 384)
     elif size == "giant":
         final_size = (512, 512)
     return img.resize(final_size)
 
 def make_token(
     img: Image.Image,
-    final_size: Literal["small", "medium", "giant"] = "medium",
+    final_size: Literal["small", "medium", "big", "giant"] = "medium",
     border_size: int = 10,
     outline_size: int = 2,
     inner_outline_size: int = 2 

@@ -71,6 +71,8 @@ async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depend
                 token = make_token(img=img, final_size="medium")
             elif token_size == "small": 
                 token = make_token(img=img, final_size="small")
+            elif token_size =="big":
+                token = make_token(img=img, final_size="big")
             elif token_size == "giant":
                 token = make_token(img=img, final_size="giant")
             
