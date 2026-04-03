@@ -34,3 +34,8 @@ export async function getCharacterToken(characterUuid: string) {
     });
     return res.data;
 }
+
+export async function getCharacterDetails(characterUuid: string) {
+    const res = await axiosInstance.get(`/characters/${characterUuid}`)
+    return res.data
+}

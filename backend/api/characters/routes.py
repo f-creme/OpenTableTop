@@ -178,3 +178,12 @@ async def get_character_token(character_uuid: str, user_uuid: str = Depends(get_
     if exists_image and is_file_image:
         return FileResponse(file_path)
     raise HTTPException(404, detail="Token not found")
+
+@router.get("/{character_uuid}")
+async def get_character_details(character_uuid: str, user_uuid: str = Depends(get_current_user_id), db = Depends(get_db)):
+    try:
+        details = repository.get_character_details(db, character_uuid)
+        return {"name": details["name"], "class": details["class"], "appearance": details["appearance"],
+                "personality": details["personality"], "bio": details["bio"]}
+    except:
+        raise HTTPException(400, detail="Unable to fetch character's details")

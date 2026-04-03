@@ -101,3 +101,15 @@ def get_character_file(db, character_uuid: str, file_type: Literal["portrait", "
             return None
         else: 
             return res
+        
+def get_character_details(db, character_uuid: str):
+    """Get details of a given character from its UUID"""
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT name, class, appearance, personality, bio " \
+            "FROM characters " \
+            "WHERE character_uuid = %s;", 
+            (character_uuid, )
+        )
+        details = cursor.fetchone()
+        return details

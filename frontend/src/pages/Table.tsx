@@ -16,6 +16,7 @@ import type { Token } from "../types/token";
 import type { Player } from "../types/character";
 import { RefreshCcw } from "lucide-react";
 import CharacterCard from "../components/CharacterCard";
+import DetailedCharacterCard from "../components/DetailedCharacterCard";
 
 const Table = () => {
   const { role } = useRole();
@@ -28,6 +29,7 @@ const Table = () => {
   const dice = useDice();
 
   const [activePlayers, setActivePlayers] = useState<Player[]>([]);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
   useEffect(() => {
     console.log(activePlayers);
@@ -125,37 +127,48 @@ const Table = () => {
 
   return (
 
-    <div className="min-h-screen flex mx-auto max-w-screen-2xl px-[5vw] gap-[5vw]">
+    <>
+      <div className="min-h-screen flex mx-auto max-w-screen-2xl px-[5vw] gap-[5vw]">
         <div className="w-1/3 bg-base-200 rounded-2xl">
-            {activePlayers && activePlayers.map((player, index) => 
-                <CharacterCard
-                    key={index}
-                    player={player}
-                />
-            )}
+          {activePlayers.map((player, index) => (
+            <div key={index} onClick={() => setSelectedPlayer(player)}>
+              <CharacterCard player={player} />
+            </div>
+          ))}
         </div>
-
         <div className="w-2/3 flex flex-col gap-4">
-            <div className="bg-base-300 w-full p-2 rounded-2xl shadow-2xl">
-                <ul className="flex items-center justify-center gap-6">
-                    {menuItems.map((item, idx) => <li key={idx}>{item}</li>)}
-                </ul>
-            </div>
-
-            <div className="flex-1 min-h-0">
-                <MapDisplay
-                    role={role}
-                    apiURL={apiURL}
-                    selectedMap={selectedMap}
-                    campaignId={campaignId!}
-                    selectedIllustration={selectedIllustration}
-                    activeTokens={activeTokens}
-                    send={send}
-                    diceUI={<DiceResults {...dice} />}
-                />
-            </div>
+          <div className="bg-base-300 w-full p-2 rounded-2xl shadow-2xl">
+            <ul className="flex items-center justify-center gap-6">
+              {menuItems.map((item, idx) => <li key={idx}>{item}</li>)}
+            </ul>
+          </div>
+          <div className="flex-1 min-h-0">
+            <MapDisplay
+              role={role}
+              apiURL={apiURL}
+              selectedMap={selectedMap}
+              campaignId={campaignId!}
+              selectedIllustration={selectedIllustration}
+              activeTokens={activeTokens}
+              send={send}
+              diceUI={<DiceResults {...dice} />}
+            />
+          </div>
         </div>
+      </div>
+{selectedPlayer && (
+  <div
+    className="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    onClick={() => setSelectedPlayer(null)}
+  >
+    <div 
+      onClick={(e) => e.stopPropagation()}
+    >
+      <DetailedCharacterCard player={selectedPlayer} />
     </div>
+  </div>
+)}
+    </>
   );
 };
 
