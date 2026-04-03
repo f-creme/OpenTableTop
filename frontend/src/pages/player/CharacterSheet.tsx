@@ -3,9 +3,10 @@ import { Navigate } from "react-router-dom"
 import { useRole } from "../../context/RoleContext"
 import { useEffect, useState } from "react"
 import { useCharacterSheet } from "../../hooks/useCharacterSheet"
-import { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast"
 import type { Character, Player } from "../../types/character"
 import { useWebSocket } from "../../context/WebSocketContext"
+import { useNavigate } from "react-router-dom"
 
 export default function CharacterSheet() {
     const { role } = useRole()
@@ -33,7 +34,10 @@ export default function CharacterSheet() {
     const [characterPortrait, setCharacterPortrait] = useState<string | null>(null)
     const [characterToken, setCharacterToken] = useState<string | null>(null)
 
+    const navigate = useNavigate() 
+
     const joinTable = () => {
+        if (selectedCharacterId === "__NULL__") return;
         const player: Player = {
             characterUuid: selectedCharacterId,
             characterName: characterName,
@@ -43,6 +47,8 @@ export default function CharacterSheet() {
         };
 
         send({ type: "join_player", player: player});
+        toast("Redirection vers la table de jeu...");
+        setTimeout(() => navigate("/room/table"), 2000);
     }
 
     useEffect(() => {
