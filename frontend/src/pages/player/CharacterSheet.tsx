@@ -243,9 +243,9 @@ export default function CharacterSheet() {
                                     <div className="font-bold opacity-30 text-xs mt-2">BIO</div>
                                     <div className="font-bold opacity-50 text-xs text-justify">{characterBio}</div>
                                 </div>
-                                <div className="w-1/3 bg-amber-50 aspect-square flex items-center">
+                                <div className="w-1/3 bg-amber-50 aspect-square flex items-center ring-primary ring-2 ring-offset-2">
                                     {characterPortrait ? (
-                                        <img src={characterPortrait} alt="Portrait" />
+                                        <img src={characterPortrait} alt="Portrait" className=""/>
                                     ) : (
                                         <p className="text text-black text-center m-4">Ajouter un portrait à votre personnage</p>
                                     )}
