@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast"
 import type { Character, Player } from "../../types/character"
 import { useWebSocket } from "../../context/WebSocketContext"
 import { useNavigate } from "react-router-dom"
+import { Pipette } from "lucide-react"
 
 export default function CharacterSheet() {
     const { role } = useRole()
@@ -34,6 +35,7 @@ export default function CharacterSheet() {
     const [characterPortrait, setCharacterPortrait] = useState<string | null>(null)
     const [characterToken, setCharacterToken] = useState<string | null>(null)
     const [disabledJoin, setDisabledJoin] = useState<boolean>(false)
+    const [color, setColor] = useState<string>("#ffd3ac")
 
     const navigate = useNavigate() 
 
@@ -45,7 +47,8 @@ export default function CharacterSheet() {
             characterName: characterName,
             characterRole: characterClass,
             characterPortrait: (!characterPortrait) ? false : true,
-            userPublicName: localStorage.getItem("publicName")!            
+            userPublicName: localStorage.getItem("publicName")!, 
+            color: color           
         };
 
         send({ type: "join_player", player: player});
@@ -99,7 +102,7 @@ export default function CharacterSheet() {
         <div className="flex flex-row mx-20 mt-10 gap-10">
             <Toaster position="top-center" containerClassName="text-center" toastOptions={{ duration: 4000 }} />
             <div className="flex flex-1 bg-base-200 min-h-100 flex-col p-4 gap-1 rounded-2xl shadow-2xl">
-                <span className="flex flex-row gap-4 items-center mb-8">
+                <span className="flex flex-row gap-4 items-center mb-4">
                     <p>Sélectionner un de vos personnages :</p>
                     <select 
                         className="flex-1 select select-sm"
@@ -184,29 +187,39 @@ export default function CharacterSheet() {
                
                     </div>
                 </div>
-                <div className="flex flex-row justify-between gap-4 mt-10">
-                    <button 
-                        className="btn btn-secondary flex-1"
-                        onClick={() => {
-                            if (selectedCharacterId === "__NULL__") {
-                                createCharacter(
-                                {
-                                    uuid: selectedCharacterId, name: characterName, classOrRole: characterClass,
-                                    appearance: characterAppearance, personality: characterPersonality, 
-                                    bio: characterBio
-                                }, fileToUpload
-                            )} else if (confirm("Mettre à jour le personnage ?")) {
-                                updateCharacter(
-                                {
-                                    uuid: selectedCharacterId, name: characterName, classOrRole: characterClass,
-                                    appearance: characterAppearance, personality: characterPersonality, 
-                                    bio: characterBio
-                                }, fileToUpload
-                            )}
-                        }}
-                    >
-                        Valider les informations
-                    </button>
+                <button 
+                    className="btn btn-secondary flex-1 p-2 mt-2"
+                    onClick={() => {
+                        if (selectedCharacterId === "__NULL__") {
+                            createCharacter(
+                            {
+                                uuid: selectedCharacterId, name: characterName, classOrRole: characterClass,
+                                appearance: characterAppearance, personality: characterPersonality, 
+                                bio: characterBio
+                            }, fileToUpload
+                        )} else if (confirm("Mettre à jour le personnage ?")) {
+                            updateCharacter(
+                            {
+                                uuid: selectedCharacterId, name: characterName, classOrRole: characterClass,
+                                appearance: characterAppearance, personality: characterPersonality, 
+                                bio: characterBio
+                            }, fileToUpload
+                        )}
+                    }}
+                >
+                    Valider les informations
+                </button>
+                <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent mt-4 mb-4"></div>
+                <p className="text-sm text-center">Sélectionner une couleur et rejoindre la table</p>
+                <div className="flex flex-row justify-between items-center gap-4 mt-4">
+                    <div className="flex flex-row items-center gap-2">
+                        <label className="gap-2"><Pipette className="h-5 w-5"/></label>
+                        <input
+                            type="color"
+                            value={color}
+                            onChange={(e) => setColor(e.target.value)}
+                        />
+                    </div>
                     <button 
                         className="btn btn-primary flex-1"
                         onClick={() => joinTable()}
