@@ -15,10 +15,10 @@ class Token(BaseModel):
     scale: float
 
 class Player(BaseModel):
-    characterId: int
+    characterUuid: str
     characterName: str
     characterRole: str | None
-    characterPortrait: str | None
+    characterPortrait: bool
     userPublicName: str 
 
 class ConnectionManager:

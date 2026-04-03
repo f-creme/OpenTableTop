@@ -11,6 +11,6 @@ export interface Player {
     characterUuid: string;
     characterName: string;
     characterRole: string;
-    characterPortrait: string | null;
+    characterPortrait: boolean;
     userPublicName: string;
 }

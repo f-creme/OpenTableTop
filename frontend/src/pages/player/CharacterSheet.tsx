@@ -38,11 +38,11 @@ export default function CharacterSheet() {
             characterUuid: selectedCharacterId,
             characterName: characterName,
             characterRole: characterClass,
-            characterPortrait: characterPortrait,
+            characterPortrait: (!characterPortrait) ? false : true,
             userPublicName: localStorage.getItem("publicName")!            
         };
 
-        send({ type: "join_player", player: player})
+        send({ type: "join_player", player: player});
     }
 
     useEffect(() => {
@@ -199,6 +199,7 @@ export default function CharacterSheet() {
                     <button 
                         className="btn btn-primary flex-1"
                         onClick={() => joinTable()}
+                        disabled={selectedCharacterId === "__NULL__"}
                     >Rejoindre la table de jeu</button>
                 </div>
             </div>
