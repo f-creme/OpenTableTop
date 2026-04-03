@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useRole } from "../context/RoleContext";
 import { NavbarTransition } from "./Transitions";
 
-import { LogOut, Menu, Dice3, SquareUserRound, UsersRound, Bug, Swords } from "lucide-react";
+import { LogOut, Menu, Dice3, SquareUserRound, UsersRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
@@ -57,10 +57,6 @@ export default function Navbar() {
                 <Link className="btn btn-ghost text-md" to="/room/mj/campaign">
                   {t("component.navbar.campaign")}
                 </Link>
-                
-                <Link className="btn btn-ghost text-md" to="/room/mj/players">
-                  {t("component.navbar.players")}
-                </Link>
               </>
             )}
 
@@ -69,16 +65,8 @@ export default function Navbar() {
                 <Link className="btn btn-ghost text-md" to="/room/player/character-sheet">
                   {t("component.navbar.character-sheet")}
                 </Link>
-
-                <Link className="btn btn-ghost text-md" to="/room/player/inventory">
-                  {t("component.navbar.inventory")}
-                </Link>
               </>
             )}
-
-            <Link className="btn btn-ghost btn-disabled" to="/room/dev">
-              <Bug className="h-5 w-5"/>
-            </Link>
 
             <Link className="btn btn-ghost" to="/">
               <LogOut className="h-5 w-5"/>
@@ -94,18 +82,14 @@ export default function Navbar() {
               {role === "mj" && (
                 <>
                   <li className="font-medium"><Link to="/room/mj/campaign"><UsersRound className="h-4 w-4 stroke-2" /> {t("component.navbar.campaign")}</Link></li>
-                  <li className="font-medium"><Link to="/room/mj/players"><UsersRound className="h-4 w-4 stroke-2" /> {t("component.navbar.players")}</Link></li>
                 </>
               )}
 
               {role === "player" && (
                 <>
                   <li className="font-medium"><Link to="/room/player/character-sheet"><SquareUserRound className="h-4 w-4 stroke-2" /> {t("component.navbar.character-sheet")}</Link></li>
-                  <li className="font-medium"><Link to="/room/player/inventory"><Swords className="h-4 w-4 stroke-2" /> {t("component.navbar.inventory")}</Link></li>
                 </>
               )}
-
-              <li className="font-medium"><Link to="/room/dev"><Bug className="h-4 w-4 stroke-2" /> {t("component.navbar.dev")}</Link></li>
               <li className="font-medium"><Link to="/"><LogOut className="h-4 w-4 stroke-2" /> {t("component.navbar.home")} </Link></li>
             </ul>,
             document.body

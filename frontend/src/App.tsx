@@ -7,10 +7,7 @@ import Login from "./pages/Login";
 import RoleSelection from "./pages/RoleSelection"
 import Table from "./pages/Table"
 import CharacterSheet from "./pages/player/CharacterSheet"
-import Inventory from "./pages/player/Inventory"
-import Players from "./pages/gm/Players"
 import ProtectedRoute from "./components/ProtectedRoute"
-import TableDev from "./pages/TableDev"
 import ManageCampaign from "./pages/gm/ManageCampaign";
 import { WebSocketProvider } from "./context/WebSocketContext";
 import { useCampaign } from "./context/CampaignContext";
@@ -34,11 +31,7 @@ function App() {
                 {/* Main pages */}
                 <Route path="table" element={<Table />} />
                 <Route path="player/character-sheet" element={<CharacterSheet />} />
-                <Route path="player/inventory" element={<Inventory />} />
-                <Route path="mj/players" element={<Players />} />
                 <Route path="mj/campaign" element={<ManageCampaign />} />
-                {/* DEV SECTION */}
-                <Route path="dev" element={<TableDev />} />
               </Route>
             </Route>
           </Routes>
