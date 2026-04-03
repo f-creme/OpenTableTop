@@ -7,7 +7,8 @@ export interface TokenAPI {
 }
 
 export interface Token {
-    id: string;
+    uuid: string;
+    fileName: string
     x: number;
     y: number;
     scale: number;
