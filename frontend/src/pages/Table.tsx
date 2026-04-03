@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Token } from "../types/token";
 import type { Player } from "../types/character";
 import { RefreshCcw } from "lucide-react";
+import CharacterCard from "../components/CharacterCard";
 
 const Table = () => {
   const { role } = useRole();
@@ -125,8 +126,13 @@ const Table = () => {
   return (
 
     <div className="min-h-screen flex mx-auto max-w-screen-2xl px-[5vw] gap-[5vw]">
-        <div className="w-1/3 bg-base-300 rounded-2xl">
-
+        <div className="w-1/3 bg-base-200 rounded-2xl">
+            {activePlayers && activePlayers.map((player, index) => 
+                <CharacterCard
+                    key={index}
+                    player={player}
+                />
+            )}
         </div>
 
         <div className="w-2/3 flex flex-col gap-4">
