@@ -6,6 +6,7 @@ import { MonitorCog, RotateCcw, Scaling, X } from "lucide-react";
 
 interface TokenDisplay {
   image: HTMLImageElement;
+  fileName: string;
   x_coord: number;
   y_coord: number;
   scale: number;
@@ -70,11 +71,12 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
         activeTokens.map((t, index) => {
           return new Promise<void>((resolve) => {
             const img = new window.Image();
-            img.src = `${apiURL}/tokens/${campaignId}/${encodeURIComponent(t.id)}`;
+            img.src = `${apiURL}/tokens/${campaignId}/${encodeURIComponent(t.uuid)}`;
             img.onload = () => {
               const transformedY = (y: number, countTokens: number) => (y === 0 ? 150 * countTokens : y);
               loadedImages.push({
                 image: img,
+                fileName: t.fileName,
                 x_coord: t.x,
                 y_coord: transformedY(t.y, index),
                 scale: t.scale,
@@ -268,7 +270,8 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
     send({
       type: "tokens_scale",
       tokens: tokens.map((t) => ({
-        id: t.image.src.split("/").pop(),
+        uuid: t.image.src.split("/").pop(),
+        fileName: t.fileName,
         x: t.x_coord,
         y: t.y_coord,
         scale: t.scale,
