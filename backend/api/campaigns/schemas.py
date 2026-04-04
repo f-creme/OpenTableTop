@@ -6,3 +6,8 @@ class CampaignGlobalRequest(BaseModel):
 
 class NewParticipantRequest(BaseModel):
     participantName: str
+
+class NewPlayerRequest(BaseModel):
+    characterUuid: str
+    characterName: str
+    characterPortrait: bool
