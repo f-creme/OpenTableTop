@@ -39,3 +39,12 @@ export async function getCharacterDetails(characterUuid: string) {
     const res = await axiosInstance.get(`/characters/${characterUuid}`)
     return res.data
 }
+
+export async function addTokenToCampaign(campaignUuid: string, characterUuid: string, characterName: string, characterPortrait: boolean) {
+    const res = await axiosInstance.post(`/campaigns/${campaignUuid}/join`, {
+        characterUuid: characterUuid, 
+        characterName: characterName, 
+        characterPortrait: characterPortrait
+    });
+    return res
+}
