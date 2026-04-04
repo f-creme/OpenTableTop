@@ -1,6 +1,7 @@
 // components/IllustrationSelector.tsx
 import { ImagePlus } from "lucide-react";
 import type { FileType } from "../types/file";
+import { useTranslation } from "react-i18next";
 
 type Role = "mj" | "player" | null
 
@@ -17,6 +18,7 @@ const IllustrationSelector = ({
     selectedIllustration,
     changeIllustration
 }: IllusSelectorProps) => {
+    const { t } = useTranslation();
     if (role !== "mj") return;
 
     return (
@@ -27,13 +29,13 @@ const IllustrationSelector = ({
 
         {illustrations.length > 0 ? (
             <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
-            <li className="menu-title">Select an illustration to display</li>
+            <li className="menu-title">{t("component.illustration-selector.caption")}</li>
             <li key={0}>
                 <button 
                     className={`btn btn-info w-full justify-start ${selectedIllustration === null || selectedIllustration === "__NULL__" ? "" : "btn-soft"}`}
                     onClick={() => changeIllustration("__NULL__")}
                 >
-                    Aucune
+                    {t("component.illustration-selector.option-none")}
                 </button>
             </li>
             {illustrations.map((ill, index) => {
@@ -52,8 +54,8 @@ const IllustrationSelector = ({
             </ul>
         ) : (
             <ul tabIndex={-1} className="dropdown-content z-1 bg-base-200 rounded-box w-60 menu shadow shadow-info">
-            <li className="menu-title">Select an illustration to display</li>
-            <li>No illustration available for the current campaign</li>
+            <li className="menu-title">{t("component.illustration-selector.caption")}</li>
+            <li>{t("component.illustration-selector.warning")}</li>
             </ul>
         )}
         </div> 

@@ -2,6 +2,7 @@
 
 import { Map } from "lucide-react";
 import type { FileType } from "../types/file";
+import { useTranslation } from "react-i18next";
 
 type Role = "mj" | "player" | null
 
@@ -13,6 +14,7 @@ interface MapSelectorProps {
 }
 
 const MapSelector = ({ role, maps, selectedMap, changeMap }: MapSelectorProps) => {
+  const { t } = useTranslation();
   if (role !== "mj") return null;
 
   return (
@@ -23,7 +25,7 @@ const MapSelector = ({ role, maps, selectedMap, changeMap }: MapSelectorProps) =
 
       {maps.length > 0 ? (
         <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
-          <li className="menu-title">Select a map to display</li>
+          <li className="menu-title">{t("component.map-selector.caption")}</li>
           {maps.map((gameMap, index) => {
             const dotIndex = gameMap.fileName.lastIndexOf(".")
             const displayName = dotIndex !== -1 ? gameMap.fileName.slice(0, dotIndex): gameMap.fileName;
@@ -42,8 +44,8 @@ const MapSelector = ({ role, maps, selectedMap, changeMap }: MapSelectorProps) =
         </ul>
       ) : (
         <ul tabIndex={-1} className="dropdown-content z-1 bg-base-200 rounded-box w-60 menu shadow shadow-info">
-          <li className="menu-title">Select a map to display</li>
-          <li>No maps available for the current campaign</li>
+          <li className="menu-title">{t("component.map-selector.caption")}</li>
+          <li>{t("component.map-selector.warning")}</li>
         </ul>
       )}
     </div>

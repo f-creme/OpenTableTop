@@ -209,6 +209,27 @@
             "confirm": {
                 "delete": "Supprimer "
             }
+        }, 
+        "map-selector": {
+            "caption": "Sélectionnez la carte à afficher",
+            "warning": "Aucune carte n'est disponible pour cette campagne. Vous pouvez ajouter des cartes dans le menu Campagne/Ressources"
+        },
+        "illustration-selector": {
+            "caption": "Sélectionnez une illustration à afficher", 
+            "warning": "Aucune illustration n'est disponible pour cette campagne. Vous pouvez ajouter des illustrations dans le menu Campagne/Ressources", 
+            "option-none": "Aucune"
+        }, 
+        "tokens-selector": {
+            "caption": "Sélectionnez les jetons à afficher",
+            "warning": "Aucun jeton n'est disponible pour cette campagne. Vous pouvez ajouter des jetons dans le menu Campagne/Ressources"
+        }, 
+        "dice-menu": {
+            "number": "Nombre de dés à lancer", 
+            "type": "Type de dé"
+        }, 
+        "dice-results": {
+            "clear": "Effacer", 
+            "results": "Résultats pour"
         }
     },
 
