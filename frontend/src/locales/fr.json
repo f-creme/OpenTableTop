@@ -230,6 +230,13 @@
         "dice-results": {
             "clear": "Effacer", 
             "results": "Résultats pour"
+        }, 
+        "map-display": {
+            "view-tooltip": "Réinitialiser la vue",
+            "scale-tooltip": "Redimensionner les jetons",
+            "scale-confirm": "Partager l'échelle aux joueurs",
+            "hide-tooltip": "Masquer la table pour les joueurs",
+            "show-tooltip": "Rendre la table visible pour les joueurs"  
         }
     },
 

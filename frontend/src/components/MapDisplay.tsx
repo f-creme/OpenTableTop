@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import type { Token } from "../types/token";
 import type Konva from "konva";
 import { MonitorCog, RotateCcw, Scaling, X, Eye, EyeClosed } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface TokenDisplay {
   image: HTMLImageElement;
@@ -25,6 +26,7 @@ type Props = {
 };
 
 const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send, diceUI, hiddenTable }: Props) => {
+  const { t } = useTranslation();
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [illustration, setIllustration] = useState<HTMLImageElement | null>(null);
   const [tokens, setTokens] = useState<TokenDisplay[]>([]);
@@ -293,11 +295,11 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
       <div className="fab fab-reverse absolute">
         <div tabIndex={0} role="button" className="btn btn-xl btn-circle btn-secondary"><MonitorCog /></div>
         <button className="fab-main-action absolute btn btn-xl btn-circle btn-primary"><X /></button>
-        <div className="tooltip tooltip-left" data-tip="Réinitialiser la vue">
+        <div className="tooltip tooltip-left" data-tip={t("component.map-display.view-tooltip")}>
           <button onClick={resetView} className="btn btn-xl btn-secondary btn-circle z-10"><RotateCcw /></button>
         </div>
 
-        <div className="tooltip tooltip-left" data-tip="Redimensionner les tokens">
+        <div className="tooltip tooltip-left" data-tip={t("component.map-display.scale-tooltip")}>
           {role === "mj" && (
             <>
               <button
@@ -328,14 +330,14 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
                   className="btn btn-secondary btn-soft w-full mt-4"
                   onClick={sendTokenScale}
                 >
-                  Partager l'échelle à tous les joueurs
+                  {t("component.map-display.scale-confirm")}
                 </div>
               </div>
             </>
           )}
         </div>
 
-        <div className="tooltip tooltip-left" data-tip={`${hiddenTable ? "Rendre visible pour les joueurs" : "Masquer pour les joueurs"}`}>
+        <div className="tooltip tooltip-left" data-tip={`${hiddenTable ? t("component.map-display.show-tooltip") : t("component.map-display.hide-tooltip")}`}>
           {role === "mj" && (
             <>
               <button
