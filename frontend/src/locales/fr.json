@@ -20,6 +20,23 @@
             "inventory": "Inventaire",
             "dev": "Développement",
             "home": "Écran de connexion"
+        },
+
+        "campaign-menu": {
+            "title": "Gestion de la campagne", 
+            "options": {
+                "general": "Général",
+                "players": "Participants",
+                "resources": "Ressources",
+                "deletion": "Supprimer la campagne"
+            }, 
+            "toast": {
+                "deletion": {
+                    "loading": "Suppression en cours...",
+                    "success": "Campagne suprimée. \nRetour à l'écran d'accueil...",
+                    "error": "Impossible de supprimer la campagne"
+                }
+            }
         }
     },
 
