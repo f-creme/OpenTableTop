@@ -3,7 +3,8 @@ import type { Character } from "../types/character";
 import { 
     addNewCharacterToDB, getMyCharacters, uploadCharacterImage,
     getCharacterPortrait, getCharacterToken,
-    updateCharacterInDB
+    updateCharacterInDB,
+    addTokenToCampaign
  } from "../api/services/characterServices";
 import axios from "axios";
 import { useState } from "react";
@@ -98,12 +99,26 @@ export const useCharacterSheet = () => {
         uploadImage(character.uuid, file)
     }
 
+    const joinCampaignWithToken = async (
+        characterUuid: string, 
+        characterName: string,
+        characterPortrait: boolean, 
+        campaignUuid: string
+    ) => {
+        try {
+            addTokenToCampaign(campaignUuid, characterUuid, characterName, characterPortrait)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return {
         availCharacters,
         loadCharacterPortrait, 
         loadCharacterToken,
         loadCharacters,
         createCharacter,
-        updateCharacter
+        updateCharacter, 
+        joinCampaignWithToken
     }
 };
