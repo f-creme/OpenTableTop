@@ -10,6 +10,8 @@
 [![Python](https://img.shields.io/badge/python-3.12+-blue.svg)]()
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/react-19-61DAFB.svg?logo=react)](https://reactjs.org/)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
+
 
 <br/>
 
@@ -24,22 +26,59 @@
 
 <br/>
 
+## ⚡ Philosophy
+OpenTableTop is meant to be simple, fast, and system-agnostic. It provides an interactive tabletop without enforcing complex character sheets, so it can be use with any RPG system.
+
 ## 🎯 Current Features
 OpentTableTop lets a Game Master and players interact online for tabletop RPG sessions.
 
-Current capabilities: 
-* **Change maps on the fly** - GM controlls the session view, players see updates instantly.
-* **Share dice rolls** - Every roll is broadcast in real-time to all connected users.
+Core capabilities: 
+* **Campaign Management for Game Master** - General info, user invitations, and upload of resources (maps, illustrations, tokens).
+* **Character Management for Players** - Simple character creation with basic info, portrait, and custom token.
+* **Shared interactive table** - The table canvas displays the map, illustrations, and token for all connected players.
+* **Real-time interactive tokens** - Players and GM can place, move, and interact with tokens dinamically. All connected users see updates instantly via websockets.
+* **GM controls** - Prepare content secretly, control visibility of maps, illustrations and tokens for players.
+* **Shared dice rolls** - Broadcast rolls in real-time to all connected users.
+* **Player presence** - See which players are connected around the table.
+* **Multiple simultaneous sessions** - Each campaign runs independently with its own table and websocket, so multiple groups can play at the same time on the same server.
 
 <br/>
 
 ## 🔧 Planned Features
-* **Token management and placement on maps** - Players and GM can place and move tokens to represents characters on the table.
-* **Player account and permissions** - More advanced login system to control access and roles.
-* **Character creation and management** - Players can create a character, store it in the database, or selecte an existing one, and display it on the table.
+* **Localization/i18n** - Add english translations (currently only French is available).
+* **Player statuses** - Player can update a small status icon/info (e.g., "injured", exploring", "help me", etc.) around the table in real-time.
 * **Dice roll history** -  Keep a log previous dice rolls.
 
 <br/>
+
+## 🚀 Quick Start *with Docker Compose*
+
+The simple way to get started for development or testing.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/f-creme/OpenTableTop.git
+cd OpenTableTop
+```
+
+### 2. Copy environment files
+
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+cp database/.env.example database/.env
+```
+> Edit `.env` files if needed (e.g., ports, database credentials).
+
+### 3. Start everything with Docker Compose
+
+```bash
+docker compose up -d
+```
+
+> This will launch the PostgreSQL database, backend API and frontend automatically.
+
 
 ## 📦 Manual installation *for development*
 
@@ -68,6 +107,8 @@ npm install
 npm run dev
 ```
 
+> In `.env`, replace docker compose service name "backend" by "localhost" for `VITE_API_URL`.
+
 **Backend:**
 
 ```bash
@@ -76,6 +117,10 @@ cp .env.example .env # Copy the env file dans edit it if needed
 uv sync 
 uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+> In `.env`: 
+> * set `DB_HOST` to `localhost`.
+> * set `STORAGE_DIR` to the an existing directory where you want to store files of users like maps, illustrations, etc.
 
 ### 3. Configuration
 
@@ -88,10 +133,6 @@ curl -X POST http://localhost:8000/auth/register \
   -d '{"username":"user","password":"pass","public_name":"display_name"}'
 ```
 > ⚠️ Only use this for local development. Do not expose your server to the internet when using this command.
-
-#### Add Maps
-* Place your map images in a maps folder
-* Edit `config.py` in the backend to point to that folder
 
 ### 4. Open the application
 
