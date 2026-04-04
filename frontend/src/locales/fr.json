@@ -48,6 +48,18 @@
             "button": {
                 "save": "Enregitrez les informations",
                 "edit": "Modifier les informations"
+            }, 
+            "toast": {
+                "update": {
+                    "loading": "Mise à jour...", 
+                    "success": "Informations enregistrées", 
+                    "error": "Impossible de mettre à jour.\nLe titre peut être déjà utilisé"
+                }, 
+                "create": {
+                    "loading": "Création en cours...",
+                    "success": "Campagne créée", 
+                    "error": "La création n'a pas abouti"
+                }
             }
         }, 
         "campaign-users-form": {
