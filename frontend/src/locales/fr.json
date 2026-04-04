@@ -49,6 +49,50 @@
                 "save": "Enregitrez les informations",
                 "edit": "Modifier les informations"
             }
+        }, 
+        "campaign-users-form": {
+            "title": "Participants de votre campagne", 
+            "section": {
+                "list": {
+                    "title": "Liste des participants",
+                    "button": "Actualiser la liste",
+                    "table": {
+                        "participant": "Participant",
+                        "character": "Personnage",
+                        "role": "Rôle", 
+                        "remove": "Retirer"
+                    },
+                    "roles": {
+                        "gm": "Maître du jeu", 
+                        "player": "Joueur"
+                    }, 
+                    "confirm-remove": "Retirer ce particpant ?"
+                }, 
+                "add": {
+                    "title": "Ajouter un nouveau participant",
+                    "caption": "Recherchez un utilisateur avec son nom public et invitez le à participer à votre campagne",
+                    "search": "Nom du joueur", 
+                    "button": "Ajouter aux participants",
+                    "confirm": "Ajouter ce participant ?"
+                }
+            },
+            "toast": {
+                "list": {
+                    "loading": "Récupération des participants...", 
+                    "success": "Liste des participants à jour", 
+                    "error": "Echec de la récupération des participants"
+                }, 
+                "remove": {
+                    "loading": "Suppression en cours...", 
+                    "success": "Participant retiré", 
+                    "error": "La suppression a échoué"
+                }, 
+                "add": {
+                    "loading": "Recherche de l'utilisateur...",
+                    "success": "Participant ajouté à la campagne", 
+                    "error": "L'ajout du participant n'a pas abouti"
+                }
+            }
         }
     },
 
