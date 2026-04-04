@@ -8,6 +8,7 @@ import type { Character, Player } from "../../types/character"
 import { useWebSocket } from "../../context/WebSocketContext"
 import { useNavigate } from "react-router-dom"
 import { Pipette } from "lucide-react"
+import { useCampaign } from "../../context/CampaignContext"
 
 export default function CharacterSheet() {
     const { role } = useRole()
@@ -20,10 +21,12 @@ export default function CharacterSheet() {
         loadCharacterToken,
         loadCharacters,
         createCharacter,
-        updateCharacter
+        updateCharacter, 
+        joinCampaignWithToken
     } = useCharacterSheet()
 
     const { send } = useWebSocket();
+    const { campaignId } = useCampaign();
 
     const [selectedCharacterId, setSelectedCharacterId] = useState<string>("__NULL__")
     const [characterName, setCharacterName] = useState<string>("")
@@ -41,6 +44,14 @@ export default function CharacterSheet() {
 
     const joinTable = () => {
         if (selectedCharacterId === "__NULL__") return;
+
+        if (!characterPortrait) {
+            const confirmNoPortrait = window.confirm(
+                "Vous n'avez pas associé de portrait pour ce personnage : vous n'aurez pas de jeton personnalisé sur la table. \nContinuer quand même ? Le MJ pourra vous attitrer un jeton s'il en a un disponible."
+            );
+            if (!confirmNoPortrait) return;
+        }
+
         setDisabledJoin(true);
         const player: Player = {
             characterUuid: selectedCharacterId,
@@ -50,6 +61,11 @@ export default function CharacterSheet() {
             userPublicName: localStorage.getItem("publicName")!, 
             color: color           
         };
+
+        if (characterPortrait) joinCampaignWithToken(
+            selectedCharacterId, characterName, 
+            player.characterPortrait, campaignId!
+        );
 
         send({ type: "join_player", player: player});
         toast("Redirection vers la table de jeu...");
