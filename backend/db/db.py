@@ -1,5 +1,6 @@
+import time
 import os
-from psycopg2 import pool
+from psycopg2 import pool, OperationalError
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 from os.path import join, dirname
@@ -21,19 +22,25 @@ DB_PASS = os.environ["DB_PASSWORD"]
 DB_MINC = os.environ["DB_MIN_CONN"]
 DB_MAXC = os.environ["DB_MAX_CONN"]
 
-try:
-    conn_pool = pool.SimpleConnectionPool(
-        minconn=DB_MINC,
-        maxconn=DB_MAXC,
-        host=DB_HOST,
-        port=DB_PORT,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASS
-    )
+for _ in range(10):
+    try:
+        conn_pool = pool.SimpleConnectionPool(
+            minconn=DB_MINC,
+            maxconn=DB_MAXC,
+            host=DB_HOST,
+            port=DB_PORT,
+            database=DB_NAME,
+            user=DB_USER,
+            password=DB_PASS
+        )
+        break
 
-except Exception as e:
-    raise RuntimeError("Error creating connection pool:", e)
+    except OperationalError:
+        print("DB not ready, waiting 2s...")
+        time.sleep(2)
+    
+    except Exception as e:
+        raise RuntimeError("Error creating connection pool:", e)
 
 
 def get_db():

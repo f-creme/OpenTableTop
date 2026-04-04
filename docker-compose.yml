@@ -9,7 +9,7 @@ services:
       - ./database/.env
     ports:
       - "5432:5432"
-    networks: 
+    networks:
       - app
 
   frontend:
@@ -27,8 +27,22 @@ services:
     networks:
       - app
 
+  backend:
+    build:
+      context: ./backend
+    container_name: opentabletop_backend
+    volumes:
+      - storage:/app/storage
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - app
+
 networks:
   app:
 
 volumes:
   postgresql_data:
+  storage:
