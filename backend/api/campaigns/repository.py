@@ -110,3 +110,33 @@ def add_user_to_campaign(db, participant_user_uuid: str, campaign_uuid: str, par
             "(%s, %s, %s, 'player');",
             (participant_user_uuid, campaign_uuid, participant_public_name)
         )
+
+def get_character_tokens_uuid(db, character_uuid: str, campaign_uuid: str):
+    with db.cursor() as cursor: 
+        cursor.execute(
+            "SELECT uuid, campaign_uuid FROM files " \
+            "WHERE file_type = 'token' AND character_uuid = %s " \
+            "AND (campaign_uuid = %s OR campaign_uuid IS NULL);",
+            (character_uuid, campaign_uuid)
+        )
+        rows_dict = cursor.fetchall()
+        return rows_dict
+    
+def register_character_token_in_campaign(db, character_uuid: str, campaign_uuid: str, filename: str, user_uuid: str):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO files (file_name, file_type, owner_uuid, campaign_uuid, character_uuid) " \
+            "VALUES (%s, 'token', %s, %s, %s) RETURNING uuid;", 
+            (filename, user_uuid, campaign_uuid, character_uuid)
+        )
+        campaign_character_token_uuid = cursor.fetchone()["uuid"]
+        return campaign_character_token_uuid
+    
+def update_token_in_campaign(db, uuid: str, filename: str):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "UPDATE files " \
+            "SET file_name = %s, created_at = now() " \
+            "WHERE uuid = %s;",
+            (filename, uuid)
+        )

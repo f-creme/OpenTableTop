@@ -57,7 +57,8 @@ def  check_if_already_exists(db, character_uuid: str):
         cursor.execute(
             "SELECT uuid, file_type FROM files " \
             "WHERE character_uuid = %s " \
-            "AND file_type IN ('portrait', 'token');", (character_uuid, )
+            "AND file_type IN ('portrait', 'token') " \
+            "AND campaign_uuid IS NULL;", (character_uuid, )
         )
         result = cursor.fetchall()
         if result is None or len(result) != 2:

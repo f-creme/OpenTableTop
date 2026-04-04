@@ -4,10 +4,11 @@ import shutil
 from psycopg2 import errors
 from db.db import get_db
 from api.dependencies.auth import get_current_user_id
-from api.campaigns.schemas import CampaignGlobalRequest, NewParticipantRequest
+from api.campaigns.schemas import CampaignGlobalRequest, NewParticipantRequest, NewPlayerRequest
 from api.campaigns import repository
 from core.config_storage import create_campaign_storage, get_campaign_dir
 from services import secure_urls
+from pathlib import Path
 
 from core.config import DATA_DIR
 
@@ -15,6 +16,9 @@ router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
 MAX_CAMPAIGN_PER_USER = 2
 
+def get_user_path(user_uuid: str) -> Path:
+    path = Path(f"{DATA_DIR}/user_{user_uuid}")
+    return path
 
 @router.get("/")
 def get_user_campaigns(user_uuid: str = Depends(get_current_user_id), db=Depends(get_db)):
@@ -113,3 +117,39 @@ def add_participant_to_campaign(campaign_uuid: str, data: NewParticipantRequest,
     except:
         db.rollback()
         raise HTTPException(status_code=400, detail="Unable to add the participant.")
+    
+@router.post("/{campaign_uuid}/join")
+def join_campaign(campaign_uuid: str, data: NewPlayerRequest, user_uuid: str = Depends(get_current_user_id), db = Depends(get_db)):
+    filename_in_campaign = f"PLAYER_{data.characterName}.webp"
+    if data.characterPortrait == True:
+        try:
+            tokens_uuid = repository.get_character_tokens_uuid(db, character_uuid=data.characterUuid, campaign_uuid=campaign_uuid)
+            
+            if len(tokens_uuid) == 1: 
+                uuid_token_in_campaign = repository.register_character_token_in_campaign(
+                    db, data.characterUuid, campaign_uuid, filename_in_campaign, user_uuid
+                )
+                uuid_token_source = tokens_uuid[0]["uuid"]
+
+            elif len(tokens_uuid) == 2: 
+                uuid_token_in_campaign = next((item["uuid"] for item in tokens_uuid if item["campaign_uuid"] == campaign_uuid), None)
+                uuid_token_source = next((item["uuid"] for item in tokens_uuid if item["campaign_uuid"] is None), None)
+                if uuid_token_in_campaign is not None:
+                    repository.update_token_in_campaign(db, uuid_token_in_campaign, filename_in_campaign)
+
+            destination_path = Path(get_campaign_dir(campaign_uuid)) / "tokens" / f"{uuid_token_in_campaign}.webp" # type: ignore
+            source_path = Path(get_user_path(user_uuid)) / "tokens" / f"{uuid_token_source}.webp" # type: ignore
+            
+            print(f"\n\n{source_path}\n{destination_path}\n\n", flush=True)
+            
+            shutil.copy(source_path, destination_path)
+            
+            db.commit()
+            return {"message": "Token added to the campaign"}
+        
+        except:
+            db.rollback()
+            raise HTTPException(400, detail="Unable to add character's token to the campaign")
+
+    else: 
+        raise HTTPException(400, detail="The player do not have a character portrait")
