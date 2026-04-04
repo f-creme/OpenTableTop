@@ -34,7 +34,7 @@ export default function RoleSelection() {
         if (role === "mj") {
             navigate("/room/mj/campaign");
         } else {
-            navigate("/room/table");
+            navigate("/room/player/character-sheet");
         }
     };
 
