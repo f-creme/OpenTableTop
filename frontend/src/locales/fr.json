@@ -37,6 +37,18 @@
                     "error": "Impossible de supprimer la campagne"
                 }
             }
+        }, 
+        "campaign-general-form": {
+            "title": "Informations générales",
+            "info": "Donnez un titre à votre campagne puis enregistrez-le pour accéder aux autres options de campagne.",
+            "fields": {
+                "title": "Titre de la campagne", 
+                "name": "Nom de Maître du Jeu"
+            },
+            "button": {
+                "save": "Enregitrez les informations",
+                "edit": "Modifier les informations"
+            }
         }
     },
 
