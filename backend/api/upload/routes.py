@@ -61,7 +61,7 @@ async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depend
         if category != "tokens":
             with open(file_path, "wb") as f:
                 f.write(contents)
-
+                  
         elif category == "tokens":
             img = Image.open(file.file)
             if not is_square(img=img):
@@ -76,12 +76,15 @@ async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depend
             elif token_size == "giant":
                 token = make_token(img=img, final_size="giant")
             
+            if file_type in ["jpeg", "jpg"]:
+                token = token.convert("RGB") # type: ignore
+
             token.save(file_path) # type: ignore
 
     except:
         db.rollback()
         raise HTTPException(400, detail="Unable to record file in the database")
-
+    
     db.commit()
     return {"filename": safe_name}
 
