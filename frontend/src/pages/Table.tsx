@@ -132,7 +132,7 @@ const Table = () => {
     <>
       <div className="min-h-screen flex mx-auto max-w-screen-2xl px-[5vw] gap-[5vw]">
         <div className="w-1/3 bg-base-200 rounded-2xl">
-          {activePlayers.map((player, index) => (
+          {(activePlayers ?? []).map((player, index) => (
             <div key={index} onClick={() => setSelectedPlayer(player)}>
               <CharacterCard player={player} />
             </div>
