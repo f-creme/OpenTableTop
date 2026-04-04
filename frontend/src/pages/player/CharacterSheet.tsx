@@ -49,7 +49,7 @@ export default function CharacterSheet() {
 
         if (!characterPortrait) {
             const confirmNoPortrait = window.confirm(
-                "Vous n'avez pas associé de portrait pour ce personnage : vous n'aurez pas de jeton personnalisé sur la table. \nContinuer quand même ? Le MJ pourra vous attitrer un jeton s'il en a un disponible."
+                t("page.character-sheet.join.confirm-no-portrait")
             );
             if (!confirmNoPortrait) return;
         }
@@ -215,7 +215,7 @@ export default function CharacterSheet() {
                                 appearance: characterAppearance, personality: characterPersonality, 
                                 bio: characterBio
                             }, fileToUpload
-                        )} else if (confirm("Mettre à jour le personnage ?")) {
+                        )} else if (confirm(t("page.character-sheet.form.confirm-update"))) {
                             updateCharacter(
                             {
                                 uuid: selectedCharacterId, name: characterName, classOrRole: characterClass,

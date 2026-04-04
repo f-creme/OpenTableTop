@@ -293,6 +293,28 @@
             "join": {
                 "caption": "Sélectionner une couleur et rejoindre la table", 
                 "button": "Rejoindre la table de jeu"
+            }, 
+            "toast": {
+                "create": {
+                    "loading": "Création...", 
+                    "success": "Personnage créé\nRechargez la page pour le sélectionner", 
+                    "error": "La création n'a pas abouti"
+                }, 
+                "update": {
+                    "loading": "Mise à jour...", 
+                    "success": "Informations mise à jour\nRechargez la page", 
+                    "error": "La mise à jour n'a pas abouti"
+                }, 
+                "upload": {
+                    "loading": "Enregistrement du portrait...", 
+                    "success": "Portrait enregistré", 
+                    "error": "L'enregistrement du portrait n'a pas abouti"
+                }, 
+                "load": {
+                    "loading": "Chargement de vos personnages...", 
+                    "success": "Personnages récupérés", 
+                    "error": "La récupération des personnages n'a pas abouti"
+                }
             }
         }
     } 
