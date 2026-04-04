@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import avatar from "../assets/avatar.webp";
 import type { Player } from "../types/character";
 import { getCharacterDetails, getCharacterPortrait } from "../api/services/characterServices";
+import { useTranslation } from "react-i18next";
 
 interface CharacterDetails {
   name: string;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const DetailedCharacterCard = ({ player }: Props) => {
+  const { t } = useTranslation();
   const [details, setDetails] = useState<CharacterDetails | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -93,7 +95,7 @@ const DetailedCharacterCard = ({ player }: Props) => {
             <div className="w-2/3">
               <div className="font-bold">{details.name.toUpperCase()}</div>
               <div className="font-bold opacity-30">{details.class.toUpperCase()}</div>
-              <div className="font-bold opacity-30 text-xs mt-2">BIO</div>
+              <div className="font-bold opacity-30 text-xs mt-2">{t("component.character-card.bio")}</div>
               <div className="font-bold opacity-50 text-xs text-justify">{details.bio}</div>
             </div>
             <div className="w-1/3 bg-amber-50 aspect-square flex items-center">
@@ -103,11 +105,11 @@ const DetailedCharacterCard = ({ player }: Props) => {
 
           <div className="flex flex-row justify-between gap-4">
             <div>
-              <div className="font-bold opacity-30 text-xs mt-2">APPARENCE</div>
+              <div className="font-bold opacity-30 text-xs mt-2">{t("component.character-card.appearance")}</div>
               <div className="font-bold opacity-50 text-xs text-justify">{details.appearance}</div>
             </div>
             <div>
-              <div className="font-bold opacity-30 text-xs mt-2">PERSONNALITÉ</div>
+              <div className="font-bold opacity-30 text-xs mt-2">{t("component.character-card.personality")}</div>
               <div className="font-bold opacity-50 text-xs text-justify">{details.personality}</div>
             </div>
           </div>

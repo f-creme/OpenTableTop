@@ -237,6 +237,12 @@
             "scale-confirm": "Partager l'échelle aux joueurs",
             "hide-tooltip": "Masquer la table pour les joueurs",
             "show-tooltip": "Rendre la table visible pour les joueurs"  
+        }, 
+        "character-card": {
+            "bio": "BIOGRAPHIE", 
+            "appearance": "APPARENCE", 
+            "personality": "PERSONNALITÉ", 
+            "portrait-warning": "Ajouter un portrait à votre personnage"
         }
     },
 
@@ -265,6 +271,28 @@
             "role": {
                 "player": "Joueur",
                 "master": "Maître du jeu"
+            }
+        }, 
+
+        "character-sheet": {
+            "form": {
+                "select": "Sélectionner un personnage :", 
+                "create": "Nouveau personnage", 
+                "name": "Nom", 
+                "role": "Rôle ou classe", 
+                "appearance": "Apparence (en quelques mots)", 
+                "personality": "Personnalité (en quelques mots)", 
+                "bio": "Biographie", 
+                "portrait": "Portrait", 
+                "portrait-info": {
+                    "1": "Taille maximale: 1MB (type WEBP, PNG, JPG)",
+                    "2": "Format requis: 1:1 (carré)" 
+                }, 
+                "button": "Enregistrer les informations"
+            }, 
+            "join": {
+                "caption": "Sélectionner une couleur et rejoindre la table", 
+                "button": "Rejoindre la table de jeu"
             }
         }
     } 
