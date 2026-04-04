@@ -30,6 +30,7 @@ const Table = () => {
 
   const [activePlayers, setActivePlayers] = useState<Player[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const [hiddenTable, setHiddenTable] = useState<boolean>(false)
 
   useEffect(() => {
     console.log(activePlayers);
@@ -40,7 +41,8 @@ const Table = () => {
     setSelectedIllustration,
     dice.handleDiceResult,
     setActiveTokens,
-    setActivePlayers
+    setActivePlayers,
+    setHiddenTable
   );
 
   const changeMap = (mapUuid: string) => {
@@ -152,6 +154,7 @@ const Table = () => {
               activeTokens={activeTokens}
               send={send}
               diceUI={<DiceResults {...dice} />}
+              hiddenTable={hiddenTable}
             />
           </div>
         </div>

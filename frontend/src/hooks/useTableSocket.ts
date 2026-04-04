@@ -9,7 +9,8 @@ export const useTableSocket = (
   onIllusUpdate: (illus: string) => void,
   onDiceResult: (data: any) => void,
   setActiveToken: Dispatch<SetStateAction<Token[]>>,
-  setActivePlayers: Dispatch<SetStateAction<Player[]>>
+  setActivePlayers: Dispatch<SetStateAction<Player[]>>,
+  setHiddenTable: Dispatch<SetStateAction<boolean>>
 ) => {
   const { ws, send } = useWebSocket();
 
@@ -84,6 +85,11 @@ export const useTableSocket = (
       if (data.type === "player_disconnect") {
         const leavingUser = data.userPublicName;
         setActivePlayers(prev => prev.filter(p => p.userPublicName !== leavingUser));
+      }
+
+      if (data.type === "update_table_visibility") {
+        const visibility = data.visibility
+        setHiddenTable(visibility)
       }
     };
 

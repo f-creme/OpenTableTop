@@ -2,7 +2,7 @@ import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import { useEffect, useState, useRef } from "react";
 import type { Token } from "../types/token";
 import type Konva from "konva";
-import { MonitorCog, RotateCcw, Scaling, X } from "lucide-react";
+import { MonitorCog, RotateCcw, Scaling, X, Eye, EyeClosed } from "lucide-react";
 
 interface TokenDisplay {
   image: HTMLImageElement;
@@ -21,9 +21,10 @@ type Props = {
   activeTokens: Token[];
   send: (payload: any) => any;
   diceUI: React.ReactNode;
+  hiddenTable: boolean
 };
 
-const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send, diceUI }: Props) => {
+const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustration, activeTokens, send, diceUI, hiddenTable }: Props) => {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [illustration, setIllustration] = useState<HTMLImageElement | null>(null);
   const [tokens, setTokens] = useState<TokenDisplay[]>([]);
@@ -37,6 +38,9 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<any>(null);
   const pinchState = useRef<{ initialDistance: number; initialScale: number } | null>(null);
+
+  const isTableHidden: boolean = (!hiddenTable || role === "mj")
+  const isVisibleLoading: boolean = hiddenTable && role !== "mj"
 
   // --- Load map ---
   useEffect(() => {
@@ -295,12 +299,14 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
 
         <div className="tooltip tooltip-left" data-tip="Redimensionner les tokens">
           {role === "mj" && (
-            <button
-              onClick={() => setShowTokenScaleControl(prev => !prev)}
-              className="btn btn-secondary btn-circle z-10"
-            >
-              <Scaling />
-            </button>
+            <>
+              <button
+                onClick={() => setShowTokenScaleControl(prev => !prev)}
+                className="btn btn-secondary btn-circle btn-xl z-10"
+              >
+                <Scaling />
+              </button>
+            </>
           )}
 
           {showTokenScaleControl && (
@@ -325,6 +331,21 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
                   Partager l'échelle à tous les joueurs
                 </div>
               </div>
+            </>
+          )}
+        </div>
+
+        <div className="tooltip tooltip-left" data-tip={`${hiddenTable ? "Rendre visible pour les joueurs" : "Masquer pour les joueurs"}`}>
+          {role === "mj" && (
+            <>
+              <button
+                onClick={() => {
+                  send({ "type": "update_table_visibility", "visibility": !hiddenTable })
+                }}
+                className="btn btn-secondary btn-circle  btn-xl z-10"
+              >
+                {hiddenTable ? <Eye /> : <EyeClosed />}
+              </button>
             </>
           )}
         </div>
@@ -365,38 +386,48 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
           if (stage) stage.draggable(true);
         }}
       >
-        <Layer>
-          {image && <KonvaImage image={image} x={0} y={0} />}
-        </Layer>
-
-        <Layer>
-          {tokens.map((t, index) => (
-            <KonvaImage
-              key={index}
-              image={t.image}
-              x={t.x_coord}
-              y={t.y_coord}
-              scaleX={t.scale}
-              scaleY={t.scale}
-              draggable
-              onDragMove={(e) => onTokenDrag(index, e.target.x(), e.target.y())}
-              onDragEnd={(e) => onTokenDragEnd(index, e.target.x(), e.target.y())}
-            />
-          ))}
-        </Layer>
-
-        <Layer>
-          {illustration && (
-            <KonvaImage
-              image={illustration}
-              x={illustrationX}
-              y={illustrationY}
-              scaleX={illustrationScale}
-              scaleY={illustrationScale}
-            />
-          )}
-        </Layer>
+        {isTableHidden && (
+          <>
+            <Layer>
+              {image && <KonvaImage image={image} x={0} y={0} />}
+            </Layer>
+            <Layer>
+              {tokens.map((t, index) => (
+                <KonvaImage
+                  key={index}
+                  image={t.image}
+                  x={t.x_coord}
+                  y={t.y_coord}
+                  scaleX={t.scale}
+                  scaleY={t.scale}
+                  draggable
+                  onDragMove={(e) => onTokenDrag(index, e.target.x(), e.target.y())}
+                  onDragEnd={(e) => onTokenDragEnd(index, e.target.x(), e.target.y())}
+                />
+              ))}
+            </Layer>
+            <Layer>
+              {illustration && (
+                <KonvaImage
+                  image={illustration}
+                  x={illustrationX}
+                  y={illustrationY}
+                  scaleX={illustrationScale}
+                  scaleY={illustrationScale}
+                />
+              )}
+            </Layer>
+          </>
+        )}
       </Stage>
+
+      {isVisibleLoading && (
+        <>
+          <div className="absolute inset-0 flex items-center justify-center bg-black">
+            <span className="loading loading-dots loading-xl text-primary"></span>
+          </div>
+        </>
+      )}
     </div>
   );
 };

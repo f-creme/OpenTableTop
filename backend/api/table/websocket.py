@@ -30,6 +30,7 @@ class ConnectionManager:
         self.current_active_tokens: List[dict] = []
         self.current_active_players: List[dict] = []
         self.ws_to_player: dict[WebSocket, str] = {}
+        self.table_visibility: bool = True
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -56,6 +57,11 @@ class ConnectionManager:
                 "active_players": self.current_active_players
             })
 
+        await websocket.send_json({
+            "type": "update_table_visibility",
+            "visibility": self.table_visibility
+        })
+
     def disconnect(self, websocket: WebSocket):
         if websocket in self.active_connections:
             self.active_connections.remove(websocket)
@@ -80,6 +86,7 @@ class ConnectionManager:
         await websocket.send_json({"type": "init_tokens", "tokens": self.current_active_tokens})
         await websocket.send_json({"type": "illus_update", "selected_illustration": self.current_illustration})
         await websocket.send_json({"type": "init_players", "players": self.current_active_players})
+        await websocket.send_json({"type": "update_table_visibility", "visibility": self.table_visibility})
 
     async def broadcast_map(self, map_name: str):
         """Map broadcast"""
@@ -145,6 +152,10 @@ class ConnectionManager:
             ]
         await self.broadcast({"type": "new_player", "player": player})
 
+    async def broadcast_table_visibility(self, visibility: bool):
+        self.table_visibility = visibility
+        await self.broadcast({"type": "update_table_visibility", "visibility": self.table_visibility})
+
 # Dictionnary to store a connection manager per campaign 
 campaign_managers: Dict[str, ConnectionManager] = {}
 
@@ -194,6 +205,11 @@ async def websocket_endpoint(websocket: WebSocket, campaign_uuid: str):
 
             elif msg_type =="request_init":
                 await manager.request_reinit(websocket)
+
+            elif msg_type == "update_table_visibility":
+                print("MESSAGE RECEIVED :", data)
+                await manager.broadcast_table_visibility(visibility=data["visibility"])
+
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
