@@ -6,6 +6,7 @@ import { useCampaign } from "../context/CampaignContext";
 import { DeleteCampaign } from "../api/services/campaignServices";
 import { Toaster, toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface CampaignMenuProps {
     view: "general" | "users" | "resources"
@@ -13,6 +14,7 @@ interface CampaignMenuProps {
 }
 
 const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
+    const { t } = useTranslation();
     const { campaignId } = useCampaign();
     const { setCampaignId } = useCampaign();
     const [disabledMenu, setDisabledMenu] = useState<boolean>(true)
@@ -41,7 +43,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
         <div className="min-h-full min-w-full bg-base-200 p-4 rounded-2xl shadow-xl flex flex-col">
             <Toaster position="top-center" toastOptions={{ duration: 5000 }}/>
             <div className="flex-1 flex flex-col gap-2">
-                <p className="font-semibold py-2">Gestion de la campagne</p>
+                <p className="font-semibold py-2">{t("component.campaign-menu.title")}</p>
 
                 <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
                 <button 
@@ -50,7 +52,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                     }`} 
                     onClick={() => setView("general")}
                 >
-                    <Settings className="h-5 w-5"/> Général
+                    <Settings className="h-5 w-5"/> {t("component.campaign-menu.options.general")}
                 </button>
 
                 <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
@@ -61,7 +63,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                     disabled={disabledMenu}
                     onClick={() => setView("users")}
                 >
-                    <Users className="h-5 w-5"/> Joueurs invités
+                    <Users className="h-5 w-5"/> {t("component.campaign-menu.options.players")}
                 </button>
 
                 <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
@@ -72,7 +74,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                     disabled={disabledMenu}
                     onClick={() => setView("resources")}
                 >
-                    <ScrollText className="h-5 w-5"/> Ressources 
+                    <ScrollText className="h-5 w-5"/> {t("component.campaign-menu.options.resources")} 
                 </button>
             </div>
 
@@ -82,7 +84,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                     className="flex-1 btn btn-error text-error-content p-3" 
                     disabled={disabledMenu} 
                     onClick={() => {if (confirm("Supprimer définitivement la campagne et toutes les données ?")) deleteCampaign()}}
-                >Supprimer</button>
+                >{t("component.campaign-menu.options.deletion")}</button>
                 {redirect === true && (
                     <Navigate to="/room/role-selection"/>
                 )}

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { uploadFile, deleteFile, getQuota } from "../api/services/campaignResourcesServices";
 import type { TokenAPI } from "../types/token";
 import type { FileType, FileTypeAPI } from "../types/file";
+import { useTranslation } from "react-i18next";
 
 interface Quota {
     currentSize: number,
@@ -12,7 +13,8 @@ interface Quota {
 }
 
 export const useCampaignResources = () => {
-    const { campaignId } = useCampaign()
+    const { t } = useTranslation();
+    const { campaignId } = useCampaign();
 
     const [availMaps, setAvailMaps] = useState<FileType[]>([])
     const [availIllustrations, setAvailIllustrations] = useState<FileType[]>([])
@@ -44,9 +46,9 @@ export const useCampaignResources = () => {
                 })
                 .catch((err) => {console.log(err); throw err}),
             {
-                loading: "Récupération des cartes et arrière-plans...",
-                success: "Liste des cartes et arrière-plans mise à jour",
-                error: "Echec de la mise à jour des cartes et arrière-plans"
+                loading: t("component.campaign-resources-form.toast.load.loading"),
+                success: t("component.campaign-resources-form.toast.load.success"),
+                error: t("component.campaign-resources-form.toast.load.error")
             }
         )
     };
@@ -61,9 +63,9 @@ export const useCampaignResources = () => {
                 })
                 .catch((err) => {console.log(err); throw err}),
             {
-                loading: "Récupération des illustrations...",
-                success: "Liste des illustrations disponibles mise à jour",
-                error: "Echec de la récupération des illustrations"
+                loading: t("component.campaign-resources-form.toast.load.loading"),
+                success: t("component.campaign-resources-form.toast.load.success"),
+                error: t("component.campaign-resources-form.toast.load.error")
             }
         )
     };
@@ -79,9 +81,9 @@ export const useCampaignResources = () => {
                 })
                 .catch((err) => {console.log(err); throw err}),
             {
-                loading: "Récupération des illustrations...",
-                success: "Liste des illustrations disponibles mise à jour",
-                error: "Echec de la récupération des illustrations"
+                loading: t("component.campaign-resources-form.toast.load.loading"),
+                success: t("component.campaign-resources-form.toast.load.success"),
+                error: t("component.campaign-resources-form.toast.load.error")
             }
         )
     };
@@ -89,15 +91,15 @@ export const useCampaignResources = () => {
     const handleUpload = async (file: File | null, category: "maps" | "illustrations" | "tokens", tokenSize?: "small" | "medium" | "big" | "giant") => {
         if (!campaignId) return;
         if (!file) {
-            toast.error("Aucun fichier sélectionné");
+            toast.error(t("component.campaign-resources-form.toast.upload.no-file"));
             return;
         }
         if (file.size > 2 * 1024 * 1024) {
-            toast.error("Fichier trop volumineux");
+            toast.error(t("component.campaign-resources-form.toast.upload.too-large"));
             return;
         }
         if (!file.type.startsWith("image/")) {
-            toast.error("Seules les images sont autorisées");
+            toast.error(t("component.campaign-resources-form.toast.upload.not-image"));
             return;
         }
 
@@ -108,9 +110,9 @@ export const useCampaignResources = () => {
             await toast.promise(
                 uploadFile(campaignId, formData, category, tokenSize),
                 {
-                    loading: "Upload en cours...",
-                    success: "Fichier uploadé avec succès",
-                    error: "Erreur lors de l'upload"
+                    loading: t("component.campaign-resources-form.toast.upload.loading"),
+                    success: t("component.campaign-resources-form.toast.upload.success"),
+                    error: t("component.campaign-resources-form.toast.upload.error")
                 }
             );
 
@@ -120,21 +122,21 @@ export const useCampaignResources = () => {
 
         } catch (err: any) {
             console.error(err);
-            toast.error(err.response?.data?.detail || "Erreur upload");
+            toast.error(err.response?.data?.detail || t("component.campaign-resources-form.toast.upload.error"));
         }   
     };
 
     const handleTrash = async (filename: string, category: "maps" | "illustrations" | "tokens") => {
         if (!campaignId) return;
-        if (!confirm(`Supprimer ${filename} ?`)) return;
+        if (!confirm(`${t("component.campaign-resources-form.confirm.delete")} ${filename} ?`)) return;
 
         try {
             await toast.promise(
                 deleteFile(campaignId, filename, category),
                 {
-                    loading: `Suppression de ${filename}...`,
-                    success: `${filename} supprimé`,
-                    error: `Erreur lors de la suppression de ${filename}`
+                    loading: t("component.campaign-resources-form.toast.delete.loading"),
+                    success: t("component.campaign-resources-form.toast.delete.success"),
+                    error: t("component.campaign-resources-form.toast.delete.error")
                 }
             );
 
@@ -144,7 +146,7 @@ export const useCampaignResources = () => {
 
         } catch (err: any) {
             console.error(err);
-            toast.error(err.response?.data?.detail || "Erreur lors de la suppression");
+            toast.error(err.response?.data?.detail || t("component.campaign-resources-form.toast.delete.error"));
         }
     };
 

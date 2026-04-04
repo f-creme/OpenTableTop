@@ -20,6 +20,229 @@
             "inventory": "Inventaire",
             "dev": "Développement",
             "home": "Écran de connexion"
+        },
+
+        "campaign-menu": {
+            "title": "Gestion de la campagne", 
+            "options": {
+                "general": "Général",
+                "players": "Participants",
+                "resources": "Ressources",
+                "deletion": "Supprimer la campagne"
+            }, 
+            "toast": {
+                "deletion": {
+                    "loading": "Suppression en cours...",
+                    "success": "Campagne suprimée. \nRetour à l'écran d'accueil...",
+                    "error": "Impossible de supprimer la campagne"
+                }
+            }
+        }, 
+        "campaign-general-form": {
+            "title": "Informations générales",
+            "info": "Donnez un titre à votre campagne puis enregistrez-le pour accéder aux autres options de campagne.",
+            "fields": {
+                "title": "Titre de la campagne", 
+                "name": "Nom de Maître du Jeu"
+            },
+            "button": {
+                "save": "Enregitrez les informations",
+                "edit": "Modifier les informations"
+            }, 
+            "toast": {
+                "update": {
+                    "loading": "Mise à jour...", 
+                    "success": "Informations enregistrées", 
+                    "error": "Impossible de mettre à jour.\nLe titre peut être déjà utilisé"
+                }, 
+                "create": {
+                    "loading": "Création en cours...",
+                    "success": "Campagne créée", 
+                    "error": "La création n'a pas abouti"
+                }
+            }
+        }, 
+        "campaign-users-form": {
+            "title": "Participants de votre campagne", 
+            "section": {
+                "list": {
+                    "title": "Liste des participants",
+                    "button": "Actualiser la liste",
+                    "table": {
+                        "participant": "Participant",
+                        "character": "Personnage",
+                        "role": "Rôle", 
+                        "remove": "Retirer"
+                    },
+                    "roles": {
+                        "gm": "Maître du jeu", 
+                        "player": "Joueur"
+                    }, 
+                    "confirm-remove": "Retirer ce particpant ?"
+                }, 
+                "add": {
+                    "title": "Ajouter un nouveau participant",
+                    "caption": "Recherchez un utilisateur avec son nom public et invitez le à participer à votre campagne",
+                    "search": "Nom du joueur", 
+                    "button": "Ajouter aux participants",
+                    "confirm": "Ajouter ce participant ?"
+                }
+            },
+            "toast": {
+                "list": {
+                    "loading": "Récupération des participants...", 
+                    "success": "Liste des participants à jour", 
+                    "error": "Echec de la récupération des participants"
+                }, 
+                "remove": {
+                    "loading": "Suppression en cours...", 
+                    "success": "Participant retiré", 
+                    "error": "La suppression a échoué"
+                }, 
+                "add": {
+                    "loading": "Recherche de l'utilisateur...",
+                    "success": "Participant ajouté à la campagne", 
+                    "error": "L'ajout du participant n'a pas abouti"
+                }
+            }
+        }, 
+        "campaign-resources-form": {
+            "title": "Ressources pour la campagne",
+            "storage-info": "Espace de stockage disponible ",
+            "upload-section": {
+                "list": "Afficher la liste",
+                "table": {
+                    "name": "Nom de la ressource", 
+                    "remove": "Supprimer"
+                },
+                "send-box": {
+                    "fieldset": "Choisir un fichier",
+                    "caption": "Taille maximale: 2MB. Formats autorisés: WEBP, PNG, JPG"
+                },
+                "button": "Ajouter le fichier sélectionner",
+                "tokens": {
+                    "title": "Jetons",
+                    "size": {
+                        "caption": "Taille du jeton ",
+                        "small": "Petit (128px)",
+                        "medium": "Moyen (256px)",
+                        "big": "Grand (384px)", 
+                        "giant": "Géant (512px)",
+                        "info": "Sélectionnez l'échelle de votre jeton. Pour information, les jetons des joueurs utilisent l'échelle moyenne."
+                    }                
+                },
+                "maps": {
+                    "title": "Cartes",
+                    "label": "Cartes et arrière-plans"
+                }, 
+                "illustrations": {
+                    "title": "Illustrations"
+                }
+            }, 
+            "info-section": {
+                "1": {
+                    "title": "Type de ressources", 
+                    "content": {
+                        "1": "Les ressources sont réparties en trois catégories, chacune correspondant à un calque différent sur la table :",
+                        "2": "Cartes : images de fond du canva. Il peut s'agir de cartes, décors ou arrière-plans. Elles sont toujours affichées sur le calque inférieur.",
+                        "3": "Jetons : éléments interactifs positionnés au dessus de la carte. Ils peuvent être déplacés librement et redimmensionnés manuellement tous ensemble.",
+                        "4": "Illustrations : éléments visuels affichés sur le calque supérieur. Leur taille par rapport est automatiquement ajustée à la carte pour être visible."
+                    }
+                }, 
+                "2": {
+                    "title": "Performances et format", 
+                    "content": {
+                        "1": "Pour garantir une expérience fluide pour les utilisateurs :",
+                        "2": "Privilégiez des fichiers légers, surtout pour les jetons amenés à être déplacés en temps réel.",
+                        "3": "Le format WEBP est recommandé pour un bon compromis qualité/poids.",
+                        "4": "Les formats JPEG et PNG sont également acceptés."
+                    }
+                },
+                "3": {
+                    "title": "Nommage des fichiers", 
+                    "content": {
+                        "1": "Le nom du fichier dans la base de données est le nom du fichier envoyé. Celui-ci ne peut être modifié, à moins de supprimer la ressources et de la renvoyer. Ainsi, veillez à nommer correctement vos ressources avant de les ajouter à la campagne.",
+                        "2": "Pour éviter les problèmes techniques et faciloter l'organisation de vos parties :",
+                        "3": "N'utilisez pas d'espaces ni de caractères spéciaux comme ",
+                        "4": "Remplacez les par ",
+                        "5": "Les ressources s'affichent dans les sélecteurs par ordre alphabétique. Il est vivement conseillé d'utilise un préfixe pour les organiser, par exemple:",
+                        "6": "Les jetons personnalisés des joueurs s'affichent dans le sélecteur avec la convention de nommage suivante : "
+                    }
+                },
+                "4": {
+                    "title": "Dimensions et qualités", 
+                    "content": {
+                        "1": "Certains ajustements sont automatiques, mais pour un meilleur rendu :",
+                        "2": "Utilisez des images aux dimensions adaptées dès le départ.",
+                        "3": "Évitez les images trop petites par rapport à l'arrière-plan qui nécessiteraient un zoom important.",
+                        "4": "De même, évitez les images inutilement grandes qui ralentissent le chargement."
+                    }
+                },
+                "5": {
+                    "title": "A propos des jetons", 
+                    "content": {
+                        "1": "Les jetons circulaires sont générés automatiquement à partir du fichier de votre choix, à la taille choisie. Pour visualiser le rendu, rendez vous sur la Table et affichez les.",
+                        "2": "Pour les besoins de la génération automatique, il est nécessaire que le fichier choisi pour générer un jeton soit une image de ratio 1:1 (carrée)"
+                    }
+                }
+            },
+            "toast": {
+                "load": {
+                    "loading": "Récupération des ressources...",
+                    "success": "Liste des ressources à jour",
+                    "error": "La récupération des ressources n'a pas abouti"
+                }, 
+                "upload": {
+                    "no-file": "Aucun fichier sélectionné",
+                    "too-large": "Fichier trop volumineux",
+                    "not-image": "Seules les images sont autorisées",
+                    "loading": "Envoi en cours...",
+                    "success": "Fichier envoyé avec succès",
+                    "error": "Le fichier n'a pas pu être envoyé"
+                }, 
+                "delete": {
+                    "loading": "Suppression...", 
+                    "success": "Suppression confirmée",
+                    "error": "La suppression n'a pas abouti"
+                }
+            }, 
+            "confirm": {
+                "delete": "Supprimer "
+            }
+        }, 
+        "map-selector": {
+            "caption": "Sélectionnez la carte à afficher",
+            "warning": "Aucune carte n'est disponible pour cette campagne. Vous pouvez ajouter des cartes dans le menu Campagne/Ressources"
+        },
+        "illustration-selector": {
+            "caption": "Sélectionnez une illustration à afficher", 
+            "warning": "Aucune illustration n'est disponible pour cette campagne. Vous pouvez ajouter des illustrations dans le menu Campagne/Ressources", 
+            "option-none": "Aucune"
+        }, 
+        "tokens-selector": {
+            "caption": "Sélectionnez les jetons à afficher",
+            "warning": "Aucun jeton n'est disponible pour cette campagne. Vous pouvez ajouter des jetons dans le menu Campagne/Ressources"
+        }, 
+        "dice-menu": {
+            "number": "Nombre de dés à lancer", 
+            "type": "Type de dé"
+        }, 
+        "dice-results": {
+            "clear": "Effacer", 
+            "results": "Résultats pour"
+        }, 
+        "map-display": {
+            "view-tooltip": "Réinitialiser la vue",
+            "scale-tooltip": "Redimensionner les jetons",
+            "scale-confirm": "Partager l'échelle aux joueurs",
+            "hide-tooltip": "Masquer la table pour les joueurs",
+            "show-tooltip": "Rendre la table visible pour les joueurs"  
+        }, 
+        "character-card": {
+            "bio": "BIOGRAPHIE", 
+            "appearance": "APPARENCE", 
+            "personality": "PERSONNALITÉ", 
+            "portrait-warning": "Ajouter un portrait à votre personnage"
         }
     },
 
@@ -41,12 +264,59 @@
             "caption": "Sélectionnez une campagne et rejoignez la table de jeu :",
             "selector": {
                 "campaign": {
+                    "selection": "Sélection de la campagne", 
                     "create": "Créer une nouvelle campagne"
                 }
             },
             "role": {
                 "player": "Joueur",
                 "master": "Maître du jeu"
+            }
+        }, 
+
+        "character-sheet": {
+            "form": {
+                "select": "Sélectionner un personnage :", 
+                "create": "Nouveau personnage", 
+                "name": "Nom", 
+                "role": "Rôle ou classe", 
+                "appearance": "Apparence (en quelques mots)", 
+                "personality": "Personnalité (en quelques mots)", 
+                "bio": "Biographie", 
+                "portrait": "Portrait", 
+                "portrait-info": {
+                    "1": "Taille maximale: 1MB (type WEBP, PNG, JPG)",
+                    "2": "Format requis: 1:1 (carré)" 
+                }, 
+                "button": "Enregistrer les informations",
+                "confirm-update": "Mettre à jour le personnage ?"
+            }, 
+            "join": {
+                "caption": "Sélectionner une couleur et rejoindre la table", 
+                "button": "Rejoindre la table de jeu",
+                "confirm-no-portrait": "Vous n'avez pas associé de portrait pour ce personnage : vous n'aurez pas de jeton personnalisé sur la table. \nContinuer quand même ? Le MJ pourra vous attitrer un jeton s'il en a un disponible."
+            }, 
+            "toast": {
+                "create": {
+                    "loading": "Création...", 
+                    "success": "Personnage créé\nRechargez la page pour le sélectionner", 
+                    "error": "La création n'a pas abouti"
+                }, 
+                "update": {
+                    "loading": "Mise à jour...", 
+                    "success": "Informations mise à jour\nRechargez la page", 
+                    "error": "La mise à jour n'a pas abouti"
+                }, 
+                "upload": {
+                    "loading": "Enregistrement du portrait...", 
+                    "success": "Portrait enregistré", 
+                    "error": "L'enregistrement du portrait n'a pas abouti"
+                }, 
+                "load": {
+                    "loading": "Chargement de vos personnages...", 
+                    "success": "Personnages récupérés", 
+                    "error": "La récupération des personnages n'a pas abouti"
+                }
             }
         }
     } 

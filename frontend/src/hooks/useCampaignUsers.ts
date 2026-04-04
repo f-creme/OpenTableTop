@@ -5,8 +5,10 @@ import { toast } from "react-hot-toast";
 
 import type { CampaignUsers } from "../types/campaign";
 import { isAxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 export const useCampaignUsers = () => {
+    const { t } = useTranslation();
     const { campaignId } = useCampaign();
     
     const [usersList, setUsersList] = useState<CampaignUsers[]>([])
@@ -19,9 +21,9 @@ export const useCampaignUsers = () => {
                 .then((res) => {setUsersList(res); console.log(res)})
                 .catch((err) => {console.log(err); throw err}),
             {
-                loading: "Récupération des participants...",
-                success: "Liste des participants mise à jour",
-                error: "Echec de la mise à jour des participants"
+                loading: t("component.campaign-users-form.toast.list.loading"),
+                success: t("component.campaign-users-form.toast.list.success"),
+                error: t("component.campaign-users-form.toast.list.error")
             }
         )
     };
@@ -32,9 +34,9 @@ export const useCampaignUsers = () => {
                 .then((res) => console.log(res))
                 .catch((err) => {console.log(err); throw err}),
             {
-                loading: "Suppression du participant...",
-                success: "Participant retiré",
-                error: "Echec de la suppression du participant"
+                loading: t("component.campaign-users-form.toast.remove.loading"),
+                success: t("component.campaign-users-form.toast.remove.success"),
+                error: t("component.campaign-users-form.toast.remove.error")
             }
         )
         return;
@@ -47,9 +49,9 @@ export const useCampaignUsers = () => {
                 .then((res) => console.log(res))
                 .catch((err) => {console.log(err); throw err}),
             {
-                loading: "Recherhce de l'utilisateur...",
-                success: "Participant ajouté à la campagne",
-                error: (err) => isAxiosError(err) ? err.response?.data?.detail : "L'ajout du participant n'a pas abouti"
+                loading: t("component.campaign-users-form.toast.add.loading"),
+                success: t("component.campaign-users-form.toast.add.success"),
+                error: (err) => isAxiosError(err) ? err.response?.data?.detail : t("component.campaign-users-form.toast.add.error")
             }
         )
         return;

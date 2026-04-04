@@ -8,8 +8,10 @@ import {
  } from "../api/services/characterServices";
 import axios from "axios";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const useCharacterSheet = () => {
+    const { t } = useTranslation();
     const [availCharacters, setAvailCharacters] = useState<Character[]>([]);
 
     const loadCharacters = async () => {
@@ -17,9 +19,9 @@ export const useCharacterSheet = () => {
             getMyCharacters()
                 .then(res => {setAvailCharacters(res.data)}),
             {
-                loading: "Récupération de mes personnages...",
-                success: "Personnages récupérées",
-                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || "Erreur lors de la récupération" : "Erreur lors de la récupération",
+                loading: t("page.character-sheet.toast.load.loading"), 
+                success: t("page.character-sheet.toast.load.success"),
+                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || t("page.character-sheet.toast.load.error") : t("page.character-sheet.toast.load.error"),
             }
         )
     };
@@ -30,7 +32,7 @@ export const useCharacterSheet = () => {
             const url = URL.createObjectURL(blob);
             return url;
         } catch {
-            console.error("Erreur lors du téléchargement du portrait")
+            console.error("Portrait download error")
             return null;
         };
     };
@@ -41,7 +43,7 @@ export const useCharacterSheet = () => {
             const url = URL.createObjectURL(blob);
             return url;
         } catch {
-            console.error("Erreur lors du téléchargement du token")
+            console.error("Token download error")
             return null;
         };
     };
@@ -54,11 +56,11 @@ export const useCharacterSheet = () => {
 
             await toast.promise(
                 uploadCharacterImage(characterUuid, formData),
-                    {
-                        loading: "Enregistrement des images...",
-                        success: "Image sauvegardée avec succès",
-                        error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || "Erreur lors de l'enregistrement de l'image" : "Erreur lors de l'enregistrement de l'image"
-                    }
+                {
+                    loading: t("page.character-sheet.toast.upload.loading"), 
+                    success: t("page.character-sheet.toast.upload.success"),
+                    error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || t("page.character-sheet.toast.upload.error") : t("page.character-sheet.toast.upload.error"),
+                }
             )
         } catch (err: any) {
             console.log(err);
@@ -72,9 +74,9 @@ export const useCharacterSheet = () => {
         const characterId = await toast.promise(
             addNewCharacterToDB(character),
             {
-                loading: "Création du personnage...",
-                success: "Personnage créé.\nRechargez la page pour le sélectionner",
-                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || "Erreur lors de la création" : "Erreur lors de la création",
+                loading: t("page.character-sheet.toast.create.loading"), 
+                success: t("page.character-sheet.toast.create.success"),
+                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || t("page.character-sheet.toast.create.error") : t("page.character-sheet.toast.create.error"),
             }
         );
         if (!characterId) return;
@@ -89,9 +91,9 @@ export const useCharacterSheet = () => {
         await toast.promise(
             updateCharacterInDB(character),
             {
-                loading: "Mise à jour du personnage...", 
-                success: "Personnage mis à jour.\nRechargez la page.",
-                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || "Erreur lors de la mise à jour" : "Erreur lors de la mise à jour",
+                loading: t("page.character-sheet.toast.update.loading"), 
+                success: t("page.character-sheet.toast.update.success"),
+                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || t("page.character-sheet.toast.update.error") : t("page.character-sheet.toast.update.error"),
             }
         );
         if (!file) return;

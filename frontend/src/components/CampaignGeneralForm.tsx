@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import { Pen } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
     campaignTitle: string;
@@ -22,16 +23,17 @@ const CampaignGeneralForm: FC<Props> = ({
     onSave,
     isNewCampaign
 }) => {
+    const { t } = useTranslation()
     return (
         <div className="flex flex-col">
-            <p className="text-4xl text-center font-semibold p-5 mb-5">Informations générales</p>
+            <p className="text-4xl text-center font-semibold p-5 mb-5">{t("component.campaign-general-form.title")}</p>
             {isNewCampaign && (
                 <p className="bg-info/10 rounded-md text-info p-4 mb-4">
-                    Donnez un titre à votre campagne pour finaliser sa création.
+                    {t("component.campaign-general-form.info")}
                 </p>
             )}
             <fieldset className="fieldset w-full mb-4">
-                <legend className="fieldset-legend text-xl">Titre de la campagne</legend>
+                <legend className="fieldset-legend text-xl">{t("component.campaign-general-form.fields.title")}</legend>
                 <input 
                     type="text"
                     className="input input-xl w-full"
@@ -42,7 +44,7 @@ const CampaignGeneralForm: FC<Props> = ({
             </fieldset>
 
             <fieldset>
-                <legend className="fieldset-legend">Votre nom pour la campagne</legend>
+                <legend className="fieldset-legend">{t("component.campaign-general-form.fields.name")}</legend>
                 <input 
                     type="text"
                     className="input input-md w-full"
@@ -58,7 +60,7 @@ const CampaignGeneralForm: FC<Props> = ({
                     disabled={disabledEditGlobal}
                     onClick={onSave}
                 >
-                    Enregistrer
+                    {t("component.campaign-general-form.button.save")}
                 </button>
                 <button
                     className={`btn btn-circle ${!disabledEditGlobal ? "btn-primary btn-soft" : ""}`}

@@ -5,8 +5,10 @@ import { useProfile } from "../context/ProfileContext";
 import type { CampaignGlobal } from "../types/campaign";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export const useCampaignGlobal = () => {
+    const { t } = useTranslation();
     const { campaignId, setCampaignId } = useCampaign();
     const { setPublicName } = useProfile();
 
@@ -36,9 +38,9 @@ export const useCampaignGlobal = () => {
                 setPublicName(localPublicName);
             }),
             {
-                loading: "Mise à jour de la campagne...",
-                success: "Campagne mise à jour",
-                error: "Impossible de mettre à jour la campagne.\nCe titre est peut-être déjà utilisé.",
+                loading: t("component.campaign-general-form.toast.update.loading"),
+                success: t("component.campaign-general-form.toast.update.success"),
+                error: t("component.campaign-general-form.toast.update.error")
             }
         );
     };
@@ -53,9 +55,9 @@ export const useCampaignGlobal = () => {
                     return res;
                 }),
             {
-                loading: "Création de la campagne...",
-                success: "Campagne créée",
-                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || "Erreur lors de la création" : "Erreur lors de la création",
+                loading: t("component.campaign-general-form.toast.create.loading"),
+                success: t("component.campaign-general-form.toast.create.success"),
+                error: (err) => axios.isAxiosError(err) ? err.response?.data?.detail || t("component.campaign-general-form.toast.create.error") : t("component.campaign-general-form.toast.create.error")
             }
         );
     };

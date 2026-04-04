@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Dice3 } from "lucide-react";
 import Dice20Icon from "./DiceIcon";
+import { useTranslation } from "react-i18next";
 
 interface DiceMenuProps {
   dices: number[];
@@ -17,7 +18,7 @@ const DiceMenu = ({
   setCountDices,
   rollDices,
 }: DiceMenuProps) => {
-  
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [shaking, setShaking] = useState(false)
@@ -52,7 +53,7 @@ const DiceMenu = ({
           
           {/* Number of dice */}
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">Nombre de dés à lancer :</legend>
+            <legend className="fieldset-legend">{t("component.dice-menu.number")}</legend>
             <input
               className="input input-secondary w-full"
               type="number"
@@ -72,7 +73,7 @@ const DiceMenu = ({
 
           {/* Type of dice */}
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">Choix du dé à lancer :</legend>
+            <legend className="fieldset-legend">{t("component.dice-menu.type")}</legend>
             {dices.map((die) => (
               <button
                 key={die}

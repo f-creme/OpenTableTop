@@ -1,5 +1,6 @@
 // components/DiceResults.tsx
 
+import { useTranslation } from "react-i18next";
 import Dice20Icon from "./DiceIcon";
 
 interface DiceResultsProps {
@@ -16,13 +17,15 @@ interface DiceResultsProps {
 const DiceResults = ({
   displayedResults, diceResults, selectedDice, countDices,
   showSum, showRoll, isClearing, clearResults
-}: DiceResultsProps) => (
+}: DiceResultsProps) => {
+  const { t } = useTranslation();
+  return (
   <>
     {displayedResults.length > 0 && (
       <div className="flex flex-col justify-center items-center gap-4 min-h-20 max-w-4xl mx-auto p-4">
           {showRoll && (
             <p className={`text-lg font-normal ${isClearing ? "animate-[fadeOut_0.3s_ease]" : "animate-[fadeIn_1.0s_ease]"}`}>
-              Results for {countDices}d{selectedDice}:
+              {t("component.dice-results.results")} {countDices}d{selectedDice}:
             </p>
           )}
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -56,13 +59,13 @@ const DiceResults = ({
                 onClick={clearResults}
                 className="ml-4 btn btn-sm btn-error animate-[fadeIn_0.5s_ease]"
               >
-                Clear
+                {t("component.dice-results.clear")}
               </button>
             )}
           </div>
       </div>
     )}
   </>
-);
+)};
 
 export default DiceResults;

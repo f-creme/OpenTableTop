@@ -1,6 +1,7 @@
 // components/TokenSelector.tsx
 import { ChessPawn } from "lucide-react";
 import type { Token } from "../types/token";
+import { useTranslation } from "react-i18next";
 
 type Role = "mj" | "player" | null;
 
@@ -17,6 +18,7 @@ const TokenSelector = ({
     activeTokens,
     toggleToken
 }: IllusSelectorProps) => {
+    const { t } = useTranslation();
     if (role !== "mj") return null;
 
     return (
@@ -27,7 +29,7 @@ const TokenSelector = ({
 
         {tokens.length > 0 ? (
             <ul tabIndex={-1} className="dropdown-content z-30 menu bg-base-100 rounded-box w-60 shadow shadow-info gap-1">
-            <li className="menu-title">Select tokens to display</li>
+            <li className="menu-title">{t("component.tokens-selector.caption")}</li>
             {tokens.map((token, index) => {
                 const dotIndex = token.fileName.lastIndexOf(".")
                 const displayName = dotIndex !== -1 ? token.fileName.slice(0, dotIndex): token.fileName;
@@ -47,8 +49,8 @@ const TokenSelector = ({
             </ul>
         ) : (
             <ul tabIndex={-1} className="dropdown-content z-1 bg-base-200 rounded-box w-60 menu shadow shadow-info">
-            <li className="menu-title">Select tokens to display</li>
-            <li>No tokens available for the current campaign</li>
+            <li className="menu-title">{t("component.tokens-selector.caption")}</li>
+            <li>{t("component.tokens-selector.warning")}</li>
             </ul>
         )}
         </div>

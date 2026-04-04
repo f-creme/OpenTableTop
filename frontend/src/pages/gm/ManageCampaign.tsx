@@ -8,8 +8,10 @@ import { Toaster } from "react-hot-toast";
 import { useCampaignUsers } from "../../hooks/useCampaignUsers";
 import CampaignResourcesForm from "../../components/CampaignResourcesForm";
 import { useCampaignResources } from "../../hooks/useCampaignResources";
+import { useTranslation } from "react-i18next";
 
 export default function ManageCampaign() {
+    const { t } = useTranslation();
     const { campaignId } = useCampaign();
 
     const {
@@ -69,9 +71,9 @@ export default function ManageCampaign() {
                         }
                         className="w-full p-2 border rounded-md shadow-sm "
                     >
-                        <option value="general">Général</option>
-                        <option value="users">Utilisateurs</option>
-                        <option value="resources">Ressources</option>
+                        <option value="general">{t("component.campaign-menu.options.general")}</option>
+                        <option value="users">{t("component.campaign-menu.options.players")}</option>
+                        <option value="resources">{t("component.campaign-menu.options.resources")}</option>
                     </select>
                 </div>
 

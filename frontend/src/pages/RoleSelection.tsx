@@ -114,7 +114,7 @@ export default function RoleSelection() {
                             onChange={(e) => setSelectedCampaign(String(e.target.value))}
                         >
                             <option key={0} disabled value={0}>
-                                Sélection de la campagne
+                                {t("page.role-selection.selector.campaign.selection")}
                             </option>
                             {campaigns?.map((c, index) => (
                                 <option key={index} value={c.id}>
