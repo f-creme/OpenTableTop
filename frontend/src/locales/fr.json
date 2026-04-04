@@ -288,11 +288,13 @@
                     "1": "Taille maximale: 1MB (type WEBP, PNG, JPG)",
                     "2": "Format requis: 1:1 (carré)" 
                 }, 
-                "button": "Enregistrer les informations"
+                "button": "Enregistrer les informations",
+                "confirm-update": "Mettre à jour le personnage ?"
             }, 
             "join": {
                 "caption": "Sélectionner une couleur et rejoindre la table", 
-                "button": "Rejoindre la table de jeu"
+                "button": "Rejoindre la table de jeu",
+                "confirm-no-portrait": "Vous n'avez pas associé de portrait pour ce personnage : vous n'aurez pas de jeton personnalisé sur la table. \nContinuer quand même ? Le MJ pourra vous attitrer un jeton s'il en a un disponible."
             }, 
             "toast": {
                 "create": {
