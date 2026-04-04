@@ -31,6 +31,10 @@ async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depend
     if file_type not in ["png", "jpeg", "webp"]:
         raise HTTPException(400, detail="Unauthorized file type")
     
+    # Set a format that allow RGBA for tokens
+    if category == "tokens":
+        file_type = "webp"
+    
     # Check role of user for the campaign
     is_user_gm = repository.get_user_role_for_campaign(db, user_uuid=user_uuid, campaign_uuid=campaign_uuid)
     if not is_user_gm:
