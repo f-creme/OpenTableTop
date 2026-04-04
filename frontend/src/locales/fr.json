@@ -41,6 +41,7 @@
             "caption": "Sélectionnez une campagne et rejoignez la table de jeu :",
             "selector": {
                 "campaign": {
+                    "selection": "Sélection de la campagne", 
                     "create": "Créer une nouvelle campagne"
                 }
             },
