@@ -36,3 +36,6 @@ __pycache__/
 **/data
 **/.storage
 .env
+
+# Deployement
+**/nginx.prod.conf

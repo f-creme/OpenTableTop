@@ -1,0 +1,43 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: opentabletop_database
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data/
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - ./database/.env
+    networks:
+      - app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: opentabletop_frontend
+    ports:
+      - "80:80"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - database
+    networks:
+      - app
+
+  backend:
+    build:
+      context: ./backend
+    container_name: opentabletop_backend
+    volumes:
+      - storage:/app/storage
+    depends_on:
+      - database
+    networks:
+      - app
+
+networks:
+  app:
+
+volumes:
+  postgresql_data:
+  storage:
