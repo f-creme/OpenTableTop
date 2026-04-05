@@ -35,7 +35,7 @@ export const WebSocketProvider = ({ children, campaignId, apiURL }: Props) => {
   useEffect(() => {
     if (!campaignId) return;
 
-    const ws = new WebSocket(`${apiURL.replace("http", "ws")}/table_ws/ws/${campaignId}`);
+    const ws = new WebSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}${apiURL}/table_ws/ws/${campaignId}`);
     wsRef.current = ws;
 
     ws.onopen = () => setIsConnected(true);

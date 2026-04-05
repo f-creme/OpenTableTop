@@ -1,0 +1,22 @@
+# Stage 1: build
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# Stage 2: serve with nginx
+FROM nginx:alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# >>>> Use nginx.prod.ssl.conf if you have a SSL certificate for your domain, otherwise copy nginx.prod.conf
+COPY nginx.prod.ssl.conf /etc/nginx/conf.d/default.conf 
+
+# >>>> Expose port 443 if you have a SSL certifcate, otherwise only expose 80
+EXPOSE 80 443
+CMD ["nginx", "-g", "daemon off;"]

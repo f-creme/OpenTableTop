@@ -17,6 +17,9 @@ services:
     container_name: opentabletop_frontend
     ports:
       - "80:80"
+      - "443:443" # <--------- Expose port 443 only if you have a SSL certificate
+    volumes:
+      - /etc/letsencrypt/live/your.domain.com:/etc/certs/your.domain.com/:ro # <--------- Replace with the location of your certificate. Right part must correspond to the path indicated in nginx.prod.ssl.conf for the certificates
     environment:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
