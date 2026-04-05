@@ -291,7 +291,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
   };
 
   return (
-    <div ref={containerRef} className="relative h-[80vh] mx-auto my-8 bg-black border-2 rounded-xl overflow-hidden">
+    <div ref={containerRef} className="relative h-[70vh] mx-auto mt-8 bg-black border-2 rounded-xl overflow-hidden">
       <div className="fab fab-reverse absolute">
         <div tabIndex={0} role="button" className="btn btn-xl btn-circle btn-secondary"><MonitorCog /></div>
         <button className="fab-main-action absolute btn btn-xl btn-circle btn-primary"><X /></button>

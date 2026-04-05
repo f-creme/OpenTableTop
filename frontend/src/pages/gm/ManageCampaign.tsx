@@ -61,7 +61,7 @@ export default function ManageCampaign() {
         <div className="min-h-screen flex justify-center mb-5 px-2">
             <Toaster position="top-center" toastOptions={{ duration: 5000 }} />
 
-            <div className="flex flex-col md:flex-row w-full md:w-9/10 gap-4">
+            <div className="flex flex-col md:flex-row w-full md:w-9/10 gap-4 max-w-screen-2xl mt-4">
 
                 <div className="md:hidden">
                     <select

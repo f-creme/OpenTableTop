@@ -28,7 +28,7 @@ export default function Navbar() {
   return (
     <NavbarTransition>
       <div className="flex flex-col items-center">
-        <div className="navbar bg-base-200 shadow-xl rounded-2xl my-5 relative z-50 w-9/10">
+        <div className="navbar max-w-screen-2xl bg-base-200 shadow-xl rounded-2xl my-5 relative z-50 w-9/10">
 
           {/* Left part */}
           <div className="flex-1">
