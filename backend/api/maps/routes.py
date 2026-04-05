@@ -24,7 +24,6 @@ def list_maps(campaign_uuid: str, db = Depends(get_db)):
             )
             maps = cursor.fetchall()
         
-        print(maps, flush=True)
         return {"maps": maps}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

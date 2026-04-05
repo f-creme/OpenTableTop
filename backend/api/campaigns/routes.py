@@ -139,9 +139,7 @@ def join_campaign(campaign_uuid: str, data: NewPlayerRequest, user_uuid: str = D
 
             destination_path = Path(get_campaign_dir(campaign_uuid)) / "tokens" / f"{uuid_token_in_campaign}.webp" # type: ignore
             source_path = Path(get_user_path(user_uuid)) / "tokens" / f"{uuid_token_source}.webp" # type: ignore
-            
-            print(f"\n\n{source_path}\n{destination_path}\n\n", flush=True)
-            
+                        
             shutil.copy(source_path, destination_path)
             
             db.commit()

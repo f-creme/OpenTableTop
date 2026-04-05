@@ -125,7 +125,6 @@ async def save_character_image(character_uuid: str, user_uuid: str = Depends(get
     # Register in database and get a file uuid
     try:
         existing_files_uuid = repository.check_if_already_exists(db, character_uuid=character_uuid)
-        print(existing_files_uuid, flush=True)
         safe_name = str(file.filename).replace("..", "_").replace("/", "_").replace(" ", "_")
         if existing_files_uuid is None:
             portrait_uuid = repository.record_new_character_file(db, safe_name, "portrait", user_uuid, character_uuid)

@@ -70,7 +70,6 @@ async def upload_file(category: str, campaign_uuid: str, user_uuid: str = Depend
             img = Image.open(file.file)
             if not is_square(img=img):
                 raise HTTPException(400, detail="Invalid image format. Token image must be a square")
-            print(token_size, flush=True)
             if token_size is None or token_size == "medium":
                 token = make_token(img=img, final_size="medium")
             elif token_size == "small": 

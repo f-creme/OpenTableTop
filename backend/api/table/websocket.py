@@ -207,7 +207,6 @@ async def websocket_endpoint(websocket: WebSocket, campaign_uuid: str):
                 await manager.request_reinit(websocket)
 
             elif msg_type == "update_table_visibility":
-                print("MESSAGE RECEIVED :", data)
                 await manager.broadcast_table_visibility(visibility=data["visibility"])
 
 
