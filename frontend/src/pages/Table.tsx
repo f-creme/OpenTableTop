@@ -32,10 +32,6 @@ const Table = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [hiddenTable, setHiddenTable] = useState<boolean>(false)
 
-  useEffect(() => {
-    console.log(activePlayers);
-  }, [activePlayers]);
-
   const { send } = useTableSocket(
     setSelectedMap,
     setSelectedIllustration,

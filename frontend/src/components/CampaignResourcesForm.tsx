@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from "react"; 
+import { useState, type FC } from "react"; 
 import { Map, ImageIcon, ChessPawn } from "lucide-react";
 import { Trash } from "lucide-react";
 import type { FileType } from "../types/file"
@@ -151,10 +151,6 @@ const CampaignResourcesForm: FC<Props> = ({
 }) => {
     const { t } = useTranslation(); 
     const [activeTab, setActiveTab] = useState<"maps" | "illustrations" | "tokens">("maps");
-
-    useEffect(() => {
-        console.log(availMaps);
-    }, [availMaps])
 
     function formatBytes(bytes: number, decimals = 2) {
         if (bytes === 0) return "0 Bytes";

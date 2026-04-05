@@ -18,8 +18,8 @@ export const useCampaignUsers = () => {
         if (!campaignId || campaignId === "__NULL__") return;
         await toast.promise(
             getInvitedUsers(campaignId)
-                .then((res) => {setUsersList(res); console.log(res)})
-                .catch((err) => {console.log(err); throw err}),
+                .then((res) => {setUsersList(res);})
+                .catch((err) => {throw err}),
             {
                 loading: t("component.campaign-users-form.toast.list.loading"),
                 success: t("component.campaign-users-form.toast.list.success"),
@@ -30,9 +30,7 @@ export const useCampaignUsers = () => {
 
     const removeUser = async (idCampaignUser: number) => {
         await toast.promise(
-            removeUserFromCampaign(idCampaignUser)
-                .then((res) => console.log(res))
-                .catch((err) => {console.log(err); throw err}),
+            removeUserFromCampaign(idCampaignUser),
             {
                 loading: t("component.campaign-users-form.toast.remove.loading"),
                 success: t("component.campaign-users-form.toast.remove.success"),
@@ -45,9 +43,7 @@ export const useCampaignUsers = () => {
     const addParticipant = async (newParticipant: string) => {
         if (!campaignId) return;
         await toast.promise(
-            addParticipantToCampaign(campaignId, newParticipant)
-                .then((res) => console.log(res))
-                .catch((err) => {console.log(err); throw err}),
+            addParticipantToCampaign(campaignId, newParticipant),
             {
                 loading: t("component.campaign-users-form.toast.add.loading"),
                 success: t("component.campaign-users-form.toast.add.success"),

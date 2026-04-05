@@ -26,7 +26,6 @@ export const useCampaignResources = () => {
         
         try {
             const res = await getQuota(campaignId);
-            console.log(res)
             setCampaignQuota(res);
         } catch (err: any) {
             console.error(err)
@@ -44,7 +43,7 @@ export const useCampaignResources = () => {
                     const maps: FileType[] = res.map(mapApiToFile);
                     setAvailMaps(maps);
                 })
-                .catch((err) => {console.log(err); throw err}),
+                .catch((err) => {throw err}),
             {
                 loading: t("component.campaign-resources-form.toast.load.loading"),
                 success: t("component.campaign-resources-form.toast.load.success"),
@@ -61,7 +60,7 @@ export const useCampaignResources = () => {
                     const illus: FileType[] = res.map(mapApiToFile)
                     setAvailIllustrations(illus);
                 })
-                .catch((err) => {console.log(err); throw err}),
+                .catch((err) => {throw err}),
             {
                 loading: t("component.campaign-resources-form.toast.load.loading"),
                 success: t("component.campaign-resources-form.toast.load.success"),
@@ -75,11 +74,10 @@ export const useCampaignResources = () => {
         await toast.promise(
             getTokens(campaignId)
                 .then((res) => {
-                    console.log(res)
                     const tokens: FileType[] = res.map(mapTokenApiToFile)
                     setAvailTokens(tokens);
                 })
-                .catch((err) => {console.log(err); throw err}),
+                .catch((err) => {throw err}),
             {
                 loading: t("component.campaign-resources-form.toast.load.loading"),
                 success: t("component.campaign-resources-form.toast.load.success"),
@@ -121,7 +119,6 @@ export const useCampaignResources = () => {
             if (category === "tokens") loadTokens();
 
         } catch (err: any) {
-            console.error(err);
             toast.error(err.response?.data?.detail || t("component.campaign-resources-form.toast.upload.error"));
         }   
     };
@@ -145,7 +142,6 @@ export const useCampaignResources = () => {
             if (category === "tokens") loadTokens();
 
         } catch (err: any) {
-            console.error(err);
             toast.error(err.response?.data?.detail || t("component.campaign-resources-form.toast.delete.error"));
         }
     };

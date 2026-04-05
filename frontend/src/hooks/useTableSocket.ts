@@ -19,7 +19,6 @@ export const useTableSocket = (
 
     const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
-      console.log(data);
 
       if (data.type === "map_update") {
         onMapUpdate(data.selected_map);
