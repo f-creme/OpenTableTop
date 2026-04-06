@@ -101,8 +101,8 @@ export default function RoleSelection() {
                     <p className="text text-xs text-center p-1">
                         {t("global.app-subtitle")}
                     </p>
-                    <p className="text text-4xl mt-10">{t("page.role-selection.welcome")} {publicName} !</p>
-                    <div className="w-2/3 flex flex-col gap-4 my-10 bg-base-200 p-5 rounded-2xl shadow-xl">
+                    <p className="text text-4xl mt-20">{t("page.role-selection.welcome")} {publicName} !</p>
+                    <div className="w-2/3 flex flex-col gap-4 my-20 bg-base-200 p-5 rounded-2xl shadow-xl max-w-200">
 
                         <div className="flex justify-center">
                             <p className="text-md text-center">{t("page.role-selection.caption")}</p>
@@ -147,7 +147,7 @@ export default function RoleSelection() {
                         </div>
                     </div>
 
-                    <div className="mb-10">
+                    <div className="mb-10 mt-15">
                         <LanguageSwitcher />
                     </div>
                 </div>
