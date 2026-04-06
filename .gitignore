@@ -41,5 +41,5 @@ __pycache__/
 # Deployement
 **/nginx.prod.conf
 **/nginx.prod.ssl.conf
-**/Dockerfile.prod
+**/Dockerfile.prod*
 docker-compose.prod.yml
