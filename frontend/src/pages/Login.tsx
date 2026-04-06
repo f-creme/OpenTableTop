@@ -62,7 +62,7 @@ const Login = () => {
                         <label className="input validator"> 
                             <User />
                             <input 
-                                className="input"
+                                className="text"
                                 required
                                 minLength={5}
                                 maxLength={20}
