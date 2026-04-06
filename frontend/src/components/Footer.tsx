@@ -1,9 +1,10 @@
 // components/Footer.tsx
 
 import { Scale } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
-
+    const { t } = useTranslation();
     const GitHubIcon = ({ className = "" }) => (
         <svg
             className={ className }
@@ -20,12 +21,29 @@ export default function Footer() {
         <footer className="relative mt-auto">
             <div className="h-px bg-linear-to-r from-transparent via-(--color-secondary) to-transparent"></div>
             <div className="bg-linear-to-r from-transparent via-(--color-base-100) to-transparent">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg: px:8 py-4">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
-                        <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
-                            <span className="font-medium text-base-content/50">Made by</span>
-                            <span className="font-semibold text-base-content/70">Florentin C.</span>
+                        
+                        <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start text-xs text-base-content/50">
+                            <a 
+                                href="/legal/terms-of-use.pdf" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="hover:text-secondary transition-colors duration-300 font-medium"
+                            >
+                                {t("component.footer.terms")}
+                            </a>
+                            <span className="w-1 h-1 rounded-full bg-base-content/50"></span>
+                            <a 
+                                href="/legal/privacy.pdf" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="hover:text-secondary transition-colors duration-300 font-medium"
+                            >
+                                {t("component.footer.privacy")}
+                            </a>
                         </div>
+
                         <div className="flex items-center gap-3 sm:gap-4">
                             <span className="text-xs text-base-content/50">© 2026 Florentin Creme</span>
                             <span className="w-1 h-1 rounded-full bg-base-content/50 hidden sm:block"></span>
@@ -47,6 +65,7 @@ export default function Footer() {
                                 </div>
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>
