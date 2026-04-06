@@ -35,7 +35,8 @@ export const WebSocketProvider = ({ children, campaignId, apiURL }: Props) => {
   useEffect(() => {
     if (!campaignId) return;
 
-    const ws = new WebSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}${apiURL}/table_ws/ws/${campaignId}`);
+    const base = import.meta.env.VITE_WS_URL || (window.location.protocol === "https://" ? "wss://" : "ws://") + window.location.host;
+    const ws = new WebSocket(`${base}/table_ws/ws/${campaignId}`);
     wsRef.current = ws;
 
     ws.onopen = () => setIsConnected(true);
