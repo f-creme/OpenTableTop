@@ -296,7 +296,7 @@ const CampaignResourcesForm: FC<Props> = ({
                                 <p><kbd className="kbd">01.city_night.webp</kbd>, <kbd className="kbd">02.donjeon_floor_01.webp</kbd>, etc.</p>
                             </li>
                             <li>
-                                <p>{t("component.campaign-resources-form.info-section.3.content.6")}</p>
+                                <p>{t("component.campaign-resources-form.info-section.3.content.6")}<kbd className="kbd">PLAYER_*Character's name*</kbd></p>
                             </li>
                         </ul>                        
                     </div>

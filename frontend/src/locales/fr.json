@@ -171,7 +171,7 @@
                         "3": "N'utilisez pas d'espaces ni de caractères spéciaux comme ",
                         "4": "Remplacez les par ",
                         "5": "Les ressources s'affichent dans les sélecteurs par ordre alphabétique. Il est vivement conseillé d'utilise un préfixe pour les organiser, par exemple:",
-                        "6": "Les jetons personnalisés des joueurs s'affichent dans le sélecteur avec la convention de nommage suivante : "
+                        "6": "Les jetons personnalisés des joueurs ne sont disponibles qu'une fois que le joueur a rejoint la partie avec un personnage pour lequel il a créé un portrait. Ces jetons s'affichent dans le sélecteur, après avoir rechargé la page, avec la convention de nommage suivante : "
                     }
                 },
                 "4": {
