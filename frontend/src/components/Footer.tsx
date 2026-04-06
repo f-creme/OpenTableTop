@@ -53,13 +53,13 @@ export default function Footer() {
                             </div>
                             <span className="w-1 h-1 rounded-full bg-base-content/50 hidden sm:block"></span>
                             <a 
-                                className="group flex items-center gap-2 text-base-content/50 hover:text-secondary transition-colors duration-300 font-medium"
+                                className="group flex items-center gap-2 text-base-content/50 hover:text-primary transition-colors duration-300 font-medium"
                                 href="https://github.com/f-creme/OpenTableTop"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
                                 <span className="hidden sm:inline">GitHub</span>
-                                <div className="relative transform rotate-0 transition-transform duration-300 group-hover:-rotate-45">
+                                <div className="relative transform rotate-0 transition-transform duration-300 group-hover:rotate-360">
                                     <GitHubIcon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
                                     <div className="absolute inset-0 rounded-full bg-primary opacity-0 blur-md -z-10"></div>
                                 </div>

@@ -48,7 +48,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                 <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
                 <button 
                     className={`btn justify-start gap-2 ${
-                        view ==="general" ? "btn-primary btn-soft" : "btn-ghost"
+                        view ==="general" ? "btn-primary btn-active" : "btn-ghost"
                     }`} 
                     onClick={() => setView("general")}
                 >
@@ -58,7 +58,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                 <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
                 <button 
                     className={`btn justify-start gap-2 ${
-                        view ==="users" ? "btn-primary btn-soft" : "btn-ghost"
+                        view ==="users" ? "btn-primary btn-active" : "btn-ghost"
                     }`}  
                     disabled={disabledMenu}
                     onClick={() => setView("users")}
@@ -69,7 +69,7 @@ const CampaignMenu = ({ view, setView }: CampaignMenuProps) => {
                 <div className="h-px bg-linear-to-r from-transparent via-(--color-primary) to-transparent"></div>
                 <button 
                     className={`btn justify-start gap-2 ${
-                        view ==="resources" ? "btn-primary btn-soft" : "btn-ghost"
+                        view ==="resources" ? "btn-primary btn-active" : "btn-ghost"
                     }`} 
                     disabled={disabledMenu}
                     onClick={() => setView("resources")}

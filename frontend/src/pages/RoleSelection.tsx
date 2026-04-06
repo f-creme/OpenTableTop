@@ -128,7 +128,7 @@ export default function RoleSelection() {
 
                         <div className="flex flex-col gap-4 sm:flex-row sm:gap-10">
                             <button
-                                className="btn flex-1 btn-secondary btn-soft items-center shadow-md p-2"
+                                className="btn flex-1 btn-secondary items-center shadow-md p-2"
                                 disabled={disabledPlayer}
                                 onClick={() => chooseRole("player")}
                             >
@@ -137,7 +137,7 @@ export default function RoleSelection() {
                             </button>
 
                             <button
-                                className="btn flex-1 btn-secondary btn-soft items-center shadow-md p-2"
+                                className="btn flex-1 btn-secondary items-center shadow-md p-2"
                                 disabled={disabledMaster}
                                 onClick={() => chooseRole("mj")}
                             >

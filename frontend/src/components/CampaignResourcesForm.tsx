@@ -52,7 +52,7 @@ const UploadSection: FC<{
                     <div className="flex gap-2">
                         <span>{t("component.campaign-resources-form.upload-section.table.name")}</span>
                     </div>
-                    <div className="w-10 mr-2">{t("component.campaign-resources-form.upload-section.table.remove")}</div>
+                    <div className="w-10 mr-6">{t("component.campaign-resources-form.upload-section.table.remove")}</div>
                 </div>
                 {files.map((file, index) => (
                     <div

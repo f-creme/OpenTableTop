@@ -319,7 +319,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
                   type="range"
                   min={0.1}
                   max={3}
-                  step={0.1}
+                  step={0.05}
                   value={tokenScale}
                   onChange={(e) => handleTokenScale(Number(e.target.value))}
                 />
@@ -327,7 +327,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
                   x{tokenScale.toFixed(1)}
                 </div>
                 <div
-                  className="btn btn-secondary btn-soft w-full mt-4"
+                  className="btn btn-secondary w-full mt-4"
                   onClick={sendTokenScale}
                 >
                   {t("component.map-display.scale-confirm")}
@@ -344,7 +344,7 @@ const MapDisplay = ({ role, apiURL, campaignId, selectedMap, selectedIllustratio
                 onClick={() => {
                   send({ "type": "update_table_visibility", "visibility": !hiddenTable })
                 }}
-                className="btn btn-secondary btn-circle  btn-xl z-10"
+                className="btn btn-secondary btn-circle  btn-xl z-10 transition"
               >
                 {hiddenTable ? <Eye /> : <EyeClosed />}
               </button>

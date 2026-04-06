@@ -77,7 +77,7 @@ const DiceMenu = ({
             {dices.map((die) => (
               <button
                 key={die}
-                className="btn btn-secondary btn-outline w-full"
+                className="btn btn-secondary w-full"
                 onClick={() => {
                   setShaking(true);
                   setTimeout(() => setShaking(false), 500)

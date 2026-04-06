@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-    themes : garden --default, dracula --prefersdark
+    themes : emerald --default, dracula --prefersdark
 };
 
 @keyframes fadeIn {
